@@ -4,13 +4,14 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { User } from '@supabase/supabase-js'
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
   const supabase = createClient()
@@ -47,7 +48,7 @@ export default function DashboardLayout({
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <Link href="/watchlist" className="text-text-primary font-bold text-xl">
-                WinForm Bets
+                WinForm
               </Link>
             </div>
             <div className="flex items-center space-x-4">
