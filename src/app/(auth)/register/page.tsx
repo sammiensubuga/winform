@@ -68,7 +68,7 @@ export default function RegisterPage() {
       return
     }
 
-    // Capitalize first letter for email greeting
+ 
 const capitalizedName = username.charAt(0).toUpperCase() + username.slice(1)
 
 const { error } = await supabase.auth.signUp({

@@ -83,7 +83,7 @@ export default function LoginPage() {
           
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-slate-900 tracking-tight mb-2">
-              Sign in
+              Sign in to WinForm
             </h1>
           </div>
 
