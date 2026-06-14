@@ -37,7 +37,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-l from-[#7EEA5A] via-[#4ADE80] via-25% via-[#DDF7D7] via-60% to-[#F8FAF8]">
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-l from-[#E8F5E9] via-[#F1F8F2] via-50% to-[#F8FAF8]">
       
       {/* Abstract wave shapes */}
       <div className="absolute bottom-0 left-0 w-96 h-96 opacity-10 pointer-events-none">
