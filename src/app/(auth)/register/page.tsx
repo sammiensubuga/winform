@@ -79,13 +79,12 @@ export default function RegisterPage() {
     })
 
     if (error) {
-      if (error.message.includes('duplicate key value violates unique constraint "profiles_username_key"')) {
-        setUsernameError('Username already taken. Please choose another one.')
-      } else if (error.message.includes('User already registered')) {
-        setEmailError('An account with this email already exists. Please login instead.')
-      } else {
-        setEmailError(error.message)
-      }
+     console.log('Full error:', error.message) // Debug
+if (error.message.includes('duplicate key') || error.message.includes('profiles_username_key')) {
+  setUsernameError('Username already taken. Please choose another one.')
+} else {
+  setUsernameError('Username already taken. Please choose another one.') // Fallback
+}
       setLoading(false)
       return
     }
