@@ -22,31 +22,29 @@ export default function RegisterPage() {
 
   // Check username availability in real-time
   useEffect(() => {
-    const checkUsername = async () => {
-      if (username.length < 3) {
-        setUsernameAvailable(null)
-        return
-      }
+   const checkUsername = async () => {
+  if (username.length < 3) {
+    setUsernameAvailable(null)
+    return
+  }
 
-      setCheckingUsername(true)
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('username')
-        .eq('username', username)
-        .single()
+  setCheckingUsername(true)
+  
+  const result = await supabase
+    .from('profiles')
+    .select('username')
+    .eq('username', username)
+    .maybeSingle()
 
-      setCheckingUsername(false)
+  setCheckingUsername(false)
 
-      if (error && error.code === 'PGRST116') {
-        // No rows returned - username is available
-        setUsernameAvailable(true)
-      } else if (data) {
-        // Username exists
-        setUsernameAvailable(false)
-      } else {
-        setUsernameAvailable(null)
-      }
-    }
+  // If no data found, username is available
+  if (!result.data) {
+    setUsernameAvailable(true)
+  } else {
+    setUsernameAvailable(false)
+  }
+}
 
     const timer = setTimeout(() => {
       if (username) {
