@@ -29,10 +29,16 @@ export default function DashboardLayout({
     getUser()
   }, [router, supabase])
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+    router.push('/')
+    router.refresh()
+  }
+
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-text-primary">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="text-slate-900">Loading...</div>
       </div>
     )
   }
@@ -42,31 +48,28 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <nav className="bg-card border-b border-border">
+    <div className="min-h-screen bg-white">
+      <nav className="bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <Link href="/watchlist" className="text-text-primary font-bold text-xl">
+              <Link href="/watchlist" className="text-slate-900 font-bold text-xl">
                 WinForm
               </Link>
             </div>
             <div className="flex items-center space-x-4">
-              <Link href="/watchlist" className="text-text-secondary hover:text-text-primary">
+              <Link href="/watchlist" className="text-slate-600 hover:text-slate-900">
                 Watchlist
               </Link>
-              <Link href="/top-picks" className="text-text-secondary hover:text-text-primary">
+              <Link href="/top-picks" className="text-slate-600 hover:text-slate-900">
                 Top Picks
               </Link>
-              <Link href="/results" className="text-text-secondary hover:text-text-primary">
+              <Link href="/results" className="text-slate-600 hover:text-slate-900">
                 Results
               </Link>
               <button
-                onClick={async () => {
-                  await supabase.auth.signOut()
-                  router.push('/login')
-                }}
-                className="text-text-secondary hover:text-text-primary"
+                onClick={handleLogout}
+                className="text-slate-600 hover:text-slate-900"
               >
                 Logout
               </button>

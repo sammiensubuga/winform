@@ -140,7 +140,7 @@ if (error.message.includes('duplicate key') || error.message.includes('profiles_
                   className={`w-full h-12 bg-white border rounded-xl pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm ${
                     usernameError ? 'border-red-500' : 'border-slate-300'
                   }`}
-                  placeholder="sammie"
+                  placeholder="Enter your username"
                 />
               </div>
               {usernameError && (
