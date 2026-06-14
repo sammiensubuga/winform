@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Mail, Lock, User, Check } from 'lucide-react'
+import { Mail, Lock, User, Check, Eye, EyeOff } from 'lucide-react'
 import Image from 'next/image'
 
 export default function RegisterPage() {
@@ -13,8 +13,17 @@ export default function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [username, setUsername] = useState('')
   const [agreeTerms, setAgreeTerms] = useState(false)
-  const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  
+  // Field-specific errors
+  const [usernameError, setUsernameError] = useState('')
+  const [emailError, setEmailError] = useState('')
+  const [passwordError, setPasswordError] = useState('')
+  const [confirmPasswordError, setConfirmPasswordError] = useState('')
+  const [termsError, setTermsError] = useState('')
+  
   const router = useRouter()
   const supabase = createClient()
 
@@ -26,29 +35,35 @@ export default function RegisterPage() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    setError('')
+    
+    // Clear all errors
+    setUsernameError('')
+    setEmailError('')
+    setPasswordError('')
+    setConfirmPasswordError('')
+    setTermsError('')
 
     // Validate username format
     if (!validateUsername(username)) {
-      setError('Username must start with a letter, 3-20 characters (lowercase letters, numbers, _)')
+      setUsernameError('Username must start with a letter, 3-20 characters (lowercase letters, numbers, _)')
       setLoading(false)
       return
     }
 
     if (password.length < 6) {
-      setError('Password must be at least 6 characters')
+      setPasswordError('Password must be at least 6 characters')
       setLoading(false)
       return
     }
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match')
+      setConfirmPasswordError('Passwords do not match')
       setLoading(false)
       return
     }
 
     if (!agreeTerms) {
-      setError('You must agree to the Terms and Privacy Policy')
+      setTermsError('You must agree to the Terms and Privacy Policy')
       setLoading(false)
       return
     }
@@ -64,7 +79,13 @@ export default function RegisterPage() {
     })
 
     if (error) {
-      setError(error.message)
+      if (error.message.includes('duplicate key value violates unique constraint "profiles_username_key"')) {
+        setUsernameError('Username already taken. Please choose another one.')
+      } else if (error.message.includes('User already registered')) {
+        setEmailError('An account with this email already exists. Please login instead.')
+      } else {
+        setEmailError(error.message)
+      }
       setLoading(false)
       return
     }
@@ -104,12 +125,6 @@ export default function RegisterPage() {
             </h1>
           </div>
 
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 rounded-2xl px-5 py-3 mb-6 text-sm">
-              {error}
-            </div>
-          )}
-
           <form onSubmit={handleRegister} className="space-y-5">
             {/* Username Field */}
             <div>
@@ -123,10 +138,15 @@ export default function RegisterPage() {
                   value={username}
                   onChange={e => setUsername(e.target.value.toLowerCase())}
                   required
-                  className="w-full h-12 bg-white border border-slate-300 rounded-xl pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm"
+                  className={`w-full h-12 bg-white border rounded-xl pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm ${
+                    usernameError ? 'border-red-500' : 'border-slate-300'
+                  }`}
                   placeholder="sammie"
                 />
               </div>
+              {usernameError && (
+                <p className="text-xs text-red-500 mt-1">{usernameError}</p>
+              )}
               <p className="text-xs text-slate-400 mt-1">Lowercase letters, numbers, underscores. 3-20 characters.</p>
             </div>
 
@@ -142,10 +162,15 @@ export default function RegisterPage() {
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   required
-                  className="w-full h-12 bg-white border border-slate-300 rounded-xl pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm"
+                  className={`w-full h-12 bg-white border rounded-xl pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm ${
+                    emailError ? 'border-red-500' : 'border-slate-300'
+                  }`}
                   placeholder="you@example.com"
                 />
               </div>
+              {emailError && (
+                <p className="text-xs text-red-500 mt-1">{emailError}</p>
+              )}
             </div>
 
             {/* Password Field */}
@@ -156,14 +181,26 @@ export default function RegisterPage() {
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   required
-                  className="w-full h-12 bg-white border border-slate-300 rounded-xl pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm"
+                  className={`w-full h-12 bg-white border rounded-xl pl-11 pr-12 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm ${
+                    passwordError ? 'border-red-500' : 'border-slate-300'
+                  }`}
                   placeholder="minimum 6 characters"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
+              {passwordError && (
+                <p className="text-xs text-red-500 mt-1">{passwordError}</p>
+              )}
             </div>
 
             {/* Confirm Password Field */}
@@ -174,41 +211,58 @@ export default function RegisterPage() {
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
-                  type="password"
+                  type={showConfirmPassword ? 'text' : 'password'}
                   value={confirmPassword}
                   onChange={e => setConfirmPassword(e.target.value)}
                   required
-                  className="w-full h-12 bg-white border border-slate-300 rounded-xl pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm"
+                  className={`w-full h-12 bg-white border rounded-xl pl-11 pr-12 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm ${
+                    confirmPasswordError ? 'border-red-500' : 'border-slate-300'
+                  }`}
                   placeholder="confirm your password"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
+              {confirmPasswordError && (
+                <p className="text-xs text-red-500 mt-1">{confirmPasswordError}</p>
+              )}
             </div>
 
             {/* Terms Agreement */}
-            <div className="flex items-center">
-              <button
-                type="button"
-                onClick={() => setAgreeTerms(!agreeTerms)}
-                className="flex items-center gap-2 group"
-              >
-                <div className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-all ${
-                  agreeTerms 
-                    ? 'bg-green-500 border-green-500' 
-                    : 'border-slate-300 bg-white group-hover:border-green-400'
-                }`}>
-                  {agreeTerms && <Check className="w-3 h-3 text-white" />}
-                </div>
-                <span className="text-xs text-slate-600">
-                  I agree to the{' '}
-                  <Link href="/terms" className="text-green-600 hover:text-green-700 transition-colors">
-                    Terms
-                  </Link>{' '}
-                  and{' '}
-                  <Link href="/privacy" className="text-green-600 hover:text-green-700 transition-colors">
-                    Privacy Policy
-                  </Link>
-                </span>
-              </button>
+            <div>
+              <div className="flex items-center">
+                <button
+                  type="button"
+                  onClick={() => setAgreeTerms(!agreeTerms)}
+                  className="flex items-center gap-2 group"
+                >
+                  <div className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-all ${
+                    agreeTerms 
+                      ? 'bg-green-500 border-green-500' 
+                      : 'border-slate-300 bg-white group-hover:border-green-400'
+                  }`}>
+                    {agreeTerms && <Check className="w-3 h-3 text-white" />}
+                  </div>
+                  <span className="text-xs text-slate-600">
+                    I agree to the{' '}
+                    <Link href="/terms" className="text-green-600 hover:text-green-700 transition-colors">
+                      Terms
+                    </Link>{' '}
+                    and{' '}
+                    <Link href="/privacy" className="text-green-600 hover:text-green-700 transition-colors">
+                      Privacy Policy
+                    </Link>
+                  </span>
+                </button>
+              </div>
+              {termsError && (
+                <p className="text-xs text-red-500 mt-1">{termsError}</p>
+              )}
             </div>
 
             {/* Create Account Button */}

@@ -4,22 +4,42 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Mail, Lock, Check } from 'lucide-react'
+import { Mail, Lock, Check, Eye, EyeOff } from 'lucide-react'
 import Image from 'next/image'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [rememberMe, setRememberMe] = useState(false)
-  const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  
+  // Field-specific errors
+  const [emailError, setEmailError] = useState('')
+  const [passwordError, setPasswordError] = useState('')
+  
   const router = useRouter()
   const supabase = createClient()
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    setError('')
+    
+    // Clear errors
+    setEmailError('')
+    setPasswordError('')
+
+    if (!email) {
+      setEmailError('Email is required')
+      setLoading(false)
+      return
+    }
+
+    if (!password) {
+      setPasswordError('Password is required')
+      setLoading(false)
+      return
+    }
 
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -27,7 +47,7 @@ export default function LoginPage() {
     })
 
     if (error) {
-      setError(error.message)
+      setPasswordError('Invalid email or password. Please try again.')
       setLoading(false)
       return
     }
@@ -57,27 +77,21 @@ export default function LoginPage() {
         <span className="text-2xl font-bold text-slate-900 tracking-tight">WinForm</span>
       </div>
 
-      {/* Login Card - Smaller */}
+      {/* Login Card */}
       <div className="min-h-screen flex items-center justify-center px-4 py-20">
         <div className="w-full max-w-md p-3 transition-all duration-300">
           
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-slate-900 tracking-tight mb-2">
-              Sign in to WinForm
+              Sign in
             </h1>
           </div>
-
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 rounded-2xl px-5 py-3 mb-6 text-sm">
-              {error}
-            </div>
-          )}
 
           <form onSubmit={handleEmailLogin} className="space-y-5">
             {/* Email Field */}
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                Email 
+                Email
               </label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -86,10 +100,15 @@ export default function LoginPage() {
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   required
-                  className="w-full h-12 bg-white border border-slate-300 rounded-xl pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm"
+                  className={`w-full h-12 bg-white border rounded-xl pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm ${
+                    emailError ? 'border-red-500' : 'border-slate-300'
+                  }`}
                   placeholder="you@example.com"
                 />
               </div>
+              {emailError && (
+                <p className="text-xs text-red-500 mt-1">{emailError}</p>
+              )}
             </div>
 
             {/* Password Field */}
@@ -108,14 +127,26 @@ export default function LoginPage() {
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   required
-                  className="w-full h-12 bg-white border border-slate-300 rounded-xl pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm"
+                  className={`w-full h-12 bg-white border rounded-xl pl-11 pr-12 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm ${
+                    passwordError ? 'border-red-500' : 'border-slate-300'
+                  }`}
                   placeholder="••••••••"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
+              {passwordError && (
+                <p className="text-xs text-red-500 mt-1">{passwordError}</p>
+              )}
             </div>
 
             {/* Remember Me */}
@@ -140,25 +171,25 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full h-12 bg-gradient-to-r from-[#2CBF2C] to-[#45D13D] text-white text-lg font-semibold rounded-xl hover:translate-y-[-2px] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 shadow-md hover:shadow-lg"
+              className="w-full h-12 bg-gradient-to-r from-green-500 to-green-600 text-white text-lg font-semibold rounded-xl hover:translate-y-[-2px] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 shadow-md hover:shadow-lg"
             >
               {loading ? 'Signing in...' : 'Sign in'}
             </button>
           </form>
 
-        {/* Create Account Link */}
-<div className="text-center mt-6">
-  <p className="text-sm text-slate-600">
-    Don&apos;t have an account?
-  </p>
-  <Link href="/register" className="text-green-600 hover:text-green-700 font-medium transition-colors block mt-1">
-    Create account
-  </Link>
-</div>
+          {/* Create Account Link */}
+          <div className="text-center mt-6">
+            <p className="text-sm text-slate-600">
+              Don&apos;t have an account?
+            </p>
+            <Link href="/register" className="text-green-600 hover:text-green-700 font-medium transition-colors block mt-1">
+              Create account
+            </Link>
+          </div>
         </div>
       </div>
 
-      {/* Footer with working links */}
+      {/* Footer */}
       <div className="absolute bottom-6 left-0 right-0 text-center z-10">
         <p className="text-slate-500 text-xs">
           © WinForm{' '}
