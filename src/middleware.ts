@@ -33,26 +33,28 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // Protected routes — redirect to login if not authenticated
-  const protectedRoutes = ['/watchlist', '/settings']
-  const isProtectedRoute = protectedRoutes.some(route =>
-    request.nextUrl.pathname.startsWith(route)
-  )
+  const path = request.nextUrl.pathname
 
-  if (isProtectedRoute && !user) {
+  // Public routes - always accessible
+  const publicRoutes = ['/', '/login', '/register', '/privacy', '/terms']
+  const isPublicRoute = publicRoutes.includes(path) || path.startsWith('/auth/callback')
+
+  // Protected routes
+  const protectedRoutes = ['/watchlist', '/settings', '/profile']
+  const isProtectedRoute = protectedRoutes.some(route => path.startsWith(route))
+
+  // If logged in and trying to access login/register, redirect to home
+  if (user && (path === '/login' || path === '/register')) {
     const redirectUrl = request.nextUrl.clone()
-    redirectUrl.pathname = '/login'
-    redirectUrl.searchParams.set('redirectTo', request.nextUrl.pathname)
+    redirectUrl.pathname = '/'
     return NextResponse.redirect(redirectUrl)
   }
 
-  // If logged in user tries to access login or register, send them home
-  if (user && (
-    request.nextUrl.pathname.startsWith('/login') ||
-    request.nextUrl.pathname.startsWith('/register')
-  )) {
+  // If not logged in and trying to access protected route, redirect to login
+  if (!user && isProtectedRoute) {
     const redirectUrl = request.nextUrl.clone()
-    redirectUrl.pathname = '/'
+    redirectUrl.pathname = '/login'
+    redirectUrl.searchParams.set('redirectTo', path)
     return NextResponse.redirect(redirectUrl)
   }
 
