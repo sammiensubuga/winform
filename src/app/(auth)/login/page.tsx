@@ -146,15 +146,15 @@ export default function LoginPage() {
             </button>
           </form>
 
-          {/* Create Account Link */}
-          <div className="text-center mt-6">
-            <p className="text-sm text-slate-600">
-              Don&apos;t have an account?{' '}
-              <Link href="/register" className="text-green-600 underline hover:text-green-700 font-medium transition-colors">
-                Create account
-              </Link>
-            </p>
-          </div>
+        {/* Create Account Link */}
+<div className="text-center mt-6">
+  <p className="text-sm text-slate-600">
+    Don&apos;t have an account?
+  </p>
+  <Link href="/register" className="text-green-600 hover:text-green-700 font-medium transition-colors block mt-1">
+    Create account
+  </Link>
+</div>
         </div>
       </div>
 
