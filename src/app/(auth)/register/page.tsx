@@ -98,7 +98,7 @@ export default function RegisterPage() {
                   value={username}
                   onChange={e => setUsername(e.target.value)}
                   required
-                  className="w-full h-12 bg-white border border-slate-300 rounded-xl pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-sm"
+                  className="w-full h-12 bg-white border border-slate-300 rounded-xl pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm"
                   placeholder="sammie"
                 />
               </div>
@@ -116,7 +116,7 @@ export default function RegisterPage() {
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   required
-                  className="w-full h-12 bg-white border border-slate-300 rounded-xl pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-sm"
+                  className="w-full h-12 bg-white border border-slate-300 rounded-xl pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm"
                   placeholder="you@example.com"
                 />
               </div>
@@ -134,7 +134,7 @@ export default function RegisterPage() {
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   required
-                  className="w-full h-12 bg-white border border-slate-300 rounded-xl pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-sm"
+                  className="w-full h-12 bg-white border border-slate-300 rounded-xl pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm"
                   placeholder="minimum 6 characters"
                 />
               </div>
@@ -149,8 +149,8 @@ export default function RegisterPage() {
               >
                 <div className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-all ${
                   rememberMe 
-                    ? 'bg-emerald-400 border-emerald-400' 
-                    : 'border-slate-300 bg-white group-hover:border-emerald-300'
+                    ? 'bg-green-500 border-green-500' 
+                    : 'border-slate-300 bg-white group-hover:border-green-400'
                 }`}>
                   {rememberMe && <Check className="w-3 h-3 text-white" />}
                 </div>
@@ -162,7 +162,7 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full h-12 bg-gradient-to-r from-emerald-400 to-emerald-500 text-white text-lg font-semibold rounded-xl hover:translate-y-[-2px] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 shadow-md hover:shadow-lg"
+              className="w-full h-12 bg-gradient-to-r from-green-500 to-green-600 text-white text-lg font-semibold rounded-xl hover:translate-y-[-2px] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 shadow-md hover:shadow-lg"
             >
               {loading ? 'Creating account...' : 'Create account'}
             </button>
@@ -173,7 +173,7 @@ export default function RegisterPage() {
             <p className="text-sm text-slate-600">
               Already have an account?
             </p>
-            <Link href="/login" className="text-emerald-500 hover:text-emerald-600 font-medium transition-colors block mt-1">
+            <Link href="/login" className="text-green-600 hover:text-green-700 font-medium transition-colors block mt-1">
               Sign in
             </Link>
           </div>
@@ -184,11 +184,11 @@ export default function RegisterPage() {
       <div className="absolute bottom-6 left-0 right-0 text-center z-10">
         <p className="text-slate-500 text-xs">
           © WinForm{' '}
-          <Link href="/privacy" className="text-slate-500 hover:text-emerald-500 transition-colors">
+          <Link href="/privacy" className="text-slate-500 hover:text-green-600 transition-colors">
             Privacy Policy
           </Link>{' '}
           <span className="mx-1">|</span>{' '}
-          <Link href="/terms" className="text-slate-500 hover:text-emerald-500 transition-colors">
+          <Link href="/terms" className="text-slate-500 hover:text-green-600 transition-colors">
             Terms of Service
           </Link>
         </p>
