@@ -140,23 +140,32 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Terms Agreement */}
-            <div className="flex items-center">
-              <button
-                type="button"
-                onClick={() => setRememberMe(!rememberMe)}
-                className="flex items-center gap-2 group"
-              >
-                <div className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-all ${
-                  rememberMe 
-                    ? 'bg-green-500 border-green-500' 
-                    : 'border-slate-300 bg-white group-hover:border-green-400'
-                }`}>
-                  {rememberMe && <Check className="w-3 h-3 text-white" />}
-                </div>
-                <span className="text-xs text-slate-600">I agree to the Terms and Privacy Policy</span>
-              </button>
-            </div>
+    {/* Terms Agreement */}
+<div className="flex items-center">
+  <button
+    type="button"
+    onClick={() => setRememberMe(!rememberMe)}
+    className="flex items-center gap-2 group"
+  >
+    <div className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-all ${
+      rememberMe 
+        ? 'bg-green-500 border-green-500' 
+        : 'border-slate-300 bg-white group-hover:border-green-400'
+    }`}>
+      {rememberMe && <Check className="w-3 h-3 text-white" />}
+    </div>
+    <span className="text-xs text-slate-600">
+      I agree to the{' '}
+      <Link href="/terms" className="text-green-600 hover:text-green-700 transition-colors">
+        Terms
+      </Link>{' '}
+      and{' '}
+      <Link href="/privacy" className="text-green-600 hover:text-green-700 transition-colors">
+        Privacy Policy
+      </Link>
+    </span>
+  </button>
+</div>
 
             {/* Create Account Button */}
             <button
