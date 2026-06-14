@@ -63,7 +63,7 @@ export default function LoginPage() {
           
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-slate-900 tracking-tight mb-2">
-              Sign in
+              Sign in to your account
             </h1>
           </div>
 
@@ -77,7 +77,7 @@ export default function LoginPage() {
             {/* Email Field */}
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                Email or Username
+                Email 
               </label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
