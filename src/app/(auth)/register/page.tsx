@@ -12,7 +12,7 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [username, setUsername] = useState('')
-  const [rememberMe, setRememberMe] = useState(false)
+  const [agreeTerms, setAgreeTerms] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null)
@@ -48,7 +48,6 @@ export default function RegisterPage() {
       }
     }
 
-    // Debounce to avoid too many requests
     const timer = setTimeout(() => {
       if (username) {
         checkUsername()
@@ -90,6 +89,12 @@ export default function RegisterPage() {
 
     if (password !== confirmPassword) {
       setError('Passwords do not match')
+      setLoading(false)
+      return
+    }
+
+    if (!agreeTerms) {
+      setError('You must agree to the Terms and Privacy Policy')
       setLoading(false)
       return
     }
@@ -252,15 +257,15 @@ export default function RegisterPage() {
             <div className="flex items-center">
               <button
                 type="button"
-                onClick={() => setRememberMe(!rememberMe)}
+                onClick={() => setAgreeTerms(!agreeTerms)}
                 className="flex items-center gap-2 group"
               >
                 <div className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-all ${
-                  rememberMe 
+                  agreeTerms 
                     ? 'bg-green-500 border-green-500' 
                     : 'border-slate-300 bg-white group-hover:border-green-400'
                 }`}>
-                  {rememberMe && <Check className="w-3 h-3 text-white" />}
+                  {agreeTerms && <Check className="w-3 h-3 text-white" />}
                 </div>
                 <span className="text-xs text-slate-600">
                   I agree to the{' '}
@@ -275,10 +280,10 @@ export default function RegisterPage() {
               </button>
             </div>
 
-            {/* Create Account Button */}
+            {/* Create Account Button - Always enabled except during loading */}
             <button
               type="submit"
-              disabled={loading || usernameAvailable !== true}
+              disabled={loading}
               className="w-full h-12 bg-gradient-to-r from-green-500 to-green-600 text-white text-lg font-semibold rounded-xl hover:translate-y-[-2px] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 shadow-md hover:shadow-lg"
             >
               {loading ? 'Creating account...' : 'Create account'}
