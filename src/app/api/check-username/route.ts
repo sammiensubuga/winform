@@ -1,5 +1,4 @@
-import { createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
+import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {
@@ -10,28 +9,28 @@ export async function GET(request: Request) {
     return NextResponse.json({ available: true })
   }
 
-  const cookieStore = await cookies()
-
-  const supabase = createServerClient(
+  // Use service role client to bypass RLS
+  const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
     {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll()
-        },
-        setAll() {
-          // Not needed for GET
-        },
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
       },
     }
   )
 
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('profiles')
     .select('username')
     .eq('username', username)
     .maybeSingle()
+
+  if (error) {
+    console.error('Error checking username:', error)
+    return NextResponse.json({ available: true })
+  }
 
   return NextResponse.json({ available: !data })
 }
