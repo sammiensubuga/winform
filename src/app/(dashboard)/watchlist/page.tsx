@@ -1,92 +1,93 @@
-'use client'
+import Link from 'next/link'
 
-import { useEffect, useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
-
-interface WatchlistItem {
-  id: string
-  match_id: string
-  match_title: string
-  match_date: string
-}
-
-export default function WatchlistPage() {
-  const [watchlist, setWatchlist] = useState<WatchlistItem[]>([])
-  const [loading, setLoading] = useState(true)
-  const supabase = createClient()
-
-  const fetchWatchlist = async () => {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) {
-      setLoading(false)
-      return
-    }
-
-    const { data, error } = await supabase
-      .from('watchlists')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('added_at', { ascending: false })
-
-    if (error) {
-      console.error('Error fetching watchlist:', error)
-    } else {
-      setWatchlist(data || [])
-    }
-    setLoading(false)
-  }
-
-  const removeFromWatchlist = async (id: string) => {
-    const { error } = await supabase
-      .from('watchlists')
-      .delete()
-      .eq('id', id)
-
-    if (error) {
-      console.error('Error removing:', error)
-    } else {
-      setWatchlist(watchlist.filter(item => item.id !== id))
-    }
-  }
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchWatchlist()
-  }, [])
-
-  if (loading) {
-    return <div className="text-center text-slate-900">Loading your watchlist...</div>
-  }
-
+export default function Footer() {
   return (
-    <div>
-      <h1 className="text-3xl font-bold text-slate-900 mb-6">My Watchlist</h1>
-      
-      {watchlist.length === 0 ? (
-        <div className="bg-white rounded-lg p-8 text-center border border-slate-200">
-          <p className="text-slate-500">Your watchlist is empty.</p>
-          <p className="text-slate-500 mt-2">Browse matches and add them to track AI predictions.</p>
-        </div>
-      ) : (
-        <div className="grid gap-4">
-          {watchlist.map((item) => (
-            <div key={item.id} className="bg-white rounded-lg p-4 flex justify-between items-center border border-slate-200">
-              <div>
-                <h3 className="text-slate-900 font-semibold">{item.match_title}</h3>
-                <p className="text-slate-500 text-sm">
-                  {new Date(item.match_date).toLocaleDateString()}
-                </p>
+    <footer className="bg-black border-t border-gray-800 mt-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+
+          {/* Brand */}
+          <div className="col-span-1 md:col-span-1">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-green-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">WF</span>
               </div>
-              <button
-                onClick={() => removeFromWatchlist(item.id)}
-                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
-              >
-                Remove
-              </button>
+              <span className="text-lg font-bold text-white">
+                Win<span className="text-green-500">Form</span>
+              </span>
             </div>
-          ))}
+            <p className="text-gray-500 text-sm leading-relaxed">
+              AI-powered football intelligence. Data-driven predictions with transparent tracking.
+            </p>
+          </div>
+
+          {/* Leagues */}
+          <div>
+            <p className="text-white text-sm font-medium mb-4">Leagues</p>
+            <div className="flex flex-col gap-2">
+              {[
+                { label: 'Premier League', href: '/leagues/premier-league' },
+                { label: 'La Liga', href: '/leagues/la-liga' },
+                { label: 'Serie A', href: '/leagues/serie-a' },
+                { label: 'Bundesliga', href: '/leagues/bundesliga' },
+                { label: 'Champions League', href: '/leagues/champions-league' },
+                { label: 'World Cup 2026', href: '/world-cup' },
+              ].map(link => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-gray-500 hover:text-green-500 text-sm transition-colors"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Company */}
+          <div>
+            <p className="text-white text-sm font-medium mb-4">Company</p>
+            <div className="flex flex-col gap-2">
+              <Link href="/about" className="text-gray-500 hover:text-green-500 text-sm transition-colors">
+                About Us
+              </Link>
+              <Link href="/contact" className="text-gray-500 hover:text-green-500 text-sm transition-colors">
+                Contact
+              </Link>
+              <Link href="/blog" className="text-gray-500 hover:text-green-500 text-sm transition-colors">
+                Blog
+              </Link>
+            </div>
+          </div>
+
+          {/* Legal */}
+          <div>
+            <p className="text-white text-sm font-medium mb-4">Legal</p>
+            <div className="flex flex-col gap-2">
+              <Link href="/privacy" className="text-gray-500 hover:text-green-500 text-sm transition-colors">
+                Privacy Policy
+              </Link>
+              <Link href="/terms" className="text-gray-500 hover:text-green-500 text-sm transition-colors">
+                Terms of Service
+              </Link>
+              <Link href="/responsible-gambling" className="text-gray-500 hover:text-green-500 text-sm transition-colors">
+                Responsible Gambling
+              </Link>
+            </div>
+          </div>
+
         </div>
-      )}
-    </div>
+
+        {/* Bottom bar */}
+        <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-gray-600 text-xs">
+            © 2026 WinForm. For entertainment purposes. Please gamble responsibly.
+          </p>
+          <p className="text-gray-600 text-xs">
+            Predictions do not guarantee outcomes.
+          </p>
+        </div>
+      </div>
+    </footer>
   )
 }
