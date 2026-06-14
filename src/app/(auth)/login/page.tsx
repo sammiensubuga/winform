@@ -59,7 +59,7 @@ export default function LoginPage() {
 
       {/* Login Card - Smaller */}
       <div className="min-h-screen flex items-center justify-center px-4 py-20">
-        <div className="w-full max-w-md p-0 transition-all duration-300">
+        <div className="w-full max-w-md p-3 transition-all duration-300">
           
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-slate-900 tracking-tight mb-2">
