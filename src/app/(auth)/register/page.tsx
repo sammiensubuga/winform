@@ -68,16 +68,19 @@ export default function RegisterPage() {
       return
     }
 
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          username: username.toLowerCase(),
-        },
-      },
-    })
+    // Capitalize first letter for email greeting
+const capitalizedName = username.charAt(0).toUpperCase() + username.slice(1)
 
+const { error } = await supabase.auth.signUp({
+  email,
+  password,
+  options: {
+    data: {
+      username: username.toLowerCase(),
+      name: capitalizedName,
+    },
+  },
+})
     if (error) {
      console.log('Full error:', error.message) // Debug
 if (error.message.includes('duplicate key') || error.message.includes('profiles_username_key')) {
