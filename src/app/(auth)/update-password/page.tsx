@@ -23,8 +23,6 @@ export default function UpdatePasswordPage() {
     const checkSession = async () => {
       const { data: { session }, error } = await supabase.auth.getSession()
       
-      console.log('Session check:', { session, error })
-      
       if (error || !session) {
         setError('Invalid or expired reset link. Please request a new password reset.')
         setVerifying(false)
@@ -65,9 +63,10 @@ export default function UpdatePasswordPage() {
       setSuccess(true)
       setLoading(false)
       
+      // Redirect to watchlist after 2 seconds (user is already logged in)
       setTimeout(() => {
-        router.push('/login')
-      }, 3000)
+        router.push('/watchlist')
+      }, 2000)
     }
   }
 
@@ -95,10 +94,10 @@ export default function UpdatePasswordPage() {
               </div>
               <h2 className="text-2xl font-bold text-slate-900 mb-2">Password updated!</h2>
               <p className="text-slate-600 mb-6">
-                Your password has been successfully reset. Redirecting you to login...
+                Your password has been successfully reset. Redirecting you to your watchlist...
               </p>
-              <Link href="/login" className="text-green-600 hover:text-green-700 font-medium">
-                Go to login now
+              <Link href="/watchlist" className="text-green-600 hover:text-green-700 font-medium">
+                Go to watchlist now
               </Link>
             </div>
           </div>
