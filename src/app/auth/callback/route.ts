@@ -6,8 +6,12 @@ import type { NextRequest } from 'next/server'
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url)
   const code = requestUrl.searchParams.get('code')
+  
+  // Get the redirect_to parameter
   const redirectTo = requestUrl.searchParams.get('redirect_to') ?? '/'
-  const next = requestUrl.searchParams.get('next') ?? '/'
+  
+  console.log('Callback received - redirect_to:', redirectTo)
+  console.log('Callback received - code:', code ? 'yes' : 'no')
 
   if (code) {
     const cookieStore = await cookies()
@@ -29,18 +33,16 @@ export async function GET(request: NextRequest) {
       }
     )
 
-    await supabase.auth.exchangeCodeForSession(code)
+    const { error } = await supabase.auth.exchangeCodeForSession(code)
+    console.log('Exchange code error:', error)
   }
 
-  // If redirect_to is set to update-password, send them there
+  // Redirect to the update-password page
   if (redirectTo === '/update-password') {
+    console.log('Redirecting to /update-password')
     return NextResponse.redirect(new URL('/update-password', requestUrl.origin))
   }
 
-  // If next is set, use that
-  if (next !== '/') {
-    return NextResponse.redirect(new URL(next, requestUrl.origin))
-  }
-
+  // Default redirect
   return NextResponse.redirect(new URL('/', requestUrl.origin))
 }

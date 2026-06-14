@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Lock, Eye, EyeOff, CheckCircle } from 'lucide-react'
 import Image from 'next/image'
@@ -17,13 +17,13 @@ export default function UpdatePasswordPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [verifying, setVerifying] = useState(true)
   const router = useRouter()
-  const searchParams = useSearchParams()
   const supabase = createClient()
 
   useEffect(() => {
-    // Verify the user has a valid reset token
-    const verifyToken = async () => {
+    const checkSession = async () => {
       const { data: { session }, error } = await supabase.auth.getSession()
+      
+      console.log('Session check:', { session, error })
       
       if (error || !session) {
         setError('Invalid or expired reset link. Please request a new password reset.')
@@ -34,7 +34,7 @@ export default function UpdatePasswordPage() {
       setVerifying(false)
     }
     
-    verifyToken()
+    checkSession()
   }, [supabase.auth])
 
   const handleUpdatePassword = async (e: React.FormEvent) => {
@@ -107,6 +107,20 @@ export default function UpdatePasswordPage() {
     )
   }
 
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-l from-[#E8F5E9] via-[#F1F8F2] via-50% to-[#F8FAF8]">
+        <div className="bg-white rounded-2xl p-8 text-center max-w-md">
+          <div className="text-red-600 mb-4">⚠️</div>
+          <p className="text-red-600 mb-4">{error}</p>
+          <Link href="/forgot-password" className="text-green-600 hover:text-green-700">
+            Request new reset link
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen relative overflow-hidden bg-gradient-to-l from-[#E8F5E9] via-[#F1F8F2] via-50% to-[#F8FAF8]">
       <div className="absolute top-10 left-10 flex items-center gap-3 z-10">
@@ -126,12 +140,6 @@ export default function UpdatePasswordPage() {
           </div>
 
           <div className="bg-white rounded-2xl p-8 border border-slate-200">
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 mb-6 text-sm">
-                {error}
-              </div>
-            )}
-
             <form onSubmit={handleUpdatePassword} className="space-y-5">
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">
