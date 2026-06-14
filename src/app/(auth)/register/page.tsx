@@ -1,59 +1,118 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Mail, Lock, User, Check } from 'lucide-react'
+import { Mail, Lock, User, Check, AlertCircle } from 'lucide-react'
 import Image from 'next/image'
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [username, setUsername] = useState('')
   const [rememberMe, setRememberMe] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null)
+  const [checkingUsername, setCheckingUsername] = useState(false)
   const router = useRouter()
   const supabase = createClient()
-const handleRegister = async (e: React.FormEvent) => {
-  e.preventDefault()
-  setLoading(true)
-  setError('')
 
-  if (password.length < 6) {
-    setError('Password must be at least 6 characters')
-    setLoading(false)
-    return
+  // Check username availability in real-time
+  useEffect(() => {
+    const checkUsername = async () => {
+      if (username.length < 3) {
+        setUsernameAvailable(null)
+        return
+      }
+
+      setCheckingUsername(true)
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('username')
+        .eq('username', username)
+        .single()
+
+      setCheckingUsername(false)
+
+      if (error && error.code === 'PGRST116') {
+        // No rows returned - username is available
+        setUsernameAvailable(true)
+      } else if (data) {
+        // Username exists
+        setUsernameAvailable(false)
+      } else {
+        setUsernameAvailable(null)
+      }
+    }
+
+    // Debounce to avoid too many requests
+    const timer = setTimeout(() => {
+      if (username) {
+        checkUsername()
+      }
+    }, 500)
+
+    return () => clearTimeout(timer)
+  }, [username, supabase])
+
+  const validateUsername = (value: string) => {
+    const usernameRegex = /^[a-z][a-z0-9_]{2,19}$/
+    return usernameRegex.test(value)
   }
 
-  // Add this check
-  const confirmPassword = (document.getElementById('confirmPassword') as HTMLInputElement).value
-  if (password !== confirmPassword) {
-    setError('Passwords do not match')
-    setLoading(false)
-    return
-  }
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
 
-  const { error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: {
-        username: username.toLowerCase().replace(/\s+/g, '_'),
+    // Validate username format
+    if (!validateUsername(username)) {
+      setError('Username must start with a letter, 3-20 characters (lowercase letters, numbers, _)')
+      setLoading(false)
+      return
+    }
+
+    // Check if username is available
+    if (usernameAvailable !== true) {
+      setError('Username is not available. Please choose another.')
+      setLoading(false)
+      return
+    }
+
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters')
+      setLoading(false)
+      return
+    }
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match')
+      setLoading(false)
+      return
+    }
+
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          username: username.toLowerCase(),
+        },
       },
-    },
-  })
+    })
 
-  if (error) {
-    setError(error.message)
-    setLoading(false)
-    return
+    if (error) {
+      setError(error.message)
+      setLoading(false)
+      return
+    }
+
+    router.push('/')
+    router.refresh()
   }
-
-  router.push('/')
-  router.refresh()
-}
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-gradient-to-l from-[#E8F5E9] via-[#F1F8F2] via-50% to-[#F8FAF8]">
@@ -103,12 +162,36 @@ const handleRegister = async (e: React.FormEvent) => {
                 <input
                   type="text"
                   value={username}
-                  onChange={e => setUsername(e.target.value)}
+                  onChange={e => setUsername(e.target.value.toLowerCase())}
                   required
-                  className="w-full h-12 bg-white border border-slate-300 rounded-xl pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm"
+                  className={`w-full h-12 bg-white border rounded-xl pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm ${
+                    usernameAvailable === false ? 'border-red-500' : 'border-slate-300'
+                  }`}
                   placeholder="sammie"
                 />
+                {checkingUsername && (
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                    <div className="w-4 h-4 border-2 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+                  </div>
+                )}
+                {usernameAvailable === true && username.length >= 3 && (
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                    <Check className="w-4 h-4 text-green-500" />
+                  </div>
+                )}
+                {usernameAvailable === false && (
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                    <AlertCircle className="w-4 h-4 text-red-500" />
+                  </div>
+                )}
               </div>
+              {usernameAvailable === false && (
+                <p className="text-xs text-red-500 mt-1">Username already taken</p>
+              )}
+              {usernameAvailable === true && username.length >= 3 && (
+                <p className="text-xs text-green-500 mt-1">Username available</p>
+              )}
+              <p className="text-xs text-slate-400 mt-1">Lowercase letters, numbers, underscores. 3-20 characters.</p>
             </div>
 
             {/* Email Field */}
@@ -129,79 +212,73 @@ const handleRegister = async (e: React.FormEvent) => {
               </div>
             </div>
 
-         {/* Password Field */}
-<div>
-  <label className="block text-sm font-medium text-slate-700 mb-1.5">
-    Password
-  </label>
-  <div className="relative">
-    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-    <input
-      type="password"
-      value={password}
-      onChange={e => setPassword(e.target.value)}
-      required
-      className="w-full h-12 bg-white border border-slate-300 rounded-xl pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm"
-      placeholder="minimum 6 characters"
-    />
-  </div>
-</div>
+            {/* Password Field */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                  type="password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  required
+                  className="w-full h-12 bg-white border border-slate-300 rounded-xl pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm"
+                  placeholder="minimum 6 characters"
+                />
+              </div>
+            </div>
 
-{/* Confirm Password Field */}
-<div>
-  <label className="block text-sm font-medium text-slate-700 mb-1.5">
-    Confirm Password
-  </label>
-  <div className="relative">
-    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-    <input
-      type="password"
-      id="confirmPassword"
-      onChange={e => {
-        if (e.target.value !== password) {
-          setError('Passwords do not match')
-        } else {
-          setError('')
-        }
-      }}
-      required
-      className="w-full h-12 bg-white border border-slate-300 rounded-xl pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm"
-      placeholder="confirm your password"
-    />
-  </div>
-</div>
+            {/* Confirm Password Field */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                Confirm Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={e => setConfirmPassword(e.target.value)}
+                  required
+                  className="w-full h-12 bg-white border border-slate-300 rounded-xl pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm"
+                  placeholder="confirm your password"
+                />
+              </div>
+            </div>
 
-    {/* Terms Agreement */}
-<div className="flex items-center">
-  <button
-    type="button"
-    onClick={() => setRememberMe(!rememberMe)}
-    className="flex items-center gap-2 group"
-  >
-    <div className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-all ${
-      rememberMe 
-        ? 'bg-green-500 border-green-500' 
-        : 'border-slate-300 bg-white group-hover:border-green-400'
-    }`}>
-      {rememberMe && <Check className="w-3 h-3 text-white" />}
-    </div>
-    <span className="text-xs text-slate-600">
-      I agree to the{' '}
-      <Link href="/terms" className="text-green-600 hover:text-green-700 transition-colors">
-        Terms
-      </Link>{' '}
-      and{' '}
-      <Link href="/privacy" className="text-green-600 hover:text-green-700 transition-colors">
-        Privacy Policy
-      </Link>
-    </span>
-  </button>
-</div>
+            {/* Terms Agreement */}
+            <div className="flex items-center">
+              <button
+                type="button"
+                onClick={() => setRememberMe(!rememberMe)}
+                className="flex items-center gap-2 group"
+              >
+                <div className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-all ${
+                  rememberMe 
+                    ? 'bg-green-500 border-green-500' 
+                    : 'border-slate-300 bg-white group-hover:border-green-400'
+                }`}>
+                  {rememberMe && <Check className="w-3 h-3 text-white" />}
+                </div>
+                <span className="text-xs text-slate-600">
+                  I agree to the{' '}
+                  <Link href="/terms" className="text-green-600 hover:text-green-700 transition-colors">
+                    Terms
+                  </Link>{' '}
+                  and{' '}
+                  <Link href="/privacy" className="text-green-600 hover:text-green-700 transition-colors">
+                    Privacy Policy
+                  </Link>
+                </span>
+              </button>
+            </div>
 
             {/* Create Account Button */}
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || usernameAvailable !== true}
               className="w-full h-12 bg-gradient-to-r from-green-500 to-green-600 text-white text-lg font-semibold rounded-xl hover:translate-y-[-2px] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 shadow-md hover:shadow-lg"
             >
               {loading ? 'Creating account...' : 'Create account'}
