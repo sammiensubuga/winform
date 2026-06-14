@@ -1,10 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Mail, Lock, User, Check, AlertCircle } from 'lucide-react'
+import { Mail, Lock, User, Check } from 'lucide-react'
 import Image from 'next/image'
 
 export default function RegisterPage() {
@@ -15,36 +15,8 @@ export default function RegisterPage() {
   const [agreeTerms, setAgreeTerms] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null)
-  const [checkingUsername, setCheckingUsername] = useState(false)
   const router = useRouter()
   const supabase = createClient()
-
-  // Check username availability in real-time
-useEffect(() => {
-  const checkUsername = async () => {
-    if (username.length < 3) {
-      setUsernameAvailable(null)
-      return
-    }
-
-    setCheckingUsername(true)
-    
-    const response = await fetch(`/api/check-username?username=${encodeURIComponent(username)}`)
-    const result = await response.json()
-
-    setCheckingUsername(false)
-    setUsernameAvailable(result.available)
-  }
-
-  const timer = setTimeout(() => {
-    if (username) {
-      checkUsername()
-    }
-  }, 500)
-
-  return () => clearTimeout(timer)
-}, [username])
 
   const validateUsername = (value: string) => {
     const usernameRegex = /^[a-z][a-z0-9_]{2,19}$/
@@ -59,13 +31,6 @@ useEffect(() => {
     // Validate username format
     if (!validateUsername(username)) {
       setError('Username must start with a letter, 3-20 characters (lowercase letters, numbers, _)')
-      setLoading(false)
-      return
-    }
-
-    // Check if username is available
-    if (usernameAvailable !== true) {
-      setError('Username is not available. Please choose another.')
       setLoading(false)
       return
     }
@@ -158,33 +123,10 @@ useEffect(() => {
                   value={username}
                   onChange={e => setUsername(e.target.value.toLowerCase())}
                   required
-                  className={`w-full h-12 bg-white border rounded-xl pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm ${
-                    usernameAvailable === false ? 'border-red-500' : 'border-slate-300'
-                  }`}
+                  className="w-full h-12 bg-white border border-slate-300 rounded-xl pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm"
                   placeholder="sammie"
                 />
-                {checkingUsername && (
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                    <div className="w-4 h-4 border-2 border-green-500 border-t-transparent rounded-full animate-spin"></div>
-                  </div>
-                )}
-                {usernameAvailable === true && username.length >= 3 && (
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                    <Check className="w-4 h-4 text-green-500" />
-                  </div>
-                )}
-                {usernameAvailable === false && (
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                    <AlertCircle className="w-4 h-4 text-red-500" />
-                  </div>
-                )}
               </div>
-              {usernameAvailable === false && (
-                <p className="text-xs text-red-500 mt-1">Username already taken</p>
-              )}
-              {usernameAvailable === true && username.length >= 3 && (
-                <p className="text-xs text-green-500 mt-1">Username available</p>
-              )}
               <p className="text-xs text-slate-400 mt-1">Lowercase letters, numbers, underscores. 3-20 characters.</p>
             </div>
 
@@ -269,7 +211,7 @@ useEffect(() => {
               </button>
             </div>
 
-            {/* Create Account Button - Always enabled except during loading */}
+            {/* Create Account Button */}
             <button
               type="submit"
               disabled={loading}
@@ -291,7 +233,7 @@ useEffect(() => {
         </div>
       </div>
 
-      {/* Footer with working links */}
+      {/* Footer */}
       <div className="absolute bottom-6 left-0 right-0 text-center z-10">
         <p className="text-slate-500 text-xs">
           © WinForm{' '}
