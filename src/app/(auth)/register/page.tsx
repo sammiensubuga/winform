@@ -89,7 +89,7 @@ if (error.message.includes('duplicate key') || error.message.includes('profiles_
       return
     }
 
-    router.push('/')
+    router.push('/watchlist')
     router.refresh()
   }
 

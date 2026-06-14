@@ -15,13 +15,12 @@ export default function WatchlistPage() {
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
 
-  useEffect(() => {
-    fetchWatchlist()
-  }, [])
-
   const fetchWatchlist = async () => {
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
+    if (!user) {
+      setLoading(false)
+      return
+    }
 
     const { data, error } = await supabase
       .from('watchlists')
@@ -50,32 +49,37 @@ export default function WatchlistPage() {
     }
   }
 
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchWatchlist()
+  }, [])
+
   if (loading) {
-    return <div className="text-center text-text-primary">Loading your watchlist...</div>
+    return <div className="text-center text-slate-900">Loading your watchlist...</div>
   }
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-text-primary mb-6">My Watchlist</h1>
+      <h1 className="text-3xl font-bold text-slate-900 mb-6">My Watchlist</h1>
       
       {watchlist.length === 0 ? (
-        <div className="bg-card rounded-lg p-8 text-center">
-          <p className="text-text-secondary">Your watchlist is empty.</p>
-          <p className="text-text-secondary mt-2">Browse matches and add them to track AI predictions.</p>
+        <div className="bg-white rounded-lg p-8 text-center border border-slate-200">
+          <p className="text-slate-500">Your watchlist is empty.</p>
+          <p className="text-slate-500 mt-2">Browse matches and add them to track AI predictions.</p>
         </div>
       ) : (
         <div className="grid gap-4">
           {watchlist.map((item) => (
-            <div key={item.id} className="bg-card rounded-lg p-4 flex justify-between items-center">
+            <div key={item.id} className="bg-white rounded-lg p-4 flex justify-between items-center border border-slate-200">
               <div>
-                <h3 className="text-text-primary font-semibold">{item.match_title}</h3>
-                <p className="text-text-secondary text-sm">
+                <h3 className="text-slate-900 font-semibold">{item.match_title}</h3>
+                <p className="text-slate-500 text-sm">
                   {new Date(item.match_date).toLocaleDateString()}
                 </p>
               </div>
               <button
                 onClick={() => removeFromWatchlist(item.id)}
-                className="bg-danger text-white px-3 py-1 rounded hover:bg-danger/80 transition"
+                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
               >
                 Remove
               </button>

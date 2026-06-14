@@ -35,7 +35,24 @@ export async function middleware(request: NextRequest) {
 
   const path = request.nextUrl.pathname
 
-  // Allow all pages for now - just for testing
+  // Public routes - always accessible (including login/register for logged-in users)
+  const publicRoutes = ['/', '/login', '/register', '/privacy', '/terms', '/auth/callback']
+  const isPublicRoute = publicRoutes.some(route => path === route || path.startsWith(route))
+
+  // Protected routes - require login
+  const protectedRoutes = ['/watchlist', '/settings', '/profile']
+  const isProtectedRoute = protectedRoutes.some(route => path.startsWith(route))
+
+  // REMOVED: the redirect that sent logged-in users away from login/register
+
+  // If not logged in and trying to access protected route, redirect to login
+  if (!user && isProtectedRoute) {
+    const redirectUrl = request.nextUrl.clone()
+    redirectUrl.pathname = '/login'
+    redirectUrl.searchParams.set('redirectTo', path)
+    return NextResponse.redirect(redirectUrl)
+  }
+
   return supabaseResponse
 }
 
