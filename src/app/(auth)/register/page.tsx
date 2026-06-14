@@ -16,37 +16,44 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const supabase = createClient()
+const handleRegister = async (e: React.FormEvent) => {
+  e.preventDefault()
+  setLoading(true)
+  setError('')
 
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
-
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters')
-      setLoading(false)
-      return
-    }
-
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          username: username.toLowerCase().replace(/\s+/g, '_'),
-        },
-      },
-    })
-
-    if (error) {
-      setError(error.message)
-      setLoading(false)
-      return
-    }
-
-    router.push('/')
-    router.refresh()
+  if (password.length < 6) {
+    setError('Password must be at least 6 characters')
+    setLoading(false)
+    return
   }
+
+  // Add this check
+  const confirmPassword = (document.getElementById('confirmPassword') as HTMLInputElement).value
+  if (password !== confirmPassword) {
+    setError('Passwords do not match')
+    setLoading(false)
+    return
+  }
+
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        username: username.toLowerCase().replace(/\s+/g, '_'),
+      },
+    },
+  })
+
+  if (error) {
+    setError(error.message)
+    setLoading(false)
+    return
+  }
+
+  router.push('/')
+  router.refresh()
+}
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-gradient-to-l from-[#E8F5E9] via-[#F1F8F2] via-50% to-[#F8FAF8]">
@@ -122,23 +129,47 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Password Field */}
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                Password
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                <input
-                  type="password"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  required
-                  className="w-full h-12 bg-white border border-slate-300 rounded-xl pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm"
-                  placeholder="minimum 6 characters"
-                />
-              </div>
-            </div>
+         {/* Password Field */}
+<div>
+  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+    Password
+  </label>
+  <div className="relative">
+    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+    <input
+      type="password"
+      value={password}
+      onChange={e => setPassword(e.target.value)}
+      required
+      className="w-full h-12 bg-white border border-slate-300 rounded-xl pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm"
+      placeholder="minimum 6 characters"
+    />
+  </div>
+</div>
+
+{/* Confirm Password Field */}
+<div>
+  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+    Confirm Password
+  </label>
+  <div className="relative">
+    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+    <input
+      type="password"
+      id="confirmPassword"
+      onChange={e => {
+        if (e.target.value !== password) {
+          setError('Passwords do not match')
+        } else {
+          setError('')
+        }
+      }}
+      required
+      className="w-full h-12 bg-white border border-slate-300 rounded-xl pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm"
+      placeholder="confirm your password"
+    />
+  </div>
+</div>
 
     {/* Terms Agreement */}
 <div className="flex items-center">
