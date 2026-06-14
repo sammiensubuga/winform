@@ -79,7 +79,7 @@ const { error } = await supabase.auth.signUp({
       username: username.toLowerCase(),
       name: capitalizedName,
     },
-  },
+  }
 })
     if (error) {
      console.log('Full error:', error.message) // Debug
