@@ -21,43 +21,30 @@ export default function RegisterPage() {
   const supabase = createClient()
 
   // Check username availability in real-time
-  useEffect(() => {
+useEffect(() => {
   const checkUsername = async () => {
-  if (username.length < 3) {
-    setUsernameAvailable(null)
-    return
+    if (username.length < 3) {
+      setUsernameAvailable(null)
+      return
+    }
+
+    setCheckingUsername(true)
+    
+    const response = await fetch(`/api/check-username?username=${encodeURIComponent(username)}`)
+    const result = await response.json()
+
+    setCheckingUsername(false)
+    setUsernameAvailable(result.available)
   }
 
-  setCheckingUsername(true)
-  
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('username')
-    .eq('username', username)
-    .maybeSingle()
+  const timer = setTimeout(() => {
+    if (username) {
+      checkUsername()
+    }
+  }, 500)
 
-  setCheckingUsername(false)
-
-  console.log('Checking username:', username) // Debug
-  console.log('Data found:', data) // Debug
-
-  if (data) {
-    // Username exists in database
-    setUsernameAvailable(false)
-  } else {
-    // Username is available
-    setUsernameAvailable(true)
-  }
-}
-
-    const timer = setTimeout(() => {
-      if (username) {
-        checkUsername()
-      }
-    }, 500)
-
-    return () => clearTimeout(timer)
-  }, [username, supabase])
+  return () => clearTimeout(timer)
+}, [username])
 
   const validateUsername = (value: string) => {
     const usernameRegex = /^[a-z][a-z0-9_]{2,19}$/
