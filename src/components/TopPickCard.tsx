@@ -195,20 +195,23 @@ export default function TopPickCard({ match }: TopPickCardProps) {
   </div>
 </div>
 
-{/* Probability Row - Bottom line with all three */}
+{/* Probability Row with Headings */}
 <div className="flex items-center justify-between gap-3 mt-2">
-  {/* Home Win Probability */}
-  <div className="flex-1 flex justify-center">
+  {/* Home Win */}
+  <div className="flex-1 flex flex-col items-center gap-1">
+    <span className="text-[10px] text-text-tertiary uppercase tracking-wider">Win</span>
     <CircularProgress percentage={match.homeProbability} color="#22C55E" />
   </div>
   
-  {/* Draw Probability */}
-  <div className="flex justify-center">
+  {/* Draw */}
+  <div className="flex flex-col items-center gap-1">
+    <span className="text-[10px] text-text-tertiary uppercase tracking-wider">Draw</span>
     <CircularProgress percentage={match.drawProbability} color="#F97316" />
   </div>
   
-  {/* Away Win Probability */}
-  <div className="flex-1 flex justify-center">
+  {/* Away Win */}
+  <div className="flex-1 flex flex-col items-center gap-1">
+    <span className="text-[10px] text-text-tertiary uppercase tracking-wider">Win</span>
     <CircularProgress percentage={match.awayProbability} color="#3B82F6" />
   </div>
 </div>
