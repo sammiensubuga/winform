@@ -1,13 +1,14 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import { initPostHog } from '@/lib/posthog'
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'WinForm — Football Intelligence',
-  description: 'AI-powered football match analysis and predictions',
+  title: 'WinForm — AI Football Predictions',
+  description: 'AI-powered football match analysis, confidence scores, and transparent prediction tracking.',
 }
 
 export default function RootLayout({
@@ -17,8 +18,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        {children}
+      <body className={`${inter.className} bg-white text-gray-900 min-h-screen`}>
+        <Header />
+        <main>
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   )
