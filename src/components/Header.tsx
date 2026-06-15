@@ -207,12 +207,18 @@ useEffect(() => {
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
-                  <Link
-                    href="/login"
-                    className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${!scrolled && isHeroPage ? 'text-white/80 hover:text-white' : 'text-text-secondary hover:text-text-primary'}`}
-                  >
-                    Login
-                  </Link>
+
+               <button
+  onClick={() => {
+    const searchInput = document.querySelector('input[type="text"]') as HTMLInputElement;
+    if (searchInput) searchInput.focus();
+  }}
+  className={`p-2 rounded-lg transition-colors ${!scrolled && isHeroPage ? 'text-white/80 hover:text-white hover:bg-white/10' : 'text-text-secondary hover:text-text-primary hover:bg-card'}`}
+>
+  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+  </svg>
+</button>
                 <Link
   href="/register"
   className="px-4 py-1.5 rounded-lg text-sm font-medium bg-accent hover:bg-accent-hover text-white transition-colors"
