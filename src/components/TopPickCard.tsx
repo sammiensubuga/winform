@@ -102,8 +102,8 @@ export default function TopPickCard({ match }: TopPickCardProps) {
     <Link href={`/matches/${match.slug}`}>
       <div className="bg-card border border-border hover:border-accent/50 rounded-xl p-4 transition-all duration-200 cursor-pointer h-full flex flex-col gap-3">
 
-      
-{/* League, Stadium, and Time - One line with centered stadium */}
+
+{/* League, Time, and Stadium - Time centered */}
 <div className="flex items-center justify-between gap-2 mb-1">
   <div className="flex items-center gap-1.5 min-w-0 flex-1">
     <div className="relative w-4 h-4 flex-shrink-0">
@@ -121,11 +121,11 @@ export default function TopPickCard({ match }: TopPickCardProps) {
   </div>
   
   <div className="flex-1 text-center">
-    <span className="text-xs text-text-tertiary">{match.venue || 'Stadium'}</span>
+    <span className="text-xs text-text-secondary">{match.kickoff}</span>
   </div>
   
   <div className="flex-1 text-right">
-    <span className="text-xs text-text-secondary">{match.kickoff}</span>
+    <span className="text-xs text-text-tertiary">{match.venue || 'Stadium'}</span>
   </div>
 </div>
 
