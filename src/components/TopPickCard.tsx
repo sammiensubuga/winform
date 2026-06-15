@@ -13,7 +13,7 @@ interface TopPickCardProps {
     homeTeamLogo: string
     awayTeamLogo: string
     league: string
-    competitionLogo?: string
+    competitionLogo: string
     kickoff: string
     status: string
     topPick: string
@@ -21,9 +21,9 @@ interface TopPickCardProps {
     confidenceTier: 'elite' | 'strong' | 'value'
     odds: number
     previousOdds: number
-    homeProbability?: number
-    drawProbability?: number
-    awayProbability?: number
+    homeProbability: number
+    drawProbability: number
+    awayProbability: number
     homeForm: string
     awayForm: string
     aiPreviewShort: string
@@ -34,26 +34,25 @@ export default function TopPickCard({ match }: TopPickCardProps) {
   const oddsDropped = match.odds < match.previousOdds
   const oddsRaised = match.odds > match.previousOdds
   
-  // Safe form handling
-  const homeFormArray = match.homeForm?.split('') || ['W', 'W', 'W', 'W', 'W']
-  const awayFormArray = match.awayForm?.split('') || ['D', 'W', 'L', 'W', 'W']
+  // Convert form string (e.g., "WWDWW") to array of letters
+  const homeFormArray = match.homeForm.split('')
+  const awayFormArray = match.awayForm.split('')
   
-  // Safe probability values
-  const homeProb = match.homeProbability ?? 0
-  const awayProb = match.awayProbability ?? 0
-  
+  // Get form letter colors
   const getFormColor = (letter: string) => {
     if (letter === 'W') return 'bg-green-500 text-white'
     if (letter === 'L') return 'bg-red-500 text-white'
     return 'bg-gray-500 text-white'
   }
   
+  // Get confidence tier color
   const getConfidenceColor = () => {
     if (match.confidenceTier === 'elite') return 'text-amber-400'
     if (match.confidenceTier === 'strong') return 'text-blue-400'
     return 'text-yellow-400'
   }
   
+  // Get progress bar width
   const progressWidth = `${match.confidence}%`
 
   return (
@@ -63,19 +62,17 @@ export default function TopPickCard({ match }: TopPickCardProps) {
         {/* League and kickoff */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            {match.competitionLogo && (
-              <div className="relative w-5 h-5">
-                <Image
-                  src={match.competitionLogo}
-                  alt={match.league}
-                  fill
-                  className="object-contain"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none'
-                  }}
-                />
-              </div>
-            )}
+            <div className="relative w-5 h-5">
+              <Image
+                src={match.competitionLogo}
+                alt={match.league}
+                fill
+                className="object-contain"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none'
+                }}
+              />
+            </div>
             <span className="text-xs text-text-secondary">{match.league}</span>
           </div>
           <span className="text-xs text-text-secondary">{match.kickoff}</span>
@@ -113,7 +110,7 @@ export default function TopPickCard({ match }: TopPickCardProps) {
             {/* Home Win Probability */}
             <div className="flex items-center justify-center gap-1 mt-3">
               <Circle className="w-4 h-4 text-green-500" />
-              <span className="text-text-primary text-sm font-semibold">{homeProb}%</span>
+              <span className="text-text-primary text-sm font-semibold">{match.homeProbability}%</span>
               <Percent className="w-3 h-3 text-text-tertiary" />
             </div>
           </div>
@@ -151,7 +148,7 @@ export default function TopPickCard({ match }: TopPickCardProps) {
             {/* Away Win Probability */}
             <div className="flex items-center justify-center gap-1 mt-3">
               <Circle className="w-4 h-4 text-red-500" />
-              <span className="text-text-primary text-sm font-semibold">{awayProb}%</span>
+              <span className="text-text-primary text-sm font-semibold">{match.awayProbability}%</span>
               <Percent className="w-3 h-3 text-text-tertiary" />
             </div>
           </div>
@@ -185,15 +182,15 @@ export default function TopPickCard({ match }: TopPickCardProps) {
           </div>
           <div>
             <p className="text-text-tertiary text-xs uppercase tracking-wider mb-1">Odds</p>
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-text-primary font-bold text-sm">{match.odds?.toFixed(2) ?? '0.00'}</span>
-              {oddsDropped && match.previousOdds && (
+            <div className="flex items-center gap-2">
+              <span className="text-text-primary font-bold text-sm">{match.odds.toFixed(2)}</span>
+              {oddsDropped && (
                 <span className="flex items-center gap-0.5 text-green-500 text-xs">
                   <TrendingDown className="w-3 h-3" />
                   was {match.previousOdds.toFixed(2)}
                 </span>
               )}
-              {oddsRaised && match.previousOdds && (
+              {oddsRaised && (
                 <span className="flex items-center gap-0.5 text-red-500 text-xs">
                   <TrendingUp className="w-3 h-3" />
                   was {match.previousOdds.toFixed(2)}
@@ -207,7 +204,7 @@ export default function TopPickCard({ match }: TopPickCardProps) {
         <div>
           <p className="text-text-tertiary text-xs uppercase tracking-wider mb-1">Analysis</p>
           <p className="text-text-secondary text-xs leading-relaxed line-clamp-2">
-            {match.aiPreviewShort || 'No analysis available.'}
+            {match.aiPreviewShort}
           </p>
         </div>
 
