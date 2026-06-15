@@ -39,7 +39,7 @@ export default function Hero() {
       />
 
       {/* Content — positioned in lower third */}
-    <div className={`relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 text-center transition-all duration-700 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+    <div className={`relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-20 text-center transition-all duration-700 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
         <div className="max-w-2xl mx-auto">
 
           {/* Tagline */}
@@ -54,24 +54,24 @@ export default function Hero() {
 </p>
 
           {/* Buttons */}
-          <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-3">
-            <a
-              href="#top-picks"
-              className="inline-flex items-center gap-2 bg-accent hover:bg-accent-hover text-white font-semibold px-7 py-3.5 rounded-xl transition-all duration-200 text-sm shadow-lg shadow-accent/25"
-            >
-              View Today&apos;s Picks
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </a>
+         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+  <a
+    href="#top-picks"
+    className="inline-flex items-center gap-2 bg-accent hover:bg-accent-hover text-white font-semibold px-7 py-3.5 rounded-xl transition-all duration-200 text-sm shadow-lg shadow-accent/25"
+  >
+    View Today&apos;s Picks
+    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+    </svg>
+  </a>
 
-            <Link
-              href="/register"
-              className="inline-flex items-center gap-2 border border-white/25 hover:border-white/50 text-white font-medium px-7 py-3.5 rounded-xl transition-all duration-200 text-sm backdrop-blur-sm"
-            >
-              Get Started Free
-            </Link>
-          </div>
+  <Link
+    href="/register"
+    className="inline-flex items-center gap-2 border border-white/25 hover:border-white/50 text-white font-medium px-7 py-3.5 rounded-xl transition-all duration-200 text-sm backdrop-blur-sm"
+  >
+    Get Started Free
+  </Link>
+</div>
 
           {/* Trust line */}
           <p className="mt-4 text-white/40 text-sm">
