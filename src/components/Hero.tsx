@@ -53,21 +53,22 @@ export default function Hero() {
   Smarter bets start with better data.
 </p>
 
-       {/* Buttons */}
+    {/* Buttons */}
 <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
   <a
     href="#top-picks"
-    className="group inline-flex items-center gap-2 bg-accent hover:bg-accent-hover text-white font-semibold px-7 py-3.5 rounded-xl transition-all duration-300 ease-out text-sm shadow-lg shadow-accent/25 hover:-translate-y-1 hover:shadow-xl"
+    className="group inline-flex items-center gap-2 bg-accent hover:bg-accent-hover text-white font-semibold px-7 py-3.5 rounded-xl transition-all duration-300 text-sm shadow-lg shadow-accent/25 animate-float"
   >
     View Today&apos;s Picks
-    <svg className="w-4 h-4 transition-transform duration-300 ease-out group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
     </svg>
   </a>
 
   <Link
     href="/register"
-    className="inline-flex items-center gap-2 border border-white/25 hover:border-white/50 text-white font-medium px-7 py-3.5 rounded-xl transition-all duration-300 ease-out text-sm backdrop-blur-sm hover:-translate-y-1 hover:shadow-lg"
+    className="inline-flex items-center gap-2 border border-white/25 hover:border-white/50 text-white font-medium px-7 py-3.5 rounded-xl transition-all duration-300 text-sm backdrop-blur-sm animate-float"
+    style={{ animationDelay: '0.5s' }}
   >
     Get Started Free
   </Link>
