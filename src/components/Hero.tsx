@@ -43,16 +43,14 @@ export default function Hero() {
         <div className="max-w-2xl mx-auto">
 
           {/* Tagline */}
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-tight tracking-tight">
-            Data First.
-            <br />
-            <span className="text-accent">Then Bet.</span>
-          </h1>
+       <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight tracking-tight">
+  Data First. <span className="text-accent">Then Bet.</span>
+</h1>
 
           {/* Subtext */}
-          <p className="mt-4 text-lg sm:text-xl text-white/70 font-normal max-w-lg">
-            Smarter bets start with better data.
-          </p>
+       <p className="mt-4 text-lg sm:text-xl text-white/90 font-semibold max-w-lg mx-auto">
+  Smarter bets start with better data.
+</p>
 
           {/* Buttons */}
           <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-3">
