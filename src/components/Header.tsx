@@ -97,24 +97,24 @@ useEffect(() => {
                 <button className={navLinkClass('/leagues')}>
                   Leagues
                 </button>
-                <div className="absolute top-full left-0 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-xl z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                  {leagues.map(league => (
-                    <Link
-                      key={league.slug}
-                      href={`/leagues/${league.slug}`}
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:text-white hover:bg-accent/20 transition-colors"
-                    >
-                      <div className="relative w-5 h-5">
-                        <img src={league.logo} alt={league.name} className="w-full h-full object-contain" />
-                      </div>
-                      {league.name}
-                    </Link>
-                  ))}
-                  <Link href="/world-cup" className="flex items-center gap-3 px-4 py-2.5 text-sm text-warning hover:text-white hover:bg-accent/20 transition-colors border-t border-border">
-                    <Trophy className="w-4 h-4 text-warning" />
-                    World Cup 2026
-                  </Link>
-                </div>
+            <div className="absolute top-full left-0 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-xl z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+  {leagues.map(league => (
+    <Link
+      key={league.slug}
+      href={`/leagues/${league.slug}`}
+      className="flex items-center gap-3 px-4 py-2.5 text-sm text-black hover:text-black hover:bg-gray-100 transition-colors"
+    >
+      <div className="relative w-5 h-5">
+        <img src={league.logo} alt={league.name} className="w-full h-full object-contain" />
+      </div>
+      {league.name}
+    </Link>
+  ))}
+  <Link href="/world-cup" className="flex items-center gap-3 px-4 py-2.5 text-sm text-amber-600 hover:text-amber-700 hover:bg-gray-100 transition-colors border-t border-gray-100">
+    <Trophy className="w-4 h-4 text-amber-600" />
+    World Cup 2026
+  </Link>
+</div>
               </div>
 
               <Link href="/world-cup" className={navLinkClass('/world-cup')}>
