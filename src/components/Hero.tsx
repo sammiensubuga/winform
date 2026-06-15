@@ -12,7 +12,7 @@ export default function Hero() {
 }, [])
 
   return (
-    <section className="relative w-full h-screen min-h-[600px] max-h-[900px] flex items-end overflow-hidden">
+    <section className="relative w-full h-screen min-h-[600px] max-h-[900px] flex items-center justify-center overflow-hidden">
 
    {/* Background image */}
 <div className="absolute inset-0">
@@ -44,7 +44,8 @@ export default function Hero() {
 
           {/* Tagline */}
        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight tracking-tight">
-  Data First. <span className="text-accent">Then Bet.</span>
+  <span className="block sm:inline">Data First.</span>{' '}
+  <span className="text-accent block sm:inline">Then Bet.</span>
 </h1>
 
           {/* Subtext */}
