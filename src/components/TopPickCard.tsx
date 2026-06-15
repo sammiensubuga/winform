@@ -101,11 +101,25 @@ export default function TopPickCard({ match }: TopPickCardProps) {
   return (
     <Link href={`/matches/${match.slug}`}>
       <div className="bg-card border border-border hover:border-accent/50 rounded-xl p-4 transition-all duration-200 cursor-pointer h-full flex flex-col gap-3">
-
-       {/* League, Stadium, and Time - One line */}
+{/* League, Stadium, and Time - One line */}
 <div className="flex items-center justify-between gap-2 mb-1">
-  <span className="text-xs text-text-secondary font-medium truncate">{match.league}</span>
+  <div className="flex items-center gap-1.5 min-w-0">
+    <div className="relative w-4 h-4 flex-shrink-0">
+      <Image
+        src={match.competitionLogo}
+        alt={match.league}
+        fill
+        className="object-contain"
+        onError={(e) => {
+          (e.target as HTMLImageElement).style.display = 'none'
+        }}
+      />
+    </div>
+    <span className="text-xs text-text-secondary font-medium truncate">{match.league}</span>
+  </div>
+  
   <span className="text-xs text-text-tertiary truncate text-center">{match.venue || 'Stadium'}</span>
+  
   <span className="text-xs text-text-secondary flex-shrink-0">{match.kickoff}</span>
 </div>
 
