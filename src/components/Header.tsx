@@ -19,7 +19,6 @@ export default function Header() {
   const pathname = usePathname()
   const router = useRouter()
   const [user, setUser] = useState<User | null>(null)
-  const [searchQuery, setSearchQuery] = useState('')
   const [scrolled, setScrolled] = useState(false)
   const [leaguesOpen, setLeaguesOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -52,14 +51,6 @@ export default function Header() {
     router.push('/')
   }
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (searchQuery.trim()) {
-      router.push(`/search?q=${encodeURIComponent(searchQuery)}`)
-      setSearchQuery('')
-    }
-  }
-
   const navLinkClass = (href: string) => {
     const isActive = pathname === href
     const base = 'px-3 py-2 rounded-lg text-sm font-medium transition'
@@ -86,12 +77,13 @@ export default function Header() {
               </span>
             </Link>
 
-            {/* Desktop nav */}
+            {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-1">
               <Link href="/" className={navLinkClass('/')}>Home</Link>
               <Link href="/top-picks" className={navLinkClass('/top-picks')}>Predictions</Link>
               <Link href="/matches" className={navLinkClass('/matches')}>Live</Link>
               
+              {/* Leagues Dropdown */}
               <div className="relative">
                 <button onClick={() => setLeaguesOpen(!leaguesOpen)} className={navLinkClass('/leagues')}>
                   Leagues ▼
@@ -110,45 +102,43 @@ export default function Header() {
                 )}
               </div>
 
+              <Link href="/world-cup" className={navLinkClass('/world-cup')}>World Cup</Link>
               <Link href="/results" className={navLinkClass('/results')}>Results</Link>
             </nav>
 
-            {/* Desktop Search + Sign Up */}
+            {/* Desktop Right Side - Search + Login + Sign Up */}
             <div className="hidden lg:flex items-center gap-3">
-              <form onSubmit={handleSearch}>
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search..."
-                    className="w-56 bg-gray-900/80 border border-gray-700 rounded-xl px-4 py-2 pl-10 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/20"
-                  />
-                  <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                  </svg>
-                </div>
-              </form>
+              {/* Search Icon */}
+              <button 
+                onClick={() => setIsSearchOpen(true)}
+                className="p-2 rounded-lg text-text-secondary hover:text-text-primary hover:bg-card transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                </svg>
+              </button>
 
               {user ? (
                 <button onClick={handleSignOut} className="text-sm text-text-secondary hover:text-text-primary px-3 py-1.5">
                   Sign Out
                 </button>
               ) : (
-                <Link href="/register" className="px-4 py-1.5 rounded-lg text-sm font-medium bg-accent hover:bg-accent-hover text-white transition" style={{ border: '1px solid #22C55E' }}>
-                  Sign Up
-                </Link>
+                <>
+                  <Link href="/login" className={`text-sm transition ${!scrolled && isHeroPage ? 'text-white/80 hover:text-white' : 'text-text-secondary hover:text-text-primary'}`}>
+                    Login
+                  </Link>
+                  <Link href="/register" className="px-4 py-1.5 rounded-lg text-sm font-medium bg-accent hover:bg-accent-hover text-white transition" style={{ border: '1px solid #22C55E' }}>
+                    Sign Up
+                  </Link>
+                </>
               )}
             </div>
 
             {/* Mobile buttons */}
             <div className="flex items-center gap-2 lg:hidden">
-              <button 
-                onClick={() => setIsSearchOpen(true)}
-                className="p-2 text-text-secondary hover:text-text-primary"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+              <button onClick={() => setIsSearchOpen(true)} className="p-2 text-text-secondary hover:text-text-primary">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                 </svg>
               </button>
 
