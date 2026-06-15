@@ -66,13 +66,13 @@ export default function Hero() {
   </svg>
 </a>
 
-  <Link
-    href="/register"
-    className="inline-flex items-center gap-2 border border-white/25 hover:border-white/50 text-white font-medium px-7 py-3.5 rounded-xl transition-all duration-300 text-sm backdrop-blur-sm animate-float"
-    style={{ animationDelay: '0.5s' }}
-  >
-    Get Started Free
-  </Link>
+<Link
+  href="/register"
+  className="inline-flex items-center gap-2 text-white font-medium px-7 py-3.5 rounded-xl transition-all duration-300 text-sm backdrop-blur-sm animate-float"
+  style={{ border: '1px solid #22C55E' }}
+>
+  Get Started Free
+</Link>
 </div>
 
           {/* Trust line */}
