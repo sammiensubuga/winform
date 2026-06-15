@@ -121,79 +121,85 @@ export default function TopPickCard({ match }: TopPickCardProps) {
         </div>
 
         {/* Teams and Form - Responsive */}
-        <div className="flex items-center justify-between gap-3">
-          {/* Home Team */}
-          <div className="flex-1 text-center">
-            <div className="relative w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2">
-              <Image
-                src={match.homeTeamLogo}
-                alt={match.homeTeam}
-                fill
-                className="object-contain"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = '/placeholder-team.png'
-                }}
-              />
-            </div>
-            <p className="text-text-primary font-semibold text-xs sm:text-sm truncate px-1">{match.homeTeam}</p>
-            
-            {/* Home Form (W/L/D) - Responsive */}
-            <div className="flex justify-center gap-0.5 sm:gap-1 mt-2">
-              {homeFormArray.map((letter, idx) => (
-                <span
-                  key={idx}
-                  className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold ${getFormColor(letter)}`}
-                >
-                  {letter}
-                </span>
-              ))}
-            </div>
-            
-            {/* Home Win Probability - Circular Badge */}
-            <div className="flex justify-center mt-3">
-              <CircularProgress percentage={match.homeProbability} color="#22C55E" />
-            </div>
-          </div>
+      {/* Teams and Form - Responsive */}
+<div className="flex items-center justify-between gap-3">
+  {/* Home Team */}
+  <div className="flex-1 text-center">
+    <div className="relative w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2">
+      <Image
+        src={match.homeTeamLogo}
+        alt={match.homeTeam}
+        fill
+        className="object-contain"
+        onError={(e) => {
+          (e.target as HTMLImageElement).src = '/placeholder-team.png'
+        }}
+      />
+    </div>
+    <p className="text-text-primary font-semibold text-xs sm:text-sm truncate px-1">{match.homeTeam}</p>
+    
+    {/* Home Form (W/L/D) - Responsive */}
+    <div className="flex justify-center gap-0.5 sm:gap-1 mt-2">
+      {homeFormArray.map((letter, idx) => (
+        <span
+          key={idx}
+          className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold ${getFormColor(letter)}`}
+        >
+          {letter}
+        </span>
+      ))}
+    </div>
+  </div>
 
-          {/* VS and Draw Probability */}
-          <div className="flex flex-col items-center gap-2">
-            <span className="text-text-tertiary text-[10px] sm:text-xs font-medium">VS</span>
-            <CircularProgress percentage={match.drawProbability} color="#F97316" />
-          </div>
+  {/* VS */}
+  <div className="text-text-tertiary text-[10px] sm:text-xs font-medium flex-shrink-0">VS</div>
 
-          {/* Away Team */}
-          <div className="flex-1 text-center">
-            <div className="relative w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2">
-              <Image
-                src={match.awayTeamLogo}
-                alt={match.awayTeam}
-                fill
-                className="object-contain"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = '/placeholder-team.png'
-                }}
-              />
-            </div>
-            <p className="text-text-primary font-semibold text-xs sm:text-sm truncate px-1">{match.awayTeam}</p>
-            
-            {/* Away Form (W/L/D) - Responsive */}
-            <div className="flex justify-center gap-0.5 sm:gap-1 mt-2">
-              {awayFormArray.map((letter, idx) => (
-                <span
-                  key={idx}
-                  className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold ${getFormColor(letter)}`}
-                >
-                  {letter}
-                </span>
-              ))}
-            </div>
-            
-            {/* Away Win Probability - Circular Badge */}
-            <div className="flex justify-center mt-3">
-              <CircularProgress percentage={match.awayProbability} color="#3B82F6" />
-            </div>
-          </div>
-        </div>
+  {/* Away Team */}
+  <div className="flex-1 text-center">
+    <div className="relative w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2">
+      <Image
+        src={match.awayTeamLogo}
+        alt={match.awayTeam}
+        fill
+        className="object-contain"
+        onError={(e) => {
+          (e.target as HTMLImageElement).src = '/placeholder-team.png'
+        }}
+      />
+    </div>
+    <p className="text-text-primary font-semibold text-xs sm:text-sm truncate px-1">{match.awayTeam}</p>
+    
+    {/* Away Form (W/L/D) - Responsive */}
+    <div className="flex justify-center gap-0.5 sm:gap-1 mt-2">
+      {awayFormArray.map((letter, idx) => (
+        <span
+          key={idx}
+          className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold ${getFormColor(letter)}`}
+        >
+          {letter}
+        </span>
+      ))}
+    </div>
+  </div>
+</div>
+
+{/* Probability Row - Bottom line with all three */}
+<div className="flex items-center justify-between gap-3 mt-2">
+  {/* Home Win Probability */}
+  <div className="flex-1 flex justify-center">
+    <CircularProgress percentage={match.homeProbability} color="#22C55E" />
+  </div>
+  
+  {/* Draw Probability */}
+  <div className="flex justify-center">
+    <CircularProgress percentage={match.drawProbability} color="#F97316" />
+  </div>
+  
+  {/* Away Win Probability */}
+  <div className="flex-1 flex justify-center">
+    <CircularProgress percentage={match.awayProbability} color="#3B82F6" />
+  </div>
+</div>
 
         {/* Divider */}
         <div className="border-t border-border" />
