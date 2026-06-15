@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { Trophy, Circle, ChevronRight, Percent } from 'lucide-react'
+import { Trophy, ChevronRight, Percent } from 'lucide-react'
 
 interface TopPickCardProps {
   match: {
@@ -82,93 +82,82 @@ export default function TopPickCard({ match }: TopPickCardProps) {
         </div>
 
         {/* Teams and Form - Responsive */}
-<div className="flex items-center justify-between gap-3">
-  {/* Home Team */}
-  <div className="flex-1 text-center">
-    <div className="relative w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2">
-      <Image
-        src={match.homeTeamLogo}
-        alt={match.homeTeam}
-        fill
-        className="object-contain"
-        onError={(e) => {
-          (e.target as HTMLImageElement).src = '/placeholder-team.png'
-        }}
-      />
-    </div>
-    <p className="text-text-primary font-semibold text-xs sm:text-sm truncate px-1">{match.homeTeam}</p>
-    
-    {/* Home Form (W/L/D) - Responsive */}
-    <div className="flex justify-center gap-0.5 sm:gap-1 mt-2">
-      {homeFormArray.map((letter, idx) => (
-        <span
-          key={idx}
-          className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold ${getFormColor(letter)}`}
-        >
-          {letter}
-        </span>
-      ))}
-    </div>
-    
-    {/* Home Win Probability */}
-    <div className="mt-3">
-      <p className="text-text-tertiary text-[10px] sm:text-xs">Win</p>
-      <div className="flex items-center justify-center gap-0.5">
-        <span className="text-text-primary text-xs sm:text-sm font-semibold">{match.homeProbability}%</span>
-        <Percent className="w-2 h-2 sm:w-3 sm:h-3 text-text-tertiary" />
-      </div>
-    </div>
-  </div>
+        <div className="flex items-center justify-between gap-3">
+          {/* Home Team */}
+          <div className="flex-1 text-center">
+            <div className="relative w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2">
+              <Image
+                src={match.homeTeamLogo}
+                alt={match.homeTeam}
+                fill
+                className="object-contain"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = '/placeholder-team.png'
+                }}
+              />
+            </div>
+            <p className="text-text-primary font-semibold text-xs sm:text-sm truncate px-1">{match.homeTeam}</p>
+            
+            {/* Home Form (W/L/D) - Responsive */}
+            <div className="flex justify-center gap-0.5 sm:gap-1 mt-2">
+              {homeFormArray.map((letter, idx) => (
+                <span
+                  key={idx}
+                  className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold ${getFormColor(letter)}`}
+                >
+                  {letter}
+                </span>
+              ))}
+            </div>
+          </div>
 
-  {/* VS and Draw Probability */}
-  <div className="flex flex-col items-center gap-2">
-    <span className="text-text-tertiary text-[10px] sm:text-xs font-medium">VS</span>
-    <div className="text-center">
-      <p className="text-text-tertiary text-[10px] sm:text-xs">Draw</p>
-      <div className="flex items-center justify-center gap-0.5">
-        <span className="text-text-primary font-bold text-sm">{match.drawProbability}%</span>
-        <Percent className="w-2 h-2 sm:w-3 sm:h-3 text-text-tertiary" />
-      </div>
-    </div>
-  </div>
+          {/* VS */}
+          <div className="text-text-tertiary text-[10px] sm:text-xs font-medium flex-shrink-0">VS</div>
 
-  {/* Away Team */}
-  <div className="flex-1 text-center">
-    <div className="relative w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2">
-      <Image
-        src={match.awayTeamLogo}
-        alt={match.awayTeam}
-        fill
-        className="object-contain"
-        onError={(e) => {
-          (e.target as HTMLImageElement).src = '/placeholder-team.png'
-        }}
-      />
-    </div>
-    <p className="text-text-primary font-semibold text-xs sm:text-sm truncate px-1">{match.awayTeam}</p>
-    
-    {/* Away Form (W/L/D) - Responsive */}
-    <div className="flex justify-center gap-0.5 sm:gap-1 mt-2">
-      {awayFormArray.map((letter, idx) => (
-        <span
-          key={idx}
-          className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold ${getFormColor(letter)}`}
-        >
-          {letter}
-        </span>
-      ))}
-    </div>
-    
-    {/* Away Win Probability */}
-    <div className="mt-3">
-      <p className="text-text-tertiary text-[10px] sm:text-xs">Win</p>
-      <div className="flex items-center justify-center gap-0.5">
-        <span className="text-text-primary text-xs sm:text-sm font-semibold">{match.awayProbability}%</span>
-        <Percent className="w-2 h-2 sm:w-3 sm:h-3 text-text-tertiary" />
-      </div>
-    </div>
-  </div>
-</div>
+          {/* Away Team */}
+          <div className="flex-1 text-center">
+            <div className="relative w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2">
+              <Image
+                src={match.awayTeamLogo}
+                alt={match.awayTeam}
+                fill
+                className="object-contain"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = '/placeholder-team.png'
+                }}
+              />
+            </div>
+            <p className="text-text-primary font-semibold text-xs sm:text-sm truncate px-1">{match.awayTeam}</p>
+            
+            {/* Away Form (W/L/D) - Responsive */}
+            <div className="flex justify-center gap-0.5 sm:gap-1 mt-2">
+              {awayFormArray.map((letter, idx) => (
+                <span
+                  key={idx}
+                  className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold ${getFormColor(letter)}`}
+                >
+                  {letter}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Probability Row - One line with color circles - Green/Orange/Blue */}
+        <div className="flex items-center justify-center gap-4 mt-1">
+          <div className="flex items-center gap-1">
+            <div className="w-2 h-2 rounded-full bg-green-500"></div>
+            <span className="text-text-primary text-xs font-semibold">{match.homeProbability}%</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-2 h-2 rounded-full bg-orange-500"></div>
+            <span className="text-text-primary text-xs font-semibold">{match.drawProbability}%</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+            <span className="text-text-primary text-xs font-semibold">{match.awayProbability}%</span>
+          </div>
+        </div>
 
         {/* Divider */}
         <div className="border-t border-border" />
