@@ -29,25 +29,27 @@ export default function HomePage() {
       {/* Page content starts here */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-      {/* Yesterday's Results Bar */}
-<div className="border-b border-border py-3 flex items-center justify-between">
-  <div className="flex items-center gap-3 text-sm flex-wrap">
-    <span className="text-text-secondary">Yesterday:</span>
-    <span className="text-success font-semibold tabular flex items-center gap-1">
-      <CheckCircle className="w-4 h-4 text-success" />
-      {mockYesterdayStats.wins} wins
-    </span>
-    <span className="text-text-tertiary">·</span>
-    <span className="text-danger font-semibold tabular flex items-center gap-1">
-      <XCircle className="w-4 h-4 text-danger" />
-      {mockYesterdayStats.losses} losses
-    </span>
-    <span className="text-text-tertiary">·</span>
-    <span className="text-text-primary font-bold tabular">{mockYesterdayStats.accuracy}% accuracy</span>
+    {/* Yesterday's Results Bar */}
+<div className="border-b border-border py-3">
+  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+    <div className="flex items-center gap-3 text-sm flex-wrap">
+      <span className="text-text-secondary">Yesterday:</span>
+      <span className="text-success font-semibold tabular flex items-center gap-1">
+        <CheckCircle className="w-4 h-4 text-success" />
+        {mockYesterdayStats.wins} wins
+      </span>
+      <span className="text-text-tertiary hidden sm:inline">·</span>
+      <span className="text-danger font-semibold tabular flex items-center gap-1">
+        <XCircle className="w-4 h-4 text-danger" />
+        {mockYesterdayStats.losses} losses
+      </span>
+      <span className="text-text-tertiary hidden sm:inline">·</span>
+      <span className="text-text-primary font-bold tabular">{mockYesterdayStats.accuracy}% accuracy</span>
+    </div>
+    <Link href="/results" className="text-accent text-xs hover:underline">
+      See all results →
+    </Link>
   </div>
-  <Link href="/results" className="text-accent text-xs hover:underline flex-shrink-0">
-    See all results →
-  </Link>
 </div>
 
         {/* Today's Top Picks */}
