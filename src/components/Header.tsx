@@ -97,7 +97,7 @@ useEffect(() => {
                 <button className={navLinkClass('/leagues')}>
                   Leagues
                 </button>
-                <div className="absolute top-full left-0 mt-2 w-56 bg-[#1E2A3A] border border-border rounded-xl shadow-xl z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                <div className="absolute top-full left-0 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-xl z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                   {leagues.map(league => (
                     <Link
                       key={league.slug}
