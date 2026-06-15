@@ -55,9 +55,9 @@ export default function Hero() {
 
     {/* Buttons */}
 <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
- <a
+<a
   href="#top-picks"
-  className="group inline-flex items-center gap-2 bg-accent hover:bg-accent-hover text-white font-semibold px-7 py-3.5 rounded-xl transition-all duration-300 text-sm shadow-lg shadow-accent/25 animate-float border-2 border-amber-400"
+  className="group inline-flex items-center gap-2 bg-accent hover:bg-accent-hover text-white font-semibold px-7 py-3.5 rounded-xl transition-all duration-300 text-sm shadow-lg shadow-accent/25 animate-float border-2 border-[#FFD700]"
 >
   View Today&apos;s Picks
   <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
