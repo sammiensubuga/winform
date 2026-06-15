@@ -213,12 +213,13 @@ useEffect(() => {
                   >
                     Login
                   </Link>
-                  <Link
-                    href="/register"
-                    className="px-4 py-1.5 rounded-lg text-sm font-medium bg-accent hover:bg-accent-hover text-white transition-colors"
-                  >
-                    Sign Up
-                  </Link>
+                <Link
+  href="/register"
+  className="px-4 py-1.5 rounded-lg text-sm font-medium bg-accent hover:bg-accent-hover text-white transition-colors"
+  style={{ border: '1px solid #22C55E', boxShadow: '0 0 8px rgba(34, 197, 94, 0.3)' }}
+>
+  Sign Up
+</Link>
                 </div>
               )}
 

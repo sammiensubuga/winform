@@ -68,10 +68,10 @@ export default function Hero() {
 
 <Link
   href="/register"
-  className="px-4 py-1.5 rounded-lg text-sm font-medium bg-accent hover:bg-accent-hover text-white transition-colors"
-  style={{ border: '1px solid #22C55E', boxShadow: '0 0 8px rgba(34, 197, 94, 0.3)' }}
+  className="inline-flex items-center gap-2 text-white font-medium px-7 py-3.5 rounded-xl transition-all duration-300 text-sm backdrop-blur-sm animate-float"
+  style={{ border: '1px solid #22C55E' }}
 >
-  Sign Up
+  Get Started Free
 </Link>
 </div>
 
