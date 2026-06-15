@@ -34,35 +34,31 @@ export default function TopPickCard({ match }: TopPickCardProps) {
   const oddsDropped = match.odds < match.previousOdds
   const oddsRaised = match.odds > match.previousOdds
   
-  // Convert form string (e.g., "WWDWW") to array of letters
   const homeFormArray = match.homeForm.split('')
   const awayFormArray = match.awayForm.split('')
   
-  // Get form letter colors
-const getFormColor = (letter: string) => {
-  if (letter === 'W') return 'bg-green-500 text-white'
-  if (letter === 'L') return 'bg-red-500 text-white'
-  return 'bg-gray-400 text-white'
-}
+  const getFormColor = (letter: string) => {
+    if (letter === 'W') return 'bg-green-500 text-white'
+    if (letter === 'L') return 'bg-red-500 text-white'
+    return 'bg-gray-500 text-white'
+  }
   
-  // Get confidence tier color
   const getConfidenceColor = () => {
     if (match.confidenceTier === 'elite') return 'text-amber-400'
     if (match.confidenceTier === 'strong') return 'text-blue-400'
     return 'text-yellow-400'
   }
   
-  // Get progress bar width
   const progressWidth = `${match.confidence}%`
 
   return (
     <Link href={`/matches/${match.slug}`}>
-      <div className="bg-white border border-gray-200 hover:border-accent/50 rounded-xl p-5 transition-all duration-200 cursor-pointer h-full flex flex-col gap-4 shadow-sm">
+      <div className="bg-card border border-border hover:border-accent/50 rounded-xl p-4 transition-all duration-200 cursor-pointer h-full flex flex-col gap-3">
 
         {/* League and kickoff */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="relative w-5 h-5">
+          <div className="flex items-center gap-1.5">
+            <div className="relative w-4 h-4">
               <Image
                 src={match.competitionLogo}
                 alt={match.league}
@@ -73,16 +69,16 @@ const getFormColor = (letter: string) => {
                 }}
               />
             </div>
-            <span className="text-xs text-text-secondary">{match.league}</span>
+            <span className="text-xs text-text-secondary truncate max-w-[120px]">{match.league}</span>
           </div>
           <span className="text-xs text-text-secondary">{match.kickoff}</span>
         </div>
 
-        {/* Teams and Form */}
-        <div className="flex items-center justify-between gap-4">
+        {/* Teams - Mobile responsive */}
+        <div className="flex items-center justify-between gap-2">
           {/* Home Team */}
           <div className="flex-1 text-center">
-            <div className="relative w-12 h-12 mx-auto mb-2">
+            <div className="relative w-10 h-10 mx-auto mb-1.5">
               <Image
                 src={match.homeTeamLogo}
                 alt={match.homeTeam}
@@ -93,14 +89,14 @@ const getFormColor = (letter: string) => {
                 }}
               />
             </div>
-            <p className="text-text-primary font-semibold text-sm">{match.homeTeam}</p>
+            <p className="text-text-primary font-semibold text-xs truncate max-w-[80px] mx-auto">{match.homeTeam}</p>
             
-            {/* Home Form (W/L/D) */}
-            <div className="flex justify-center gap-1 mt-2">
+            {/* Home Form - smaller on mobile */}
+            <div className="flex justify-center gap-0.5 mt-1.5">
               {homeFormArray.map((letter, idx) => (
                 <span
                   key={idx}
-                  className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${getFormColor(letter)}`}
+                  className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${getFormColor(letter)}`}
                 >
                   {letter}
                 </span>
@@ -108,19 +104,18 @@ const getFormColor = (letter: string) => {
             </div>
             
             {/* Home Win Probability */}
-            <div className="flex items-center justify-center gap-1 mt-3">
-              <Circle className="w-4 h-4 text-green-500" />
-              <span className="text-text-primary text-sm font-semibold">{match.homeProbability}%</span>
-              <Percent className="w-3 h-3 text-text-tertiary" />
+            <div className="flex items-center justify-center gap-0.5 mt-1.5">
+              <Circle className="w-3 h-3 text-green-500" />
+              <span className="text-text-primary text-xs font-semibold">{match.homeProbability}%</span>
             </div>
           </div>
 
           {/* VS */}
-          <div className="text-text-tertiary text-xs font-medium">VS</div>
+          <div className="text-text-tertiary text-xs font-medium px-1">VS</div>
 
           {/* Away Team */}
           <div className="flex-1 text-center">
-            <div className="relative w-12 h-12 mx-auto mb-2">
+            <div className="relative w-10 h-10 mx-auto mb-1.5">
               <Image
                 src={match.awayTeamLogo}
                 alt={match.awayTeam}
@@ -131,14 +126,14 @@ const getFormColor = (letter: string) => {
                 }}
               />
             </div>
-            <p className="text-text-primary font-semibold text-sm">{match.awayTeam}</p>
+            <p className="text-text-primary font-semibold text-xs truncate max-w-[80px] mx-auto">{match.awayTeam}</p>
             
-            {/* Away Form (W/L/D) */}
-            <div className="flex justify-center gap-1 mt-2">
+            {/* Away Form - smaller on mobile */}
+            <div className="flex justify-center gap-0.5 mt-1.5">
               {awayFormArray.map((letter, idx) => (
                 <span
                   key={idx}
-                  className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${getFormColor(letter)}`}
+                  className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${getFormColor(letter)}`}
                 >
                   {letter}
                 </span>
@@ -146,10 +141,9 @@ const getFormColor = (letter: string) => {
             </div>
             
             {/* Away Win Probability */}
-            <div className="flex items-center justify-center gap-1 mt-3">
-              <Circle className="w-4 h-4 text-red-500" />
-              <span className="text-text-primary text-sm font-semibold">{match.awayProbability}%</span>
-              <Percent className="w-3 h-3 text-text-tertiary" />
+            <div className="flex items-center justify-center gap-0.5 mt-1.5">
+              <Circle className="w-3 h-3 text-red-500" />
+              <span className="text-text-primary text-xs font-semibold">{match.awayProbability}%</span>
             </div>
           </div>
         </div>
@@ -161,55 +155,55 @@ const getFormColor = (letter: string) => {
         <div>
           <div className="flex items-center justify-between mb-1">
             <span className="text-text-secondary text-xs">Confidence</span>
-            <span className={`text-sm font-bold ${getConfidenceColor()}`}>{match.confidence}%</span>
+            <span className={`text-xs font-bold ${getConfidenceColor()}`}>{match.confidence}%</span>
           </div>
-         <div className="w-full bg-gray-200 rounded-full h-1.5">
+          <div className="w-full bg-gray-700 rounded-full h-1">
             <div
-              className={`rounded-full h-1.5 ${match.confidenceTier === 'elite' ? 'bg-amber-400' : match.confidenceTier === 'strong' ? 'bg-blue-400' : 'bg-yellow-400'}`}
+              className={`rounded-full h-1 ${match.confidenceTier === 'elite' ? 'bg-amber-400' : match.confidenceTier === 'strong' ? 'bg-blue-400' : 'bg-yellow-400'}`}
               style={{ width: progressWidth }}
             />
           </div>
         </div>
 
-        {/* Top Pick and Odds - Side by Side */}
-        <div className="grid grid-cols-2 gap-4">
+        {/* Top Pick and Odds - Responsive grid */}
+        <div className="grid grid-cols-2 gap-3">
           <div>
-            <p className="text-text-tertiary text-xs uppercase tracking-wider mb-1">Top Pick</p>
+            <p className="text-text-tertiary text-xs uppercase tracking-wider mb-0.5">Top Pick</p>
             <div className="flex items-center gap-1">
-              <Trophy className="w-4 h-4 text-amber-400" />
-              <p className="text-text-primary font-semibold text-sm">{match.topPick}</p>
+              <Trophy className="w-3.5 h-3.5 text-amber-400" />
+              <p className="text-text-primary font-semibold text-xs">{match.topPick}</p>
             </div>
           </div>
           <div>
-            <p className="text-text-tertiary text-xs uppercase tracking-wider mb-1">Odds</p>
-            <div className="flex items-center gap-2">
+            <p className="text-text-tertiary text-xs uppercase tracking-wider mb-0.5">Odds</p>
+            <div className="flex flex-wrap items-center gap-1">
               <span className="text-text-primary font-bold text-sm">{match.odds.toFixed(2)}</span>
               {oddsDropped && (
                 <span className="flex items-center gap-0.5 text-green-500 text-xs">
                   <TrendingDown className="w-3 h-3" />
-                  was {match.previousOdds.toFixed(2)}
+                  <span className="hidden sm:inline">was {match.previousOdds.toFixed(2)}</span>
                 </span>
               )}
               {oddsRaised && (
                 <span className="flex items-center gap-0.5 text-red-500 text-xs">
                   <TrendingUp className="w-3 h-3" />
-                  was {match.previousOdds.toFixed(2)}
+                  <span className="hidden sm:inline">was {match.previousOdds.toFixed(2)}</span>
                 </span>
               )}
             </div>
           </div>
         </div>
 
-        {/* Analysis Section with Heading */}
+        {/* Analysis Section */}
         <div>
-          <p className="text-text-tertiary text-xs uppercase tracking-wider mb-1">Analysis</p>
+          <p className="text-text-tertiary text-xs uppercase tracking-wider mb-0.5">Analysis</p>
           <p className="text-text-secondary text-xs leading-relaxed line-clamp-2">
             {match.aiPreviewShort}
           </p>
         </div>
 
         {/* View Full Analysis Button */}
-        <div className="mt-auto pt-2">
+        <div className="mt-auto pt-1">
           <div className="flex items-center justify-between text-accent text-xs font-medium hover:underline">
             <span>View full analysis</span>
             <ChevronRight className="w-3 h-3" />
