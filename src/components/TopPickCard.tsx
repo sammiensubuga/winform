@@ -39,11 +39,11 @@ export default function TopPickCard({ match }: TopPickCardProps) {
   const awayFormArray = match.awayForm.split('')
   
   // Get form letter colors
-  const getFormColor = (letter: string) => {
-    if (letter === 'W') return 'bg-green-500 text-white'
-    if (letter === 'L') return 'bg-red-500 text-white'
-    return 'bg-gray-500 text-white'
-  }
+const getFormColor = (letter: string) => {
+  if (letter === 'W') return 'bg-green-500 text-white'
+  if (letter === 'L') return 'bg-red-500 text-white'
+  return 'bg-gray-400 text-white'
+}
   
   // Get confidence tier color
   const getConfidenceColor = () => {
@@ -57,7 +57,7 @@ export default function TopPickCard({ match }: TopPickCardProps) {
 
   return (
     <Link href={`/matches/${match.slug}`}>
-      <div className="bg-card border border-border hover:border-accent/50 rounded-xl p-5 transition-all duration-200 cursor-pointer h-full flex flex-col gap-4">
+      <div className="bg-white border border-gray-200 hover:border-accent/50 rounded-xl p-5 transition-all duration-200 cursor-pointer h-full flex flex-col gap-4 shadow-sm">
 
         {/* League and kickoff */}
         <div className="flex items-center justify-between">
@@ -163,7 +163,7 @@ export default function TopPickCard({ match }: TopPickCardProps) {
             <span className="text-text-secondary text-xs">Confidence</span>
             <span className={`text-sm font-bold ${getConfidenceColor()}`}>{match.confidence}%</span>
           </div>
-          <div className="w-full bg-gray-700 rounded-full h-1.5">
+         <div className="w-full bg-gray-200 rounded-full h-1.5">
             <div
               className={`rounded-full h-1.5 ${match.confidenceTier === 'elite' ? 'bg-amber-400' : match.confidenceTier === 'strong' ? 'bg-blue-400' : 'bg-yellow-400'}`}
               style={{ width: progressWidth }}
