@@ -164,32 +164,30 @@ useEffect(() => {
   </div>
 
   {/* Mobile menu */}
-  {mobileMenuOpen && (
-    <div className="lg:hidden py-4 border-t border-border space-y-3">
-      <form onSubmit={handleSearch} className="px-3">
-        <div className="relative">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search teams, leagues..."
-            className="w-full bg-gray-900/80 border border-gray-700 rounded-xl px-4 py-2.5 pl-10 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/20"
-          />
-          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-          </svg>
-        </div>
-      </form>
-      <div className="space-y-1">
-        <Link href="/" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 text-text-secondary">Home</Link>
-        <Link href="/top-picks" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 text-text-secondary">Predictions</Link>
-        <Link href="/matches" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 text-text-secondary">Live</Link>
-        <Link href="/world-cup" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 text-text-secondary">World Cup</Link>
-        <Link href="/results" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 text-text-secondary">Results</Link>
-      </div>
-    </div>
-  )}
+{mobileMenuOpen && (
+  <div className="lg:hidden py-4 border-t border-border space-y-1">
+    <Link href="/" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 text-text-secondary">Home</Link>
+    <Link href="/top-picks" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 text-text-secondary">Predictions</Link>
+    <Link href="/matches" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 text-text-secondary">Live</Link>
+    <Link href="/world-cup" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 text-text-secondary">World Cup</Link>
+    <Link href="/results" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 text-text-secondary">Results</Link>
+  </div>
+)}
 </div>
+{/* Mobile search icon */}
+<button 
+  onClick={() => {
+    const searchValue = prompt('Search teams, leagues, matches...');
+    if (searchValue && searchValue.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchValue)}`);
+    }
+  }}
+  className="lg:hidden p-2 text-text-secondary hover:text-text-primary"
+>
+  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+  </svg>
+</button>
     </header>
   )
 }
