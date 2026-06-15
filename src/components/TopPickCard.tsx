@@ -103,7 +103,7 @@ export default function TopPickCard({ match }: TopPickCardProps) {
     <Link href={`/matches/${match.slug}`}>
       <div className="bg-card border border-border hover:border-accent/50 rounded-xl p-4 transition-all duration-200 cursor-pointer h-full flex flex-col gap-3">
 
-      {/* League, Time, and Stadium with Bookmark Icon */}
+{/* League, Time, and Stadium with Bookmark Icon */}
 <div className="flex items-center justify-between gap-2 mb-1">
   <div className="flex items-center gap-1.5 min-w-0 flex-1">
     <div className="relative w-4 h-4 shrink-0">
@@ -124,11 +124,11 @@ export default function TopPickCard({ match }: TopPickCardProps) {
     <span className="text-xs text-text-secondary">{match.kickoff}</span>
   </div>
   
-  <div className="flex-1 text-right flex items-center justify-end gap-2">
-    <span className="text-xs text-text-tertiary">{match.venue || 'Stadium'}</span>
+  <div className="flex-1 flex items-center justify-end gap-1.5">
+    <span className="text-xs text-text-tertiary truncate">{match.venue || 'Stadium'}</span>
     {/* Bookmark Icon - Static, no functionality */}
     <svg 
-      className="w-4 h-4 text-text-secondary shrink-0" 
+      className="w-3.5 h-3.5 text-text-secondary shrink-0" 
       fill="none" 
       stroke="currentColor" 
       viewBox="0 0 24 24" 
