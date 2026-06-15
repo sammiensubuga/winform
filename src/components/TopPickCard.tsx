@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { Trophy, ChevronRight, Percent } from 'lucide-react'
+import { Trophy, ChevronRight } from 'lucide-react'
 
 interface TopPickCardProps {
   match: {
@@ -28,6 +28,45 @@ interface TopPickCardProps {
     awayForm: string
     aiPreviewShort: string
   }
+}
+
+// Circular Progress Badge Component
+const CircularProgress = ({ percentage, color }: { percentage: number; color: string }) => {
+  const radius = 20
+  const circumference = 2 * Math.PI * radius
+  const offset = circumference - (percentage / 100) * circumference
+  
+  return (
+    <div className="relative inline-flex items-center justify-center">
+      <svg className="w-12 h-12 sm:w-14 sm:h-14 transform -rotate-90">
+        {/* Background circle */}
+        <circle
+          cx="50%"
+          cy="50%"
+          r={radius}
+          stroke="#334155"
+          strokeWidth="3"
+          fill="none"
+        />
+        {/* Progress circle */}
+        <circle
+          cx="50%"
+          cy="50%"
+          r={radius}
+          stroke={color}
+          strokeWidth="3"
+          fill="none"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          strokeLinecap="round"
+          className="transition-all duration-500"
+        />
+      </svg>
+      <span className="absolute text-text-primary text-xs sm:text-sm font-bold">
+        {percentage}%
+      </span>
+    </div>
+  )
 }
 
 export default function TopPickCard({ match }: TopPickCardProps) {
@@ -109,10 +148,18 @@ export default function TopPickCard({ match }: TopPickCardProps) {
                 </span>
               ))}
             </div>
+            
+            {/* Home Win Probability - Circular Badge */}
+            <div className="flex justify-center mt-3">
+              <CircularProgress percentage={match.homeProbability} color="#22C55E" />
+            </div>
           </div>
 
-          {/* VS */}
-          <div className="text-text-tertiary text-[10px] sm:text-xs font-medium flex-shrink-0">VS</div>
+          {/* VS and Draw Probability */}
+          <div className="flex flex-col items-center gap-2">
+            <span className="text-text-tertiary text-[10px] sm:text-xs font-medium">VS</span>
+            <CircularProgress percentage={match.drawProbability} color="#F97316" />
+          </div>
 
           {/* Away Team */}
           <div className="flex-1 text-center">
@@ -140,22 +187,11 @@ export default function TopPickCard({ match }: TopPickCardProps) {
                 </span>
               ))}
             </div>
-          </div>
-        </div>
-
-        {/* Probability Row - One line with color circles - Green/Orange/Blue */}
-        <div className="flex items-center justify-center gap-4 mt-1">
-          <div className="flex items-center gap-1">
-            <div className="w-2 h-2 rounded-full bg-green-500"></div>
-            <span className="text-text-primary text-xs font-semibold">{match.homeProbability}%</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <div className="w-2 h-2 rounded-full bg-orange-500"></div>
-            <span className="text-text-primary text-xs font-semibold">{match.drawProbability}%</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-            <span className="text-text-primary text-xs font-semibold">{match.awayProbability}%</span>
+            
+            {/* Away Win Probability - Circular Badge */}
+            <div className="flex justify-center mt-3">
+              <CircularProgress percentage={match.awayProbability} color="#3B82F6" />
+            </div>
           </div>
         </div>
 
