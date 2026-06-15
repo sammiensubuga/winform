@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { Trophy, ChevronRight } from 'lucide-react'
+import { Trophy, ChevronRight, Star, Zap, Target } from 'lucide-react'
 
 interface TopPickCardProps {
   match: {
@@ -82,13 +82,13 @@ export default function TopPickCard({ match }: TopPickCardProps) {
     if (letter === 'L') return 'bg-red-500 text-white'
     return 'bg-gray-500 text-white'
   }
-  
-  // Get confidence tier color
-  const getConfidenceColor = () => {
-    if (match.confidenceTier === 'elite') return 'text-amber-400'
-    if (match.confidenceTier === 'strong') return 'text-blue-400'
-    return 'text-yellow-400'
-  }
+// Get confidence tier color
+const getConfidenceColor = () => {
+  if (match.confidenceTier === 'elite') return 'text-amber-400'
+  if (match.confidenceTier === 'strong') return 'text-green-500'
+  if (match.confidenceTier === 'value') return 'text-blue-500'
+  return 'text-yellow-400'
+}
   
   // Get progress bar color
   const getProgressColor = () => {
@@ -240,19 +240,24 @@ export default function TopPickCard({ match }: TopPickCardProps) {
           </div>
         </div>
 
-        {/* Confidence Section */}
-        <div>
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-text-secondary text-xs">Confidence</span>
-            <span className={`text-sm font-bold ${getConfidenceColor()}`}>{match.confidence}%</span>
-          </div>
-          <div className="w-full bg-gray-700 rounded-full h-1.5">
-            <div
-              className={`rounded-full h-1.5 ${getProgressColor()}`}
-              style={{ width: progressWidth }}
-            />
-          </div>
-        </div>
+      {/* Confidence Section */}
+<div>
+  <div className="flex items-center justify-between mb-1">
+    <div className="flex items-center gap-1.5">
+      {match.confidenceTier === 'elite' && <Star className="w-3.5 h-3.5 text-amber-400" />}
+      {match.confidenceTier === 'strong' && <Zap className="w-3.5 h-3.5 text-green-500" />}
+      {match.confidenceTier === 'value' && <Target className="w-3.5 h-3.5 text-blue-500" />}
+      <span className="text-text-secondary text-xs">Confidence</span>
+    </div>
+    <span className={`text-sm font-bold ${getConfidenceColor()}`}>{match.confidence}%</span>
+  </div>
+  <div className="w-full bg-gray-700 rounded-full h-1.5">
+    <div
+      className={`rounded-full h-1.5 ${getProgressColor()}`}
+      style={{ width: progressWidth }}
+    />
+  </div>
+</div>
 
         {/* Analysis Section */}
         <div>
