@@ -39,9 +39,8 @@ export default function Hero() {
       />
 
       {/* Content — positioned in lower third */}
-      <div className={`relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 transition-all duration-700 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-
-        <div className="max-w-2xl">
+    <div className={`relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 text-center transition-all duration-700 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        <div className="max-w-2xl mx-auto">
 
           {/* Tagline */}
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-tight tracking-tight">
