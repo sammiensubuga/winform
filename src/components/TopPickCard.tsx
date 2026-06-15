@@ -103,31 +103,45 @@ export default function TopPickCard({ match }: TopPickCardProps) {
     <Link href={`/matches/${match.slug}`}>
       <div className="bg-card border border-border hover:border-accent/50 rounded-xl p-4 transition-all duration-200 cursor-pointer h-full flex flex-col gap-3">
 
-        {/* League, Time, and Stadium */}
-        <div className="flex items-center justify-between gap-2 mb-1">
-          <div className="flex items-center gap-1.5 min-w-0 flex-1">
-            <div className="relative w-4 h-4 shrink-0">
-              <Image
-                src={match.competitionLogo}
-                alt={match.league}
-                fill
-                className="object-contain"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = 'none'
-                }}
-              />
-            </div>
-            <span className="text-xs text-text-secondary font-medium truncate">{match.league}</span>
-          </div>
-          
-          <div className="flex-1 text-center">
-            <span className="text-xs text-text-secondary">{match.kickoff}</span>
-          </div>
-          
-          <div className="flex-1 text-right">
-            <span className="text-xs text-text-tertiary">{match.venue || 'Stadium'}</span>
-          </div>
-        </div>
+      {/* League, Time, and Stadium with Bookmark Icon */}
+<div className="flex items-center justify-between gap-2 mb-1">
+  <div className="flex items-center gap-1.5 min-w-0 flex-1">
+    <div className="relative w-4 h-4 shrink-0">
+      <Image
+        src={match.competitionLogo}
+        alt={match.league}
+        fill
+        className="object-contain"
+        onError={(e) => {
+          (e.target as HTMLImageElement).style.display = 'none'
+        }}
+      />
+    </div>
+    <span className="text-xs text-text-secondary font-medium truncate">{match.league}</span>
+  </div>
+  
+  <div className="flex-1 text-center">
+    <span className="text-xs text-text-secondary">{match.kickoff}</span>
+  </div>
+  
+  <div className="flex-1 text-right flex items-center justify-end gap-2">
+    <span className="text-xs text-text-tertiary">{match.venue || 'Stadium'}</span>
+    {/* Bookmark Icon - Static, no functionality */}
+    <svg 
+      className="w-4 h-4 text-text-secondary shrink-0" 
+      fill="none" 
+      stroke="currentColor" 
+      viewBox="0 0 24 24" 
+      strokeWidth={1.5}
+    >
+      <path 
+        strokeLinecap="round" 
+        strokeLinejoin="round" 
+        d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" 
+      />
+    </svg>
+  </div>
+</div>
 
         {/* Divider line */}
         <div className="border-t border-border" />
