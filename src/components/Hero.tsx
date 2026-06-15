@@ -14,11 +14,14 @@ export default function Hero() {
   return (
     <section className="relative w-full h-screen min-h-[600px] max-h-[900px] flex items-end overflow-hidden">
 
-      {/* Background image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/hero-stadium.jpg')" }}
-      />
+   {/* Background image */}
+<div className="absolute inset-0">
+  <img 
+    src="/hero-stadium.jpg" 
+    alt="Football stadium"
+    className="w-full h-full object-cover"
+  />
+</div>
 
       {/* Gradient overlay */}
       <div
