@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import ConfidenceBadge from './ConfidenceBadge'
+import { Trophy, TrendingUp, TrendingDown, Circle, ChevronRight, Percent } from 'lucide-react'
 
 interface TopPickCardProps {
   match: {
@@ -13,6 +13,7 @@ interface TopPickCardProps {
     homeTeamLogo: string
     awayTeamLogo: string
     league: string
+    competitionLogo?: string
     kickoff: string
     status: string
     topPick: string
@@ -20,29 +21,71 @@ interface TopPickCardProps {
     confidenceTier: 'elite' | 'strong' | 'value'
     odds: number
     previousOdds: number
-    aiPreviewShort?: string
+    homeProbability?: number
+    drawProbability?: number
+    awayProbability?: number
+    homeForm: string
+    awayForm: string
+    aiPreviewShort: string
   }
 }
 
 export default function TopPickCard({ match }: TopPickCardProps) {
   const oddsDropped = match.odds < match.previousOdds
   const oddsRaised = match.odds > match.previousOdds
-  const oddsChanged = oddsDropped || oddsRaised
+  
+  // Safe form handling
+  const homeFormArray = match.homeForm?.split('') || ['W', 'W', 'W', 'W', 'W']
+  const awayFormArray = match.awayForm?.split('') || ['D', 'W', 'L', 'W', 'W']
+  
+  // Safe probability values
+  const homeProb = match.homeProbability ?? 0
+  const awayProb = match.awayProbability ?? 0
+  
+  const getFormColor = (letter: string) => {
+    if (letter === 'W') return 'bg-green-500 text-white'
+    if (letter === 'L') return 'bg-red-500 text-white'
+    return 'bg-gray-500 text-white'
+  }
+  
+  const getConfidenceColor = () => {
+    if (match.confidenceTier === 'elite') return 'text-amber-400'
+    if (match.confidenceTier === 'strong') return 'text-blue-400'
+    return 'text-yellow-400'
+  }
+  
+  const progressWidth = `${match.confidence}%`
 
   return (
     <Link href={`/matches/${match.slug}`}>
-      <div className="bg-white border border-gray-200 rounded-xl p-5 hover:border-green-500/50 transition-all duration-200 cursor-pointer h-full flex flex-col gap-4">
+      <div className="bg-card border border-border hover:border-accent/50 rounded-xl p-5 transition-all duration-200 cursor-pointer h-full flex flex-col gap-4">
 
         {/* League and kickoff */}
         <div className="flex items-center justify-between">
-          <span className="text-xs text-gray-500">{match.league}</span>
-          <span className="text-xs text-gray-500">{match.kickoff}</span>
+          <div className="flex items-center gap-2">
+            {match.competitionLogo && (
+              <div className="relative w-5 h-5">
+                <Image
+                  src={match.competitionLogo}
+                  alt={match.league}
+                  fill
+                  className="object-contain"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = 'none'
+                  }}
+                />
+              </div>
+            )}
+            <span className="text-xs text-text-secondary">{match.league}</span>
+          </div>
+          <span className="text-xs text-text-secondary">{match.kickoff}</span>
         </div>
 
-        {/* Teams */}
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex flex-col items-center gap-1.5 flex-1">
-            <div className="relative w-10 h-10">
+        {/* Teams and Form */}
+        <div className="flex items-center justify-between gap-4">
+          {/* Home Team */}
+          <div className="flex-1 text-center">
+            <div className="relative w-12 h-12 mx-auto mb-2">
               <Image
                 src={match.homeTeamLogo}
                 alt={match.homeTeam}
@@ -53,17 +96,34 @@ export default function TopPickCard({ match }: TopPickCardProps) {
                 }}
               />
             </div>
-            <span className="text-xs text-gray-800 font-medium text-center leading-tight">
-              {match.homeTeam}
-            </span>
+            <p className="text-text-primary font-semibold text-sm">{match.homeTeam}</p>
+            
+            {/* Home Form (W/L/D) */}
+            <div className="flex justify-center gap-1 mt-2">
+              {homeFormArray.map((letter, idx) => (
+                <span
+                  key={idx}
+                  className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${getFormColor(letter)}`}
+                >
+                  {letter}
+                </span>
+              ))}
+            </div>
+            
+            {/* Home Win Probability */}
+            <div className="flex items-center justify-center gap-1 mt-3">
+              <Circle className="w-4 h-4 text-green-500" />
+              <span className="text-text-primary text-sm font-semibold">{homeProb}%</span>
+              <Percent className="w-3 h-3 text-text-tertiary" />
+            </div>
           </div>
 
-          <div className="flex flex-col items-center gap-1">
-            <span className="text-gray-400 text-xs font-medium">VS</span>
-          </div>
+          {/* VS */}
+          <div className="text-text-tertiary text-xs font-medium">VS</div>
 
-          <div className="flex flex-col items-center gap-1.5 flex-1">
-            <div className="relative w-10 h-10">
+          {/* Away Team */}
+          <div className="flex-1 text-center">
+            <div className="relative w-12 h-12 mx-auto mb-2">
               <Image
                 src={match.awayTeamLogo}
                 alt={match.awayTeam}
@@ -74,47 +134,89 @@ export default function TopPickCard({ match }: TopPickCardProps) {
                 }}
               />
             </div>
-            <span className="text-xs text-gray-800 font-medium text-center leading-tight">
-              {match.awayTeam}
-            </span>
+            <p className="text-text-primary font-semibold text-sm">{match.awayTeam}</p>
+            
+            {/* Away Form (W/L/D) */}
+            <div className="flex justify-center gap-1 mt-2">
+              {awayFormArray.map((letter, idx) => (
+                <span
+                  key={idx}
+                  className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${getFormColor(letter)}`}
+                >
+                  {letter}
+                </span>
+              ))}
+            </div>
+            
+            {/* Away Win Probability */}
+            <div className="flex items-center justify-center gap-1 mt-3">
+              <Circle className="w-4 h-4 text-red-500" />
+              <span className="text-text-primary text-sm font-semibold">{awayProb}%</span>
+              <Percent className="w-3 h-3 text-text-tertiary" />
+            </div>
           </div>
         </div>
 
         {/* Divider */}
-        <div className="border-t border-gray-100" />
+        <div className="border-t border-border" />
 
-        {/* Top Pick */}
-        <div className="flex flex-col gap-2">
-          <ConfidenceBadge tier={match.confidenceTier} confidence={match.confidence} />
-
-          <p className="text-gray-800 font-semibold text-base">
-            {match.topPick}
-          </p>
-
-          <div className="flex items-center gap-2">
-            <span className="text-gray-500 text-sm">
-              Odds {match.odds.toFixed(2)}
-            </span>
-            {oddsChanged && (
-              <span className={`text-xs ${oddsDropped ? 'text-green-600' : 'text-red-600'}`}>
-                {oddsDropped ? '↓' : '↑'} was {match.previousOdds.toFixed(2)}
-              </span>
-            )}
+        {/* Confidence Section */}
+        <div>
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-text-secondary text-xs">Confidence</span>
+            <span className={`text-sm font-bold ${getConfidenceColor()}`}>{match.confidence}%</span>
+          </div>
+          <div className="w-full bg-gray-700 rounded-full h-1.5">
+            <div
+              className={`rounded-full h-1.5 ${match.confidenceTier === 'elite' ? 'bg-amber-400' : match.confidenceTier === 'strong' ? 'bg-blue-400' : 'bg-yellow-400'}`}
+              style={{ width: progressWidth }}
+            />
           </div>
         </div>
 
-        {/* AI Preview */}
-        {match.aiPreviewShort && (
-          <p className="text-gray-500 text-xs leading-relaxed line-clamp-2">
-            {match.aiPreviewShort}
-          </p>
-        )}
+        {/* Top Pick and Odds - Side by Side */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <p className="text-text-tertiary text-xs uppercase tracking-wider mb-1">Top Pick</p>
+            <div className="flex items-center gap-1">
+              <Trophy className="w-4 h-4 text-amber-400" />
+              <p className="text-text-primary font-semibold text-sm">{match.topPick}</p>
+            </div>
+          </div>
+          <div>
+            <p className="text-text-tertiary text-xs uppercase tracking-wider mb-1">Odds</p>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-text-primary font-bold text-sm">{match.odds?.toFixed(2) ?? '0.00'}</span>
+              {oddsDropped && match.previousOdds && (
+                <span className="flex items-center gap-0.5 text-green-500 text-xs">
+                  <TrendingDown className="w-3 h-3" />
+                  was {match.previousOdds.toFixed(2)}
+                </span>
+              )}
+              {oddsRaised && match.previousOdds && (
+                <span className="flex items-center gap-0.5 text-red-500 text-xs">
+                  <TrendingUp className="w-3 h-3" />
+                  was {match.previousOdds.toFixed(2)}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
 
-        {/* CTA */}
+        {/* Analysis Section with Heading */}
+        <div>
+          <p className="text-text-tertiary text-xs uppercase tracking-wider mb-1">Analysis</p>
+          <p className="text-text-secondary text-xs leading-relaxed line-clamp-2">
+            {match.aiPreviewShort || 'No analysis available.'}
+          </p>
+        </div>
+
+        {/* View Full Analysis Button */}
         <div className="mt-auto pt-2">
-          <span className="text-green-600 text-xs font-medium hover:underline">
-            View full analysis →
-          </span>
+          <div className="flex items-center justify-between text-accent text-xs font-medium hover:underline">
+            <span>View full analysis</span>
+            <ChevronRight className="w-3 h-3" />
+          </div>
         </div>
 
       </div>
