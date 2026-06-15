@@ -33,13 +33,13 @@ export default function HomePage() {
 <div className="border-b border-border py-4">
   <div className="text-center">
     <p className="text-text-secondary text-xs uppercase tracking-wider mb-3">Yesterday</p>
-    <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
-      <span className="text-success font-semibold tabular flex items-center gap-1.5">
-        <CheckCircle className="w-4 h-4 text-success" />
+    <div className="flex flex-wrap items-center justify-center gap-3 text-xs sm:text-sm whitespace-nowrap">
+      <span className="text-success font-semibold tabular flex items-center gap-1">
+        <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-success" />
         {mockYesterdayStats.wins} wins
       </span>
-      <span className="text-danger font-semibold tabular flex items-center gap-1.5">
-        <XCircle className="w-4 h-4 text-danger" />
+      <span className="text-danger font-semibold tabular flex items-center gap-1">
+        <XCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-danger" />
         {mockYesterdayStats.losses} losses
       </span>
       <span className="text-text-primary font-bold tabular">
