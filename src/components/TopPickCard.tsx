@@ -14,11 +14,12 @@ interface TopPickCardProps {
     awayTeamLogo: string
     league: string
     competitionLogo: string
+    venue?: string
     kickoff: string
     status: string
     topPick: string
     confidence: number
-    confidenceTier: 'elite' | 'strong' | 'value'
+    confidenceTier: string
     odds: number
     previousOdds: number
     homeProbability: number
@@ -101,26 +102,17 @@ export default function TopPickCard({ match }: TopPickCardProps) {
     <Link href={`/matches/${match.slug}`}>
       <div className="bg-card border border-border hover:border-accent/50 rounded-xl p-4 transition-all duration-200 cursor-pointer h-full flex flex-col gap-3">
 
-        {/* League and kickoff */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 min-w-0">
-            <div className="relative w-5 h-5 flex-shrink-0">
-              <Image
-                src={match.competitionLogo}
-                alt={match.league}
-                fill
-                className="object-contain"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = 'none'
-                }}
-              />
-            </div>
-            <span className="text-xs text-text-secondary truncate">{match.league}</span>
-          </div>
-          <span className="text-xs text-text-secondary flex-shrink-0">{match.kickoff}</span>
-        </div>
+       {/* League, Stadium, and Time - One line */}
+<div className="flex items-center justify-between gap-2 mb-1">
+  <span className="text-xs text-text-secondary font-medium truncate">{match.league}</span>
+  <span className="text-xs text-text-tertiary truncate text-center">{match.venue || 'Stadium'}</span>
+  <span className="text-xs text-text-secondary flex-shrink-0">{match.kickoff}</span>
+</div>
 
-        {/* Teams and Form - Responsive */}
+{/* Divider line */}
+<div className="border-t border-border" />
+
+      
       {/* Teams and Form - Responsive */}
 <div className="flex items-center justify-between gap-3">
   {/* Home Team */}
