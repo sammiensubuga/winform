@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Hero from '@/components/Hero'
 import TopPickCard from '@/components/TopPickCard'
 import LiveMatchBanner from '@/components/LiveMatchBanner'
+import { CheckCircle, XCircle } from 'lucide-react'
 import ConfidenceBadge from '@/components/ConfidenceBadge'
 import {
   mockTopPicks,
@@ -28,21 +29,17 @@ export default function HomePage() {
       {/* Page content starts here */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-       {/* Yesterday's Results Bar */}
+      {/* Yesterday's Results Bar */}
 <div className="border-b border-border py-3 flex items-center justify-between">
   <div className="flex items-center gap-3 text-sm flex-wrap">
     <span className="text-text-secondary">Yesterday:</span>
     <span className="text-success font-semibold tabular flex items-center gap-1">
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-      </svg>
+      <CheckCircle className="w-4 h-4 text-success" />
       {mockYesterdayStats.wins} wins
     </span>
     <span className="text-text-tertiary">·</span>
     <span className="text-danger font-semibold tabular flex items-center gap-1">
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-      </svg>
+      <XCircle className="w-4 h-4 text-danger" />
       {mockYesterdayStats.losses} losses
     </span>
     <span className="text-text-tertiary">·</span>
