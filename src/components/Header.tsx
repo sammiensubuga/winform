@@ -19,6 +19,7 @@ export default function Header() {
   const pathname = usePathname()
   const router = useRouter()
   const [user, setUser] = useState<User | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
   const [scrolled, setScrolled] = useState(false)
   const [leaguesOpen, setLeaguesOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
@@ -35,16 +36,16 @@ export default function Header() {
     return () => subscription.unsubscribe()
   }, [])
 
-useEffect(() => {
-  if (!isHeroPage) {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setScrolled(true)
-    return
-  }
-  const handleScroll = () => setScrolled(window.scrollY > 80)
-  window.addEventListener('scroll', handleScroll, { passive: true })
-  return () => window.removeEventListener('scroll', handleScroll)
-}, [isHeroPage])
+  useEffect(() => {
+    if (!isHeroPage) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setScrolled(true)
+      return
+    }
+    const handleScroll = () => setScrolled(window.scrollY > 80)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [isHeroPage])
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -65,6 +66,14 @@ useEffect(() => {
     router.refresh()
   }
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery)}`)
+      setSearchQuery('')
+    }
+  }
+
   const navLinkClass = (href: string) => {
     const isActive = pathname === href
     const base = 'px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200'
@@ -83,13 +92,13 @@ useEffect(() => {
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${headerBg}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-{/* Logo */}
-<Link href="/" className="flex items-center gap-2 flex-shrink-0">
-  <img src="/logo.png" alt="WinForm Logo" className="w-8 h-8 object-contain" />
-  <span className={`text-xl font-bold transition-colors duration-300 hidden sm:inline ${logoTextClass}`}>
-    Win<span className="text-accent">Form</span>
-  </span>
-</Link>
+
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-2 flex-shrink-0">
+              <span className={`text-xl font-bold transition-colors duration-300 ${logoTextClass}`}>
+                Win<span className="text-accent">Form</span>
+              </span>
+            </Link>
 
             {/* Desktop nav */}
             <nav className="hidden md:flex items-center gap-1">
@@ -143,6 +152,30 @@ useEffect(() => {
               </Link>
               <Link href="/results" className={navLinkClass('/results')}>Results</Link>
             </nav>
+
+            {/* Premium Search Bar - Desktop */}
+            <div className="hidden lg:block flex-1 max-w-md mx-4">
+              <form onSubmit={handleSearch} className="w-full">
+                <div className="relative group">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search teams, leagues, matches..."
+                    className="w-full bg-gray-900/80 backdrop-blur-sm border border-gray-700 rounded-xl px-5 py-2.5 pl-11 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all duration-300 group-hover:border-gray-500"
+                  />
+                  <svg
+                    className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-green-500 transition-colors duration-300"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                  </svg>
+                </div>
+              </form>
+            </div>
 
             {/* Right side */}
             <div className="flex items-center gap-2">
@@ -207,25 +240,26 @@ useEffect(() => {
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
+                  {/* Search icon on mobile */}
+                  <button
+                    onClick={() => {
+                      const searchInput = document.querySelector('input[type="text"]') as HTMLInputElement;
+                      if (searchInput) searchInput.focus();
+                    }}
+                    className={`lg:hidden p-2 rounded-lg transition-colors ${!scrolled && isHeroPage ? 'text-white/80 hover:text-white hover:bg-white/10' : 'text-text-secondary hover:text-text-primary hover:bg-card'}`}
+                  >
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                    </svg>
+                  </button>
 
-               <button
-  onClick={() => {
-    const searchInput = document.querySelector('input[type="text"]') as HTMLInputElement;
-    if (searchInput) searchInput.focus();
-  }}
-  className={`p-2 rounded-lg transition-colors ${!scrolled && isHeroPage ? 'text-white/80 hover:text-white hover:bg-white/10' : 'text-text-secondary hover:text-text-primary hover:bg-card'}`}
->
-  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-  </svg>
-</button>
-                <Link
-  href="/register"
-  className="px-4 py-1.5 rounded-lg text-sm font-medium bg-accent hover:bg-accent-hover text-white transition-colors"
-  style={{ border: '1px solid #22C55E', boxShadow: '0 0 8px rgba(34, 197, 94, 0.3)' }}
->
-  Sign Up
-</Link>
+                  <Link
+                    href="/register"
+                    className="px-4 py-1.5 rounded-lg text-sm font-medium bg-accent hover:bg-accent-hover text-white transition-colors"
+                    style={{ border: '1px solid #22C55E', boxShadow: '0 0 8px rgba(34, 197, 94, 0.3)' }}
+                  >
+                    Sign Up
+                  </Link>
                 </div>
               )}
 
@@ -278,6 +312,18 @@ useEffect(() => {
                 </Link>
               ))}
             </div>
+            {!user && (
+              <>
+                <div className="border-t border-border my-2" />
+                <Link
+                  href="/register"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="px-3 py-2.5 rounded-lg text-center bg-accent hover:bg-accent-hover text-white text-sm font-medium transition-colors"
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
           </div>
         )}
       </header>
