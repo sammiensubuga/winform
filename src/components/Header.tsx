@@ -111,7 +111,7 @@ useEffect(() => {
           </nav>
 
           {/* Search Bar */}
-          <div className="hidden lg:block flex-1 max-w-md mx-4">
+          <div className="hidden lg:block w-64 mx-4">
             <form onSubmit={handleSearch}>
               <div className="relative">
                 <input
