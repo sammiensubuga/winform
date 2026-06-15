@@ -16,6 +16,7 @@ interface TopPickCardProps {
     competitionLogo: string
     venue?: string
     kickoff: string
+    matchDate: string
     status: string
     topPick: string
     confidence: number
@@ -102,135 +103,130 @@ export default function TopPickCard({ match }: TopPickCardProps) {
     <Link href={`/matches/${match.slug}`}>
       <div className="bg-card border border-border hover:border-accent/50 rounded-xl p-4 transition-all duration-200 cursor-pointer h-full flex flex-col gap-3">
 
+        {/* League, Time, and Stadium */}
+        <div className="flex items-center justify-between gap-2 mb-1">
+          <div className="flex items-center gap-1.5 min-w-0 flex-1">
+            <div className="relative w-4 h-4 shrink-0">
+              <Image
+                src={match.competitionLogo}
+                alt={match.league}
+                fill
+                className="object-contain"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none'
+                }}
+              />
+            </div>
+            <span className="text-xs text-text-secondary font-medium truncate">{match.league}</span>
+          </div>
+          
+          <div className="flex-1 text-center">
+            <span className="text-xs text-text-secondary">{match.kickoff}</span>
+          </div>
+          
+          <div className="flex-1 text-right">
+            <span className="text-xs text-text-tertiary">{match.venue || 'Stadium'}</span>
+          </div>
+        </div>
 
-{/* League, Time, and Stadium - Time centered */}
-<div className="flex items-center justify-between gap-2 mb-1">
-  <div className="flex items-center gap-1.5 min-w-0 flex-1">
-    <div className="relative w-4 h-4 flex-shrink-0">
-      <Image
-        src={match.competitionLogo}
-        alt={match.league}
-        fill
-        className="object-contain"
-        onError={(e) => {
-          (e.target as HTMLImageElement).style.display = 'none'
-        }}
-      />
-    </div>
-    <span className="text-xs text-text-secondary font-medium truncate">{match.league}</span>
-  </div>
-  
-  <div className="flex-1 text-center">
-    <span className="text-xs text-text-secondary">{match.kickoff}</span>
-  </div>
-  
-  <div className="flex-1 text-right">
-    <span className="text-xs text-text-tertiary">{match.venue || 'Stadium'}</span>
-  </div>
-</div>
+        {/* Divider line */}
+        <div className="border-t border-border" />
 
-{/* Divider line */}
-<div className="border-t border-border" />
+        {/* Teams and Form */}
+        <div className="flex items-center justify-between gap-3">
+          {/* Home Team */}
+          <div className="flex-1 text-center">
+            <div className="relative w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2">
+              <Image
+                src={match.homeTeamLogo}
+                alt={match.homeTeam}
+                fill
+                className="object-contain"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = '/placeholder-team.png'
+                }}
+              />
+            </div>
+            <p className="text-text-primary font-semibold text-xs sm:text-sm truncate px-1">{match.homeTeam}</p>
+            
+            {/* Home Form */}
+            <div className="flex justify-center gap-0.5 sm:gap-1 mt-2">
+              {homeFormArray.map((letter, idx) => (
+                <span
+                  key={idx}
+                  className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold ${getFormColor(letter)}`}
+                >
+                  {letter}
+                </span>
+              ))}
+            </div>
+          </div>
 
-      
-      {/* Teams and Form - Responsive */}
-<div className="flex items-center justify-between gap-3">
-  {/* Home Team */}
-  <div className="flex-1 text-center">
-    <div className="relative w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2">
-      <Image
-        src={match.homeTeamLogo}
-        alt={match.homeTeam}
-        fill
-        className="object-contain"
-        onError={(e) => {
-          (e.target as HTMLImageElement).src = '/placeholder-team.png'
-        }}
-      />
-    </div>
-    <p className="text-text-primary font-semibold text-xs sm:text-sm truncate px-1">{match.homeTeam}</p>
-    
-    {/* Home Form (W/L/D) - Responsive */}
-    <div className="flex justify-center gap-0.5 sm:gap-1 mt-2">
-      {homeFormArray.map((letter, idx) => (
-        <span
-          key={idx}
-          className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold ${getFormColor(letter)}`}
-        >
-          {letter}
-        </span>
-      ))}
-    </div>
-  </div>
+          {/* VS */}
+          <div className="text-text-tertiary text-[10px] sm:text-xs font-medium shrink-0">VS</div>
 
-  {/* VS */}
-  <div className="text-text-tertiary text-[10px] sm:text-xs font-medium flex-shrink-0">VS</div>
+          {/* Away Team */}
+          <div className="flex-1 text-center">
+            <div className="relative w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2">
+              <Image
+                src={match.awayTeamLogo}
+                alt={match.awayTeam}
+                fill
+                className="object-contain"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = '/placeholder-team.png'
+                }}
+              />
+            </div>
+            <p className="text-text-primary font-semibold text-xs sm:text-sm truncate px-1">{match.awayTeam}</p>
+            
+            {/* Away Form */}
+            <div className="flex justify-center gap-0.5 sm:gap-1 mt-2">
+              {awayFormArray.map((letter, idx) => (
+                <span
+                  key={idx}
+                  className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold ${getFormColor(letter)}`}
+                >
+                  {letter}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
 
-  {/* Away Team */}
-  <div className="flex-1 text-center">
-    <div className="relative w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2">
-      <Image
-        src={match.awayTeamLogo}
-        alt={match.awayTeam}
-        fill
-        className="object-contain"
-        onError={(e) => {
-          (e.target as HTMLImageElement).src = '/placeholder-team.png'
-        }}
-      />
-    </div>
-    <p className="text-text-primary font-semibold text-xs sm:text-sm truncate px-1">{match.awayTeam}</p>
-    
-    {/* Away Form (W/L/D) - Responsive */}
-    <div className="flex justify-center gap-0.5 sm:gap-1 mt-2">
-      {awayFormArray.map((letter, idx) => (
-        <span
-          key={idx}
-          className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold ${getFormColor(letter)}`}
-        >
-          {letter}
-        </span>
-      ))}
-    </div>
-  </div>
-</div>
-
-{/* Probability Row with Headings */}
-<div className="flex items-center justify-between gap-3 mt-2">
-  {/* Home Win */}
-  <div className="flex-1 flex flex-col items-center gap-1">
-    <span className="text-[10px] text-text-tertiary uppercase tracking-wider">Win</span>
-    <CircularProgress percentage={match.homeProbability} color="#22C55E" />
-  </div>
-  
-  {/* Draw */}
-  <div className="flex flex-col items-center gap-1">
-    <span className="text-[10px] text-text-tertiary uppercase tracking-wider">Draw</span>
-    <CircularProgress percentage={match.drawProbability} color="#F97316" />
-  </div>
-  
-  {/* Away Win */}
-  <div className="flex-1 flex flex-col items-center gap-1">
-    <span className="text-[10px] text-text-tertiary uppercase tracking-wider">Win</span>
-    <CircularProgress percentage={match.awayProbability} color="#3B82F6" />
-  </div>
-</div>
+        {/* Probability Row with Headings */}
+        <div className="flex items-center justify-between gap-3 mt-2">
+          <div className="flex-1 flex flex-col items-center gap-1">
+            <span className="text-[10px] text-text-tertiary uppercase tracking-wider">Win</span>
+            <CircularProgress percentage={match.homeProbability} color="#22C55E" />
+          </div>
+          
+          <div className="flex flex-col items-center gap-1">
+            <span className="text-[10px] text-text-tertiary uppercase tracking-wider">Draw</span>
+            <CircularProgress percentage={match.drawProbability} color="#F97316" />
+          </div>
+          
+          <div className="flex-1 flex flex-col items-center gap-1">
+            <span className="text-[10px] text-text-tertiary uppercase tracking-wider">Win</span>
+            <CircularProgress percentage={match.awayProbability} color="#3B82F6" />
+          </div>
+        </div>
 
         {/* Divider */}
         <div className="border-t border-border" />
 
-        {/* Top Pick and Odds - Same line, odds on right */}
+        {/* Top Pick and Odds */}
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-1 min-w-0">
-            <Trophy className="w-4 h-4 text-amber-400 flex-shrink-0" />
+            <Trophy className="w-4 h-4 text-amber-400 shrink-0" />
             <p className="text-text-primary font-semibold text-sm truncate">{match.topPick}</p>
           </div>
-          <div className="flex items-center gap-1 flex-shrink-0">
+          <div className="flex items-center gap-1 shrink-0">
             <span className="text-text-primary font-bold text-sm">{match.odds.toFixed(2)}</span>
           </div>
         </div>
 
-        {/* Confidence Section - AFTER Top Pick */}
+        {/* Confidence Section */}
         <div>
           <div className="flex items-center justify-between mb-1">
             <span className="text-text-secondary text-xs">Confidence</span>
@@ -252,12 +248,20 @@ export default function TopPickCard({ match }: TopPickCardProps) {
           </p>
         </div>
 
-        {/* View Full Analysis Button */}
-        <div className="mt-auto pt-1">
-          <div className="flex items-center justify-between text-accent text-xs font-medium hover:underline">
-            <span>View full analysis</span>
+        {/* Match Date and Details Link */}
+        <div className="mt-auto pt-1 flex items-center justify-between">
+          <span className="text-text-tertiary text-[10px]">
+            {new Date(match.matchDate).toLocaleDateString('en-GB', {
+              weekday: 'short',
+              day: 'numeric',
+              month: 'short',
+              year: 'numeric'
+            })}
+          </span>
+          <Link href={`/matches/${match.slug}`} className="flex items-center gap-1 text-amber-400 text-xs font-medium hover:underline">
+            <span>Details</span>
             <ChevronRight className="w-3 h-3" />
-          </div>
+          </Link>
         </div>
 
       </div>
