@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { Trophy, TrendingUp, TrendingDown, Circle, ChevronRight } from 'lucide-react'
+import { Trophy, Circle, ChevronRight } from 'lucide-react'
 
 interface TopPickCardProps {
   match: {
@@ -31,9 +31,6 @@ interface TopPickCardProps {
 }
 
 export default function TopPickCard({ match }: TopPickCardProps) {
-  const oddsDropped = match.odds < match.previousOdds
-  const oddsRaised = match.odds > match.previousOdds
-  
   const homeFormArray = match.homeForm.split('')
   const awayFormArray = match.awayForm.split('')
   
@@ -165,32 +162,15 @@ export default function TopPickCard({ match }: TopPickCardProps) {
           </div>
         </div>
 
-        {/* Top Pick and Odds - Responsive */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <p className="text-gray-500 text-xs uppercase tracking-wider mb-1">Top Pick</p>
-            <div className="flex items-center gap-1.5">
-              <Trophy className="w-4 h-4 text-blue-500" />
-              <p className="text-white font-semibold text-sm">{match.topPick}</p>
-            </div>
+        {/* Top Pick and Odds - Same line, odds on right */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <Trophy className="w-4 h-4 text-blue-500" />
+            <p className="text-white font-semibold text-sm">{match.topPick}</p>
           </div>
-          <div>
-            <p className="text-gray-500 text-xs uppercase tracking-wider mb-1">Odds</p>
-            <div className="flex flex-wrap items-center gap-1.5">
-              <span className="text-white font-bold text-base">{match.odds.toFixed(2)}</span>
-              {oddsDropped && (
-                <span className="flex items-center gap-0.5 text-green-500 text-xs">
-                  <TrendingDown className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">was {match.previousOdds.toFixed(2)}</span>
-                </span>
-              )}
-              {oddsRaised && (
-                <span className="flex items-center gap-0.5 text-red-500 text-xs">
-                  <TrendingUp className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">was {match.previousOdds.toFixed(2)}</span>
-                </span>
-              )}
-            </div>
+          <div className="text-right">
+            <p className="text-gray-500 text-xs uppercase tracking-wider mb-0.5">Odds</p>
+            <span className="text-white font-bold text-base">{match.odds.toFixed(2)}</span>
           </div>
         </div>
 
