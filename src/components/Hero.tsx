@@ -39,7 +39,7 @@ export default function Hero() {
       />
 
       {/* Content — positioned in lower third */}
-    <div className={`relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-20 text-center transition-all duration-700 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+    <div className={`relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-20 pb-20 text-center transition-all duration-700 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
         <div className="max-w-2xl mx-auto">
 
           {/* Tagline */}
@@ -68,17 +68,17 @@ export default function Hero() {
 
 <Link
   href="/register"
-  className="inline-flex items-center gap-2 text-white font-medium px-7 py-3.5 rounded-xl transition-all duration-300 text-sm backdrop-blur-sm animate-float"
-  style={{ border: '1px solid #22C55E' }}
+  className="px-4 py-1.5 rounded-lg text-sm font-medium bg-accent hover:bg-accent-hover text-white transition-colors"
+  style={{ border: '1px solid #22C55E', boxShadow: '0 0 8px rgba(34, 197, 94, 0.3)' }}
 >
-  Get Started Free
+  Sign Up
 </Link>
 </div>
 
           {/* Trust line */}
-          <p className="mt-4 text-white/40 text-sm">
-            $0 forever · No credit card needed
-          </p>
+      <p className="mt-4 text-white/60 text-sm font-medium">
+  $0 forever · No credit card needed
+</p>
 
         </div>
       </div>
