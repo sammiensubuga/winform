@@ -263,11 +263,11 @@ const getProgressColor = () => {
           </p>
         </div>
 
-{/* Match Date and Full-width Details Button */}
-<div className="mt-auto pt-1 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
-  <span className="text-text-tertiary text-[8px] sm:text-[10px]">
+{/* Match Date and Full-width Details Button - Date centered on mobile */}
+<div className="mt-auto pt-1 flex flex-col sm:flex-row items-center sm:items-center justify-between gap-2 sm:gap-0">
+  <span className="text-text-tertiary text-[8px] sm:text-[10px] text-center sm:text-left w-full sm:w-auto">
     {new Date(match.matchDate).toLocaleDateString('en-GB', {
-      weekday: 'short',
+      weekday: 'long',
       day: 'numeric',
       month: 'long',
       year: 'numeric'
