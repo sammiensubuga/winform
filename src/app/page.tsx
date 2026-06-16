@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Hero from '@/components/Hero'
 import TopPickCard from '@/components/TopPickCard'
 import LiveMatchBanner from '@/components/LiveMatchBanner'
-import { Star, Zap, Target, CheckCircle, XCircle, Calendar, Clock, ChevronRight  } from 'lucide-react'
+import { Star, Zap, Target, CheckCircle, XCircle, Calendar, Clock, ChevronRight, Trophy } from 'lucide-react'
 import ConfidenceBadge from '@/components/ConfidenceBadge'
 import {
   mockTopPicks,
