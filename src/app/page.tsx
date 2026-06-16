@@ -273,8 +273,13 @@ export default function HomePage() {
       <Link key={match.id} href={`/matches/${match.slug}`}>
         <div className={`flex flex-col items-center p-3 sm:p-4 hover:bg-card-hover transition-colors cursor-pointer ${index !== mockUpcomingMatches.length - 1 ? 'border-b border-border' : ''}`}>
           
-          {/* VS with Time, Teams, and ConfidenceBadge - All centered */}
           <div className="flex flex-col items-center w-full gap-1">
+            
+            {/* Time - Centered above everything */}
+            <div className="flex items-center gap-1">
+              <Clock className="w-3 h-3 text-text-tertiary" />
+              <span className="text-text-secondary text-[10px] sm:text-xs">{match.kickoff}</span>
+            </div>
             
             {/* Teams row */}
             <div className="flex items-center justify-between w-full gap-2">
@@ -298,12 +303,8 @@ export default function HomePage() {
               </div>
             </div>
             
-            {/* Time and ConfidenceBadge - Centered below */}
-            <div className="flex flex-col items-center gap-0.5 mt-1">
-              <div className="flex items-center gap-1">
-                <Clock className="w-3 h-3 text-text-tertiary" />
-                <span className="text-text-secondary text-[10px] sm:text-xs">{match.kickoff}</span>
-              </div>
+            {/* ConfidenceBadge - Centered below VS */}
+            <div className="mt-0.5">
               <ConfidenceBadge tier={match.confidenceTier} confidence={match.confidence} size="sm" />
             </div>
             
