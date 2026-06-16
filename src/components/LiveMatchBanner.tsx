@@ -40,7 +40,7 @@ export default function LiveMatchBanner({ match }: LiveMatchProps) {
             <span className="text-text-secondary text-[10px] sm:text-xs font-medium">{match.league}</span>
           </div>
           <div className="flex items-center gap-1">
-            <span className="text-red-500 text-[10px] sm:text-xs font-bold">{match.minute}'</span>
+            <span className="text-red-500 text-[10px] sm:text-xs font-bold">{match.minute}</span>
           </div>
         </div>
 
