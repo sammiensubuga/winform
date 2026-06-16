@@ -51,14 +51,13 @@ export default function LiveMatchBanner({ match }: LiveMatchProps) {
     return () => clearInterval(timer)
   }, [])
 
-  // Update probabilities every 3 seconds (simulate match dynamics)
+  // Update probabilities every 3 seconds
   useEffect(() => {
     const probTimer = setInterval(() => {
       setHomeProb(prev => {
-        const change = (Math.random() * 6) - 3 // -3 to +3
+        const change = (Math.random() * 6) - 3
         const newVal = Math.max(30, Math.min(70, prev + change))
         const roundedVal = Math.round(newVal)
-        // Adjust draw and away to keep total 100%
         const remaining = 100 - roundedVal
         const currentDraw = drawProb
         const currentAway = awayProb
@@ -80,6 +79,11 @@ export default function LiveMatchBanner({ match }: LiveMatchProps) {
   const possessionAway = match.possession.away
   const possessionTotal = possessionHome + possessionAway
   const possessionPercent = possessionTotal > 0 ? (possessionHome / possessionTotal) * 100 : 50
+
+  // Circular gauge radius and circumference
+  const radius = 28
+  const circumference = 2 * Math.PI * radius
+  const offset = circumference - (homeProb / 100) * circumference
 
   return (
     <Link href={`/matches/${match.slug}`}>
@@ -119,6 +123,69 @@ export default function LiveMatchBanner({ match }: LiveMatchProps) {
             </div>
           )}
           <span className="text-text-secondary text-[10px] sm:text-xs font-medium">{match.league}</span>
+        </div>
+
+        {/* Circular Speedometer - Top Right Corner */}
+        <div className="absolute right-3 top-3 sm:right-4 sm:top-4 z-10">
+          <div className="relative w-16 h-16 sm:w-20 sm:h-20">
+            {/* Background circle with gradient zones */}
+            <svg className="w-full h-full transform -rotate-90">
+              {/* Zone 1: Home Win (Green) - 0 to 40% */}
+              <circle
+                cx="50%"
+                cy="50%"
+                r={radius}
+                stroke="#22C55E"
+                strokeWidth="5"
+                fill="none"
+                strokeDasharray={`${circumference * 0.4} ${circumference}`}
+                strokeDashoffset={0}
+                className="opacity-30"
+              />
+              {/* Zone 2: Draw (Orange) - 40 to 55% */}
+              <circle
+                cx="50%"
+                cy="50%"
+                r={radius}
+                stroke="#F97316"
+                strokeWidth="5"
+                fill="none"
+                strokeDasharray={`${circumference * 0.15} ${circumference}`}
+                strokeDashoffset={-circumference * 0.4}
+                className="opacity-30"
+              />
+              {/* Zone 3: Away Win (Blue) - 55 to 100% */}
+              <circle
+                cx="50%"
+                cy="50%"
+                r={radius}
+                stroke="#3B82F6"
+                strokeWidth="5"
+                fill="none"
+                strokeDasharray={`${circumference * 0.45} ${circumference}`}
+                strokeDashoffset={-circumference * 0.55}
+                className="opacity-30"
+              />
+              {/* Active progress ring (white/gold) */}
+              <circle
+                cx="50%"
+                cy="50%"
+                r={radius}
+                stroke="#F0F4F8"
+                strokeWidth="5"
+                fill="none"
+                strokeDasharray={circumference}
+                strokeDashoffset={offset}
+                strokeLinecap="round"
+                className="transition-all duration-700 ease-out"
+              />
+            </svg>
+            {/* Percentage text in center */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <span className="text-text-primary font-bold text-sm sm:text-base">{homeProb}%</span>
+              <span className="text-text-tertiary text-[6px] sm:text-[8px] leading-tight">HOME</span>
+            </div>
+          </div>
         </div>
 
         {/* Main row: Teams, Logos, and Score */}
@@ -183,63 +250,6 @@ export default function LiveMatchBanner({ match }: LiveMatchProps) {
               <span className="text-text-tertiary text-[8px] sm:text-[10px]">
                 Shots {match.shots.away}
               </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Speedometer Gauge - Like a car tachometer */}
-        <div className="mt-3">
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-text-tertiary text-[8px] sm:text-[10px]">Home Win</span>
-            <span className="text-text-tertiary text-[8px] sm:text-[10px]">Draw</span>
-            <span className="text-text-tertiary text-[8px] sm:text-[10px]">Away Win</span>
-          </div>
-          
-          <div className="relative w-full h-8 bg-gray-800 rounded-full overflow-hidden">
-            {/* Gradient zones */}
-            <div className="absolute inset-0 flex">
-              <div className="w-1/3 bg-green-500/30"></div>
-              <div className="w-1/3 bg-orange-500/30"></div>
-              <div className="w-1/3 bg-blue-500/30"></div>
-            </div>
-            
-            {/* Needle */}
-            <div 
-              className="absolute top-0 w-0.5 h-full bg-white shadow-lg transition-all duration-700 ease-out"
-              style={{ 
-                left: `${(homeProb - 30) / 40 * 100}%`,
-                transform: 'translateX(-50%)'
-              }}
-            >
-              <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-red-500 rounded-full shadow-lg shadow-red-500/50"></div>
-            </div>
-            
-            {/* Percentage labels on the gauge */}
-            <div className="absolute inset-0 flex items-center justify-between px-2">
-              <span className="text-[8px] font-bold text-white/60">30%</span>
-              <span className="text-[8px] font-bold text-white/60">50%</span>
-              <span className="text-[8px] font-bold text-white/60">70%</span>
-            </div>
-            
-            {/* Needle value indicator */}
-            <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 text-[8px] font-bold text-white">
-              {homeProb}%
-            </div>
-          </div>
-          
-          {/* W/D/W percentages below gauge */}
-          <div className="flex items-center justify-between mt-4">
-            <div className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-green-500"></span>
-              <span className="text-text-primary font-bold text-xs">{homeProb}%</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-orange-500"></span>
-              <span className="text-text-primary font-bold text-xs">{drawProb}%</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-              <span className="text-text-primary font-bold text-xs">{awayProb}%</span>
             </div>
           </div>
         </div>
