@@ -135,6 +135,7 @@ export const mockLiveMatches = [
     homeTeamLogo: 'https://media.api-sports.io/football/teams/33.png',
     awayTeamLogo: 'https://media.api-sports.io/football/teams/40.png',
     league: 'Premier League',
+    leagueLogo: 'https://media.api-sports.io/football/leagues/39.png',
     homeScore: 1,
     awayScore: 0,
     minute: 65,
@@ -143,6 +144,7 @@ export const mockLiveMatches = [
     topPick: 'Over 1.5 Goals',
     confidence: 78,
     confidenceTier: 'strong' as const,
+    odds: 1.72,
   },
   {
     id: 102,
@@ -152,6 +154,7 @@ export const mockLiveMatches = [
     homeTeamLogo: 'https://media.api-sports.io/football/teams/85.png',
     awayTeamLogo: 'https://media.api-sports.io/football/teams/81.png',
     league: 'Ligue 1',
+    leagueLogo: 'https://media.api-sports.io/football/leagues/61.png',
     homeScore: 2,
     awayScore: 1,
     minute: 72,
@@ -160,6 +163,7 @@ export const mockLiveMatches = [
     topPick: 'Home Win',
     confidence: 81,
     confidenceTier: 'elite' as const,
+    odds: 1.45,
   },
 ]
 

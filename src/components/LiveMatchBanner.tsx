@@ -13,6 +13,7 @@ interface LiveMatchProps {
     homeTeamLogo: string
     awayTeamLogo: string
     league: string
+    leagueLogo?: string
     homeScore: number
     awayScore: number
     minute: number
@@ -21,12 +22,16 @@ interface LiveMatchProps {
     topPick?: string
     confidence?: number
     confidenceTier?: string
+    odds?: number
   }
 }
 
 export default function LiveMatchBanner({ match }: LiveMatchProps) {
   const [time, setTime] = useState({ minutes: match.minute, seconds: 0 })
+  const [odds, setOdds] = useState(match.odds || 1.72)
+  const [oddsDirection, setOddsDirection] = useState<'up' | 'down' | null>(null)
   
+  // Update time every second
   useEffect(() => {
     const timer = setInterval(() => {
       setTime(prev => {
@@ -43,6 +48,27 @@ export default function LiveMatchBanner({ match }: LiveMatchProps) {
     return () => clearInterval(timer)
   }, [])
 
+  // Update odds every 10 seconds (simulate live movement)
+  useEffect(() => {
+    const oddsTimer = setInterval(() => {
+      setOdds(prev => {
+        // Random movement between -0.03 and +0.03
+        const change = (Math.random() * 0.06) - 0.03
+        const newOdds = Math.max(1.10, Math.min(3.00, prev + change))
+        const rounded = Math.round(newOdds * 100) / 100
+        
+        // Set direction for arrow indicator
+        if (rounded > prev) setOddsDirection('up')
+        else if (rounded < prev) setOddsDirection('down')
+        else setOddsDirection(null)
+        
+        return rounded
+      })
+    }, 10000) // Update every 10 seconds
+    
+    return () => clearInterval(oddsTimer)
+  }, [])
+
   const possessionHome = match.possession.home
   const possessionAway = match.possession.away
   const possessionTotal = possessionHome + possessionAway
@@ -52,27 +78,61 @@ export default function LiveMatchBanner({ match }: LiveMatchProps) {
     <Link href={`/matches/${match.slug}`}>
       <div className="relative bg-gradient-to-br from-red-950/40 to-card border-l-4 border-red-500 border border-border rounded-xl p-3 sm:p-4 hover:border-red-500/70 transition-all cursor-pointer h-full overflow-hidden">
         
-      {/* iPhone-style Recording Indicator - Top Center */}
-<div className="absolute top-1 left-1/2 -translate-x-1/2 z-10">
-  <div className="bg-black/80 backdrop-blur-md rounded-full px-3 py-0.5 flex items-center gap-1.5 border border-white/10 shadow-lg">
-    <div className="relative">
-      <span className="w-1.5 h-1.5 rounded-full bg-red-500 inline-block animate-pulse" />
-      <span className="absolute inset-0 w-1.5 h-1.5 rounded-full bg-red-500 animate-ping opacity-75" />
+        {/* iPhone-style Recording Indicator - Top Center */}
+        <div className="absolute top-1 left-1/2 -translate-x-1/2 z-10">
+          <div className="bg-black/80 backdrop-blur-md rounded-full px-3 py-0.5 flex items-center gap-1.5 border border-white/10 shadow-lg">
+            <div className="relative">
+              <span className="w-1.5 h-1.5 rounded-full bg-red-500 inline-block animate-pulse" />
+              <span className="absolute inset-0 w-1.5 h-1.5 rounded-full bg-red-500 animate-ping opacity-75" />
+            </div>
+            <span className="text-white text-[10px] font-mono font-bold tabular tracking-wider">
+              {String(time.minutes).padStart(2, '0')}:{String(time.seconds).padStart(2, '0')}
+            </span>
+            <div className="flex gap-0.5">
+              <span className="w-0.5 h-0.5 rounded-full bg-white/40" />
+              <span className="w-0.5 h-0.5 rounded-full bg-white/40" />
+              <span className="w-0.5 h-0.5 rounded-full bg-white/40" />
+            </div>
+          </div>
+        </div>
+
+     {/* League name with logo - Left */}
+<div className="flex items-center gap-1.5 mt-2">
+  {match.leagueLogo && (
+    <div className="relative w-4 h-4 shrink-0">
+      <Image
+        src={match.leagueLogo}
+        alt={match.league}
+        fill
+        className="object-contain"
+        onError={(e) => {
+          (e.target as HTMLImageElement).style.display = 'none'
+        }}
+      />
     </div>
-    <span className="text-white text-[10px] font-mono font-bold tabular tracking-wider">
-      {String(time.minutes).padStart(2, '0')}:{String(time.seconds).padStart(2, '0')}
-    </span>
-    <div className="flex gap-0.5">
-      <span className="w-0.5 h-0.5 rounded-full bg-white/40" />
-      <span className="w-0.5 h-0.5 rounded-full bg-white/40" />
-      <span className="w-0.5 h-0.5 rounded-full bg-white/40" />
-    </div>
-  </div>
+  )}
+  <span className="text-text-secondary text-[10px] sm:text-xs font-medium">{match.league}</span>
 </div>
 
-        {/* League name */}
-        <div className="flex items-center gap-1.5 mt-2">
-          <span className="text-text-secondary text-[10px] sm:text-xs font-medium">{match.league}</span>
+        {/* Right - Live Odds with direction indicator */}
+        <div className="absolute right-3 top-3 sm:right-4 sm:top-4 z-10">
+          <div className="flex items-center gap-1.5">
+            <span className="text-text-secondary text-[8px] sm:text-[10px]">Odds</span>
+            <div className="flex items-center gap-0.5">
+              {oddsDirection === 'up' && (
+                <span className="text-green-500 text-[10px]">↑</span>
+              )}
+              {oddsDirection === 'down' && (
+                <span className="text-red-500 text-[10px]">↓</span>
+              )}
+              <span className={`text-text-primary font-bold text-xs sm:text-sm transition-colors duration-300 ${
+                oddsDirection === 'up' ? 'text-green-500' : 
+                oddsDirection === 'down' ? 'text-red-500' : ''
+              }`}>
+                {odds.toFixed(2)}
+              </span>
+            </div>
+          </div>
         </div>
 
         {/* Main row: Teams, Logos, and Score */}
