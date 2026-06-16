@@ -55,14 +55,6 @@ export default function HomePage() {
     border: '1px solid #22C55E',
     backgroundColor: 'transparent'
   }}
-  onMouseEnter={(e) => {
-    e.currentTarget.style.backgroundColor = '#22C55E'
-    e.currentTarget.style.color = 'white'
-  }}
-  onMouseLeave={(e) => {
-    e.currentTarget.style.backgroundColor = 'transparent'
-    e.currentTarget.style.color = '#22C55E'
-  }}
 >
   See all results →
 </Link>
