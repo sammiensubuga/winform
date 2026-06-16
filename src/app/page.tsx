@@ -68,9 +68,9 @@ export default function HomePage() {
             <div>
               <h2 className="text-2xl font-bold text-text-primary">Today&apos;s Top Picks</h2>
               <p className="text-text-secondary text-sm mt-1">
-                AI-selected best opportunities ·{' '}
+                WinForm best opportunities ·{' '}
                 {new Date().toLocaleDateString('en-GB', {
-                  weekday: 'long',
+                  weekday: 'short',
                   day: 'numeric',
                   month: 'long',
                   year: 'numeric',
