@@ -52,7 +52,7 @@ export default function HomePage() {
         href="/results"
         className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg transition"
         style={{ 
-          border: '1px solid #22C55E',
+          border: '1px solid #D4AF37',
           color: 'white',
           backgroundColor: 'transparent'
         }}
@@ -181,7 +181,7 @@ export default function HomePage() {
         href="/results"
         className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition"
         style={{ 
-          border: '1px solid #22C55E',
+          border: '1px solid #D4AF37',
           color: 'white',
           backgroundColor: 'transparent'
         }}
