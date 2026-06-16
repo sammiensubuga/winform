@@ -260,38 +260,65 @@ export default function HomePage() {
       }}
     >
       View all
+      <ChevronRight className="w-3.5 h-3.5 ml-1" />
     </Link>
   </div>
   
   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
     {mockUpcomingMatches.map((match, index) => (
       <Link key={match.id} href={`/matches/${match.slug}`}>
-        <div className="bg-card border border-border hover:border-accent/50 rounded-xl p-4 transition-all duration-200 cursor-pointer flex flex-col items-center gap-3">
+        <div className="relative bg-gradient-to-br from-card/90 to-card border border-border/50 hover:border-accent/50 rounded-2xl p-4 transition-all duration-200 cursor-pointer flex flex-col items-center gap-3 shadow-lg shadow-black/10 backdrop-blur-sm overflow-hidden">
+          
+          {/* Glass effect overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none rounded-2xl" />
+          
+          {/* League and Stadium - Top row */}
+          <div className="flex items-center justify-between w-full relative z-10">
+            <div className="flex items-center gap-1.5">
+              <div className="relative w-4 h-4">
+                <Image src={match.leagueLogo} alt={match.league} fill className="object-contain" />
+              </div>
+              <span className="text-text-secondary text-[10px] sm:text-xs font-medium truncate">{match.league}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="text-text-tertiary text-[10px] sm:text-xs truncate max-w-[100px]">{match.venue}</span>
+            </div>
+          </div>
           
           {/* Date and Time - Stacked vertically */}
-          <div className="flex flex-col items-center text-text-secondary text-xs">
-            <span>{match.kickoff.includes('Tomorrow') ? 'Tomorrow' : 'Today'}</span>
+          <div className="flex flex-col items-center text-text-secondary text-xs relative z-10">
+            <span className="font-medium">{match.kickoff.includes('Tomorrow') ? 'Tomorrow' : 'Today'}</span>
             <span className="text-[10px] text-text-tertiary">{match.kickoff.replace('Tomorrow ', '').replace('Today ', '')}</span>
           </div>
           
           {/* Teams - Logos above names */}
-          <div className="flex items-center justify-between w-full gap-2">
+          <div className="flex items-center justify-between w-full gap-2 relative z-10">
             {/* Home Team */}
             <div className="flex flex-col items-center gap-1.5 flex-1">
-              <div className="relative w-10 h-10 sm:w-12 sm:h-12">
+              <div className="relative w-10 h-10 sm:w-12 sm:h-12 transition-transform hover:scale-105 duration-200">
                 <Image src={match.homeTeamLogo} alt={match.homeTeam} fill className="object-contain" />
               </div>
               <span className="text-text-primary font-semibold text-xs sm:text-sm text-center truncate w-full max-w-[80px]">{match.homeTeam}</span>
             </div>
             
-            {/* VS Card - Smaller and more circular */}
-            <div className="bg-red-600 rounded-full w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shadow-lg shadow-red-600/20 flex-shrink-0">
-              <span className="text-white font-bold text-xs sm:text-sm">VS</span>
+            {/* VS Card - iPhone style with glass effect */}
+            <div className="relative flex-shrink-0">
+              {/* Glow effect behind the VS card */}
+              <div className="absolute inset-0 bg-red-500/20 blur-xl rounded-full" />
+              
+              <div className="relative bg-gradient-to-br from-red-500 to-red-600 rounded-2xl w-14 h-14 sm:w-16 sm:h-16 flex flex-col items-center justify-center shadow-lg shadow-red-500/30 backdrop-blur-sm border border-white/10">
+                <span className="text-white font-bold text-xs sm:text-sm tracking-wide">VS</span>
+                <div className="flex gap-0.5 mt-0.5">
+                  <span className="w-1 h-1 rounded-full bg-white/40" />
+                  <span className="w-1 h-1 rounded-full bg-white/40" />
+                  <span className="w-1 h-1 rounded-full bg-white/40" />
+                </div>
+              </div>
             </div>
             
             {/* Away Team */}
             <div className="flex flex-col items-center gap-1.5 flex-1">
-              <div className="relative w-10 h-10 sm:w-12 sm:h-12">
+              <div className="relative w-10 h-10 sm:w-12 sm:h-12 transition-transform hover:scale-105 duration-200">
                 <Image src={match.awayTeamLogo} alt={match.awayTeam} fill className="object-contain" />
               </div>
               <span className="text-text-primary font-semibold text-xs sm:text-sm text-center truncate w-full max-w-[80px]">{match.awayTeam}</span>

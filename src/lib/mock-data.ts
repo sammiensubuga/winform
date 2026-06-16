@@ -172,6 +172,8 @@ export const mockUpcomingMatches = [
     homeTeamLogo: 'https://media.api-sports.io/football/teams/47.png',
     awayTeamLogo: 'https://media.api-sports.io/football/teams/34.png',
     league: 'Premier League',
+    leagueLogo: 'https://media.api-sports.io/football/leagues/39.png',
+    venue: 'Tottenham Hotspur Stadium',
     kickoff: 'Tomorrow 15:00',
     topPick: 'Over 2.5 Goals',
     confidence: 76,
@@ -185,6 +187,8 @@ export const mockUpcomingMatches = [
     homeTeamLogo: 'https://media.api-sports.io/football/teams/541.png',
     awayTeamLogo: 'https://media.api-sports.io/football/teams/530.png',
     league: 'La Liga',
+    leagueLogo: 'https://media.api-sports.io/football/leagues/140.png',
+    venue: 'Santiago Bernabéu',
     kickoff: 'Tomorrow 20:00',
     topPick: 'Under 2.5 Goals',
     confidence: 72,
@@ -198,6 +202,8 @@ export const mockUpcomingMatches = [
     homeTeamLogo: 'https://media.api-sports.io/football/teams/496.png',
     awayTeamLogo: 'https://media.api-sports.io/football/teams/492.png',
     league: 'Serie A',
+    leagueLogo: 'https://media.api-sports.io/football/leagues/135.png',
+    venue: 'Allianz Stadium',
     kickoff: 'Tomorrow 19:45',
     topPick: 'BTTS',
     confidence: 69,
@@ -211,6 +217,8 @@ export const mockUpcomingMatches = [
     homeTeamLogo: 'https://media.api-sports.io/football/teams/165.png',
     awayTeamLogo: 'https://media.api-sports.io/football/teams/168.png',
     league: 'Bundesliga',
+    leagueLogo: 'https://media.api-sports.io/football/leagues/78.png',
+    venue: 'Signal Iduna Park',
     kickoff: 'Tomorrow 17:30',
     topPick: 'Home Win',
     confidence: 61,
@@ -224,13 +232,14 @@ export const mockUpcomingMatches = [
     homeTeamLogo: 'https://media.api-sports.io/football/teams/50.png',
     awayTeamLogo: 'https://media.api-sports.io/football/teams/66.png',
     league: 'Premier League',
+    leagueLogo: 'https://media.api-sports.io/football/leagues/39.png',
+    venue: 'Etihad Stadium',
     kickoff: 'Tomorrow 16:00',
     topPick: 'Home Win',
     confidence: 77,
     confidenceTier: 'strong' as const,
   },
 ]
-
 export const mockWorldCupMatches = [
   // Group A
   {
