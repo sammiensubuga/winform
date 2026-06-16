@@ -250,10 +250,7 @@ export default function HomePage() {
 {/* Upcoming Matches */}
 <section className="py-10 border-t border-border">
   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6">
-    <div className="flex items-center gap-2">
-      <Calendar className="w-5 h-5 text-text-secondary" />
-      <h2 className="text-2xl font-bold text-text-primary">Upcoming Matches</h2>
-    </div>
+    <h2 className="text-2xl font-bold text-text-primary">Upcoming Matches</h2>
     <Link 
       href="/matches" 
       className="inline-flex items-center justify-center w-full sm:w-auto px-4 py-1.5 mt-3 sm:mt-0 rounded-lg text-sm font-medium transition"
@@ -268,46 +265,35 @@ export default function HomePage() {
     </Link>
   </div>
   
-  <div className="bg-card border border-border rounded-2xl overflow-hidden">
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
     {mockUpcomingMatches.map((match, index) => (
       <Link key={match.id} href={`/matches/${match.slug}`}>
-        <div className={`flex flex-col items-center p-3 sm:p-4 hover:bg-card-hover transition-colors cursor-pointer ${index !== mockUpcomingMatches.length - 1 ? 'border-b border-border' : ''}`}>
+        <div className="bg-card border border-border hover:border-accent/50 rounded-xl p-6 transition-all duration-200 cursor-pointer flex flex-col items-center gap-4">
           
-          <div className="flex flex-col items-center w-full gap-2">
-            
-            {/* Time - Centered above everything */}
-            <div className="flex items-center gap-1">
-              <Clock className="w-3 h-3 text-text-tertiary" />
-              <span className="text-text-secondary text-[10px] sm:text-xs">{match.kickoff}</span>
-            </div>
-            
-            {/* Teams row - Logos above names */}
-            <div className="flex items-center justify-between w-full gap-4">
-              {/* Home Team - Left */}
-              <div className="flex flex-col items-center gap-1 min-w-0 flex-1">
-                <div className="relative w-8 h-8 sm:w-10 sm:h-10 shrink-0">
-                  <Image src={match.homeTeamLogo} alt={match.homeTeam} fill className="object-contain" />
-                </div>
-                <span className="text-text-primary text-[10px] sm:text-xs font-medium truncate text-center w-full">{match.homeTeam}</span>
+          {/* Teams - Logos above names */}
+          <div className="flex items-center justify-between w-full">
+            {/* Home Team */}
+            <div className="flex flex-col items-center gap-2 flex-1">
+              <div className="relative w-12 h-12 sm:w-14 sm:h-14">
+                <Image src={match.homeTeamLogo} alt={match.homeTeam} fill className="object-contain" />
               </div>
-              
-              {/* VS - Center */}
-              <span className="text-text-tertiary text-[8px] sm:text-xs font-medium shrink-0">vs</span>
-              
-              {/* Away Team - Right */}
-              <div className="flex flex-col items-center gap-1 min-w-0 flex-1">
-                <div className="relative w-8 h-8 sm:w-10 sm:h-10 shrink-0">
-                  <Image src={match.awayTeamLogo} alt={match.awayTeam} fill className="object-contain" />
-                </div>
-                <span className="text-text-primary text-[10px] sm:text-xs font-medium truncate text-center w-full">{match.awayTeam}</span>
+              <span className="text-text-primary font-semibold text-sm sm:text-base text-center">{match.homeTeam}</span>
+            </div>
+            
+            {/* VS Card - Red background in center */}
+            <div className="bg-red-600 rounded-xl px-4 py-3 flex flex-col items-center min-w-[80px] shadow-lg shadow-red-600/20">
+              <span className="text-white font-bold text-lg">VS</span>
+              <span className="text-white/80 text-[10px]">{match.kickoff.includes('Tomorrow') ? 'Tomorrow' : 'Today'}</span>
+              <span className="text-white/80 text-[10px]">{match.kickoff.replace('Tomorrow ', '').replace('Today ', '')}</span>
+            </div>
+            
+            {/* Away Team */}
+            <div className="flex flex-col items-center gap-2 flex-1">
+              <div className="relative w-12 h-12 sm:w-14 sm:h-14">
+                <Image src={match.awayTeamLogo} alt={match.awayTeam} fill className="object-contain" />
               </div>
+              <span className="text-text-primary font-semibold text-sm sm:text-base text-center">{match.awayTeam}</span>
             </div>
-            
-            {/* ConfidenceBadge - Centered below VS */}
-            <div className="mt-0.5">
-              <ConfidenceBadge tier={match.confidenceTier} confidence={match.confidence} size="sm" />
-            </div>
-            
           </div>
           
         </div>
@@ -315,7 +301,6 @@ export default function HomePage() {
     ))}
   </div>
 </section>
-
   {/* World Cup 2026 - Matching TopPickCard size */}
 <section className="py-10 border-t border-border">
   <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-6">
