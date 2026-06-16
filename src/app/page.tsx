@@ -288,10 +288,11 @@ export default function HomePage() {
                 <span className="text-text-primary text-xs sm:text-sm font-medium truncate">{match.homeTeam}</span>
               </div>
               
-              {/* VS with Time - Center */}
+              {/* VS with Time and Top Pick - Center */}
               <div className="flex flex-col items-center shrink-0">
                 <span className="text-text-tertiary text-[8px] sm:text-xs font-medium">vs</span>
                 <span className="text-text-secondary text-[8px] sm:text-xs hidden sm:block">{match.kickoff}</span>
+                <span className="text-text-secondary text-[8px] sm:text-xs hidden sm:block">{match.topPick}</span>
               </div>
               
               {/* Away Team - Right */}
@@ -307,7 +308,6 @@ export default function HomePage() {
           {/* Details - Right side */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0 w-full sm:w-auto justify-start sm:justify-end">
             <ConfidenceBadge tier={match.confidenceTier} confidence={match.confidence} size="sm" />
-            <span className="text-text-secondary text-[10px] sm:text-xs hidden lg:block">{match.topPick}</span>
           </div>
           
         </div>
