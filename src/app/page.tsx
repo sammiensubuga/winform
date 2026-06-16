@@ -49,11 +49,11 @@ export default function HomePage() {
     </div>
 <Link 
   href="/results" 
-  className="inline-block text-xs font-medium px-4 py-1.5 rounded-lg transition-all duration-200 mt-3"
+  className="px-4 py-1.5 rounded-lg text-sm font-medium transition"
   style={{ 
-    color: 'white',
+    color: '#22C55E',
     border: '1px solid #22C55E',
-    backgroundColor: '#22C55E'
+    backgroundColor: 'transparent'
   }}
 >
   See all results →
