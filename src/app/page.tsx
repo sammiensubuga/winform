@@ -92,77 +92,82 @@ const CircularProgress = ({ percentage, color }: { percentage: number; color: st
     </div>
   </div>
 </div>
-        {/* Today's Top Picks */}
-        <section id="top-picks" className="py-10">
-          <div className="flex items-end justify-between mb-6">
-            <div>
-              <h2 className="text-2xl font-bold text-text-primary">Today&apos;s Top Picks</h2>
-              <p className="text-text-secondary text-sm mt-1">
-                WinForm best opportunities ·{' '}
-                {new Date().toLocaleDateString('en-GB', {
-                  weekday: 'short',
-                  day: 'numeric',
-                  month: 'long',
-                  year: 'numeric',
-                })}
-              </p>
-            </div>
-            <Link href="/top-picks" className="text-accent text-sm hover:underline hidden md:block">
-              View all →
-            </Link>
-          </div>
-
-{elitePicks.length > 0 && (
-  <div className="mb-8">
-    <div className="flex items-center gap-2 mb-4">
-      <Star className="w-4 h-4 text-amber-400" />
-      <p className="text-xs font-medium">
-        <span className="text-text-tertiary">Elite Picks </span>
-        <span className="text-amber-400">80%+ confidence</span>
+     {/* Today's Top Picks */}
+<section id="top-picks" className="py-10">
+  <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-6">
+    <div>
+      <h2 className="text-2xl font-bold text-text-primary">Today&apos;s Top Picks</h2>
+      <p className="text-text-secondary text-sm mt-1">
+        AI-selected best opportunities ·{' '}
+        {new Date().toLocaleDateString('en-GB', {
+          weekday: 'long',
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+        })}
       </p>
     </div>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {elitePicks.map(match => (
-        <TopPickCard key={match.id} match={match} />
-      ))}
-    </div>
+    <Link 
+      href="/top-picks" 
+      className="inline-flex items-center justify-center w-full sm:w-auto px-4 py-1.5 mt-3 sm:mt-0 rounded-lg text-sm font-medium transition"
+      style={{ 
+        border: '1px solid #D4AF37',
+        color: 'white',
+        backgroundColor: 'transparent'
+      }}
+    >
+      View all
+    </Link>
   </div>
-)}
 
-{strongPicks.length > 0 && (
-  <div className="mb-8">
-    <div className="flex items-center gap-2 mb-4">
-      <Zap className="w-4 h-4 text-green-500" />
-      <p className="text-xs font-medium">
-        <span className="text-text-tertiary"> Strong Picks </span>
-        <span className="text-green-500">70-79% confidence</span>
-      </p>
+  {elitePicks.length > 0 && (
+    <div className="mb-8">
+      <div className="flex items-center gap-2 mb-4">
+        <Star className="w-4 h-4 text-amber-400" />
+        <p className="text-xs font-medium text-amber-400">
+          Elite Picks 80%+ confidence
+        </p>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {elitePicks.map(match => (
+          <TopPickCard key={match.id} match={match} />
+        ))}
+      </div>
     </div>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {strongPicks.map(match => (
-        <TopPickCard key={match.id} match={match} />
-      ))}
-    </div>
-  </div>
-)}
+  )}
 
-{valuePicks.length > 0 && (
-  <div className="mb-8">
-    <div className="flex items-center gap-2 mb-4">
-      <Target className="w-4 h-4 text-blue-500" />
-      <p className="text-xs font-medium">
-        <span className="text-text-tertiary"> Value Picks </span>
-        <span className="text-blue-500">55-69% confidence</span>
-      </p>
+  {strongPicks.length > 0 && (
+    <div className="mb-8">
+      <div className="flex items-center gap-2 mb-4">
+        <Zap className="w-4 h-4 text-green-500" />
+        <p className="text-xs font-medium text-green-500">
+          Strong Picks 70-79% confidence
+        </p>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {strongPicks.map(match => (
+          <TopPickCard key={match.id} match={match} />
+        ))}
+      </div>
     </div>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {valuePicks.map(match => (
-        <TopPickCard key={match.id} match={match} />
-      ))}
+  )}
+
+  {valuePicks.length > 0 && (
+    <div className="mb-8">
+      <div className="flex items-center gap-2 mb-4">
+        <Target className="w-4 h-4 text-blue-500" />
+        <p className="text-xs font-medium text-blue-500">
+          Value Picks 55-69% confidence
+        </p>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {valuePicks.map(match => (
+          <TopPickCard key={match.id} match={match} />
+        ))}
+      </div>
     </div>
-  </div>
-)}
-        </section>
+  )}
+</section>
 
        {/* Yesterday's Performance */}
 <section className="py-10 border-t border-border">
