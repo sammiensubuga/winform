@@ -273,7 +273,7 @@ export default function HomePage() {
       <Link key={match.id} href={`/matches/${match.slug}`}>
         <div className={`flex flex-col items-center p-3 sm:p-4 hover:bg-card-hover transition-colors cursor-pointer ${index !== mockUpcomingMatches.length - 1 ? 'border-b border-border' : ''}`}>
           
-          <div className="flex flex-col items-center w-full gap-1">
+          <div className="flex flex-col items-center w-full gap-2">
             
             {/* Time - Centered above everything */}
             <div className="flex items-center gap-1">
@@ -281,25 +281,25 @@ export default function HomePage() {
               <span className="text-text-secondary text-[10px] sm:text-xs">{match.kickoff}</span>
             </div>
             
-            {/* Teams row */}
-            <div className="flex items-center justify-between w-full gap-2">
+            {/* Teams row - Logos above names */}
+            <div className="flex items-center justify-between w-full gap-4">
               {/* Home Team - Left */}
-              <div className="flex items-center gap-2 min-w-0">
-                <div className="relative w-5 h-5 sm:w-6 sm:h-6 shrink-0">
+              <div className="flex flex-col items-center gap-1 min-w-0 flex-1">
+                <div className="relative w-8 h-8 sm:w-10 sm:h-10 shrink-0">
                   <Image src={match.homeTeamLogo} alt={match.homeTeam} fill className="object-contain" />
                 </div>
-                <span className="text-text-primary text-xs sm:text-sm font-medium truncate">{match.homeTeam}</span>
+                <span className="text-text-primary text-[10px] sm:text-xs font-medium truncate text-center w-full">{match.homeTeam}</span>
               </div>
               
               {/* VS - Center */}
               <span className="text-text-tertiary text-[8px] sm:text-xs font-medium shrink-0">vs</span>
               
               {/* Away Team - Right */}
-              <div className="flex items-center gap-2 min-w-0">
-                <span className="text-text-primary text-xs sm:text-sm font-medium truncate">{match.awayTeam}</span>
-                <div className="relative w-5 h-5 sm:w-6 sm:h-6 shrink-0">
+              <div className="flex flex-col items-center gap-1 min-w-0 flex-1">
+                <div className="relative w-8 h-8 sm:w-10 sm:h-10 shrink-0">
                   <Image src={match.awayTeamLogo} alt={match.awayTeam} fill className="object-contain" />
                 </div>
+                <span className="text-text-primary text-[10px] sm:text-xs font-medium truncate text-center w-full">{match.awayTeam}</span>
               </div>
             </div>
             
