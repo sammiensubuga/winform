@@ -263,7 +263,6 @@ export default function HomePage() {
       }}
     >
       View all
-      <ChevronRight className="w-3.5 h-3.5 ml-1" />
     </Link>
   </div>
   
@@ -272,20 +271,29 @@ export default function HomePage() {
       <Link key={match.id} href={`/matches/${match.slug}`}>
         <div className={`flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 sm:p-4 hover:bg-card-hover transition-colors cursor-pointer ${index !== mockUpcomingMatches.length - 1 ? 'border-b border-border' : ''}`}>
           
-          {/* Teams - Mobile optimized */}
-          <div className="flex items-center gap-2 flex-1 min-w-0 w-full sm:w-auto mb-2 sm:mb-0">
-            <div className="relative w-5 h-5 sm:w-6 sm:h-6 shrink-0">
-              <Image src={match.homeTeamLogo} alt={match.homeTeam} fill className="object-contain" />
+          {/* Teams - Home on left, Away on right */}
+          <div className="flex items-center justify-between w-full sm:w-auto flex-1 min-w-0 mb-2 sm:mb-0">
+            {/* Home Team - Left */}
+            <div className="flex items-center gap-2 min-w-0 flex-1">
+              <div className="relative w-5 h-5 sm:w-6 sm:h-6 shrink-0">
+                <Image src={match.homeTeamLogo} alt={match.homeTeam} fill className="object-contain" />
+              </div>
+              <span className="text-text-primary text-xs sm:text-sm font-medium truncate">{match.homeTeam}</span>
             </div>
-            <span className="text-text-primary text-xs sm:text-sm font-medium truncate">{match.homeTeam}</span>
-            <span className="text-text-tertiary text-[8px] sm:text-xs shrink-0">vs</span>
-            <div className="relative w-5 h-5 sm:w-6 sm:h-6 shrink-0">
-              <Image src={match.awayTeamLogo} alt={match.awayTeam} fill className="object-contain" />
+            
+            {/* VS - Center */}
+            <span className="text-text-tertiary text-[8px] sm:text-xs shrink-0 mx-2">vs</span>
+            
+            {/* Away Team - Right */}
+            <div className="flex items-center gap-2 min-w-0 flex-1 justify-end">
+              <span className="text-text-primary text-xs sm:text-sm font-medium truncate">{match.awayTeam}</span>
+              <div className="relative w-5 h-5 sm:w-6 sm:h-6 shrink-0">
+                <Image src={match.awayTeamLogo} alt={match.awayTeam} fill className="object-contain" />
+              </div>
             </div>
-            <span className="text-text-primary text-xs sm:text-sm font-medium truncate">{match.awayTeam}</span>
           </div>
           
-          {/* Details - Mobile optimized */}
+          {/* Details - Right side */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0 w-full sm:w-auto justify-start sm:justify-end">
             <div className="flex items-center gap-1">
               <Clock className="w-3 h-3 text-text-tertiary" />
@@ -300,6 +308,7 @@ export default function HomePage() {
     ))}
   </div>
 </section>
+
   {/* World Cup 2026 - Matching TopPickCard size */}
 <section className="py-10 border-t border-border">
   <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-6">
