@@ -74,14 +74,10 @@ export default function LiveMatchBanner({ match }: LiveMatchProps) {
             </div>
           </div>
 
-          {/* Score */}
+          {/* Score - Horizontal */}
           <div className="text-center shrink-0">
             <p className="text-text-primary font-bold text-xl sm:text-3xl">
-              {match.homeScore}
-            </p>
-            <p className="text-text-primary font-bold text-xl sm:text-3xl">—</p>
-            <p className="text-text-primary font-bold text-xl sm:text-3xl">
-              {match.awayScore}
+              {match.homeScore} — {match.awayScore}
             </p>
           </div>
 
