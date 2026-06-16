@@ -50,33 +50,33 @@ export default function LiveMatchBanner({ match }: LiveMatchProps) {
 
   return (
     <Link href={`/matches/${match.slug}`}>
-      <div className="bg-gradient-to-br from-red-950/40 to-card border-l-4 border-red-500 border border-border rounded-xl p-3 sm:p-4 hover:border-red-500/70 transition-all cursor-pointer h-full">
+      <div className="relative bg-gradient-to-br from-red-950/40 to-card border-l-4 border-red-500 border border-border rounded-xl p-3 sm:p-4 hover:border-red-500/70 transition-all cursor-pointer h-full overflow-hidden">
         
-        {/* Top row: Dynamic Live Card */}
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
+        {/* iPhone-style Recording Indicator - Top Center */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+          <div className="bg-black/80 backdrop-blur-md rounded-full px-3 py-0.5 flex items-center gap-1.5 border border-white/10 shadow-lg">
             <div className="relative">
-              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse inline-block" />
-              <span className="absolute inset-0 w-2 h-2 rounded-full bg-red-500 animate-ping opacity-75" />
+              <span className="w-1.5 h-1.5 rounded-full bg-red-500 inline-block animate-pulse" />
+              <span className="absolute inset-0 w-1.5 h-1.5 rounded-full bg-red-500 animate-ping opacity-75" />
             </div>
-            <span className="text-red-500 text-xs font-bold">LIVE</span>
-          </div>
-          
-          {/* Dynamic Time Card */}
-          <div className="bg-red-500/10 backdrop-blur-sm border border-red-500/20 rounded-lg px-3 py-1">
-            <span className="text-red-500 text-xs font-mono tabular font-bold">
+            <span className="text-white text-[10px] font-mono font-bold tabular tracking-wider">
               {String(time.minutes).padStart(2, '0')}:{String(time.seconds).padStart(2, '0')}
             </span>
+            <div className="flex gap-0.5">
+              <span className="w-0.5 h-0.5 rounded-full bg-white/40" />
+              <span className="w-0.5 h-0.5 rounded-full bg-white/40" />
+              <span className="w-0.5 h-0.5 rounded-full bg-white/40" />
+            </div>
           </div>
         </div>
 
         {/* League name */}
-        <div className="flex items-center gap-1.5 mb-2">
+        <div className="flex items-center gap-1.5 mt-2">
           <span className="text-text-secondary text-[10px] sm:text-xs font-medium">{match.league}</span>
         </div>
 
         {/* Main row: Teams, Logos, and Score */}
-        <div className="flex items-center justify-between gap-2 sm:gap-3">
+        <div className="flex items-center justify-between gap-2 sm:gap-3 mt-2">
           {/* Home Team */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-1.5 sm:gap-2 mb-1">
