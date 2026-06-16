@@ -664,6 +664,7 @@ export const mockWorldCupMatches = [
     aiPreviewShort: 'A high-energy fixture. Austria have scored in 7 of their last 8 matches. Czech Republic have seen over 2.5 goals in 5 of their last 6 away games.',
   },
 ]
+
 export const mockYesterdayStats = {
   wins: 8,
   losses: 2,

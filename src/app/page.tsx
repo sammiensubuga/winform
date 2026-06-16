@@ -285,7 +285,7 @@ const CircularProgress = ({ percentage, color }: { percentage: number; color: st
   </div>
 </section>
 
- {/* World Cup 2026 */}
+{/* World Cup 2026 */}
 <section className="py-10 border-t border-border">
   <div className="flex items-center justify-between mb-6">
     <div>
@@ -305,8 +305,8 @@ const CircularProgress = ({ percentage, color }: { percentage: number; color: st
     </Link>
   </div>
 
-  {/* Group by group */}
-  {['Group A', 'Group B', 'Group C', 'Group D'].map((groupName) => {
+  {/* Group by group - All groups */}
+  {['Group A', 'Group B', 'Group C', 'Group D', 'Group E', 'Group F', 'Group G', 'Group H'].map((groupName) => {
     const groupMatches = mockWorldCupMatches.filter(match => match.group === groupName)
     if (groupMatches.length === 0) return null
     
