@@ -98,7 +98,7 @@ export default function HomePage() {
             <div>
               <h2 className="text-2xl font-bold text-text-primary">Today&apos;s Top Picks</h2>
               <p className="text-text-secondary text-sm mt-1">
-                AI-selected best opportunities ·{' '}
+                Selected best opportunities ·{' '}
                 {new Date().toLocaleDateString('en-GB', {
                   weekday: 'long',
                   day: 'numeric',
@@ -438,9 +438,9 @@ export default function HomePage() {
 <div className="mt-auto pt-1 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
   <span className="text-text-tertiary text-[8px] sm:text-[10px] text-center sm:text-left w-full sm:w-auto">
     {new Date(match.matchDate || '2026-06-15').toLocaleDateString('en-GB', {
-      weekday: 'short',
+      weekday: 'long',
       day: 'numeric',
-      month: 'short',
+      month: 'long',
       year: 'numeric'
     })}
   </span>
