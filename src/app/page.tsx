@@ -246,6 +246,7 @@ export default function HomePage() {
             </div>
           </section>
         )}
+
 {/* Upcoming Matches */}
 <section className="py-10 border-t border-border">
   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6">
@@ -263,6 +264,7 @@ export default function HomePage() {
       }}
     >
       View all
+      <ChevronRight className="w-3.5 h-3.5 ml-1" />
     </Link>
   </div>
   
@@ -273,15 +275,9 @@ export default function HomePage() {
           
           {/* Teams - Home on left, Away on right */}
           <div className="flex flex-col items-center w-full sm:flex-1 gap-1 mb-2 sm:mb-0">
-            {/* Time in the middle at the top */}
-            <div className="flex items-center gap-1 sm:hidden">
-              <Clock className="w-3 h-3 text-text-tertiary" />
-              <span className="text-text-secondary text-[10px]">{match.kickoff}</span>
-            </div>
-            
-            <div className="flex items-center justify-between w-full gap-2">
+            <div className="flex items-center w-full gap-2">
               {/* Home Team - Left */}
-              <div className="flex items-center gap-2 min-w-0">
+              <div className="flex items-center gap-2 min-w-0 flex-1">
                 <div className="relative w-5 h-5 sm:w-6 sm:h-6 shrink-0">
                   <Image src={match.homeTeamLogo} alt={match.homeTeam} fill className="object-contain" />
                 </div>
@@ -291,17 +287,26 @@ export default function HomePage() {
               {/* VS with Time and Top Pick - Center */}
               <div className="flex flex-col items-center shrink-0">
                 <span className="text-text-tertiary text-[8px] sm:text-xs font-medium">vs</span>
-                <span className="text-text-secondary text-[8px] sm:text-xs hidden sm:block">{match.kickoff}</span>
-                <span className="text-text-secondary text-[8px] sm:text-xs hidden sm:block">{match.topPick}</span>
+                <div className="flex items-center gap-1 mt-0.5">
+                  <Clock className="w-3 h-3 text-text-tertiary hidden sm:block" />
+                  <span className="text-text-secondary text-[8px] sm:text-xs">{match.kickoff}</span>
+                </div>
+                <span className="text-text-secondary text-[8px] sm:text-xs mt-0.5">{match.topPick}</span>
               </div>
               
               {/* Away Team - Right */}
-              <div className="flex items-center gap-2 min-w-0">
+              <div className="flex items-center gap-2 min-w-0 flex-1 justify-end">
                 <span className="text-text-primary text-xs sm:text-sm font-medium truncate">{match.awayTeam}</span>
                 <div className="relative w-5 h-5 sm:w-6 sm:h-6 shrink-0">
                   <Image src={match.awayTeamLogo} alt={match.awayTeam} fill className="object-contain" />
                 </div>
               </div>
+            </div>
+            
+            {/* Time - Mobile only */}
+            <div className="flex items-center gap-1 sm:hidden">
+              <Clock className="w-3 h-3 text-text-tertiary" />
+              <span className="text-text-secondary text-[10px]">{match.kickoff}</span>
             </div>
           </div>
           
