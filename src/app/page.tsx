@@ -303,11 +303,12 @@ export default function HomePage() {
             
 {/* VS Card - Transparent glass effect */}
 {/* VS Card - Pure glass effect */}
+{/* VS Card - Glass effect matching sign up page */}
 <div className="relative flex-shrink-0">
-  {/* Subtle glow behind */}
+  {/* Glow effect behind */}
   <div className="absolute inset-0 bg-white/5 blur-xl rounded-full" />
   
-  <div className="relative bg-white/5 backdrop-blur-xl rounded-2xl w-14 h-14 sm:w-16 sm:h-16 flex flex-col items-center justify-center shadow-lg shadow-black/20 border border-white/10">
+  <div className="relative bg-white/10 backdrop-blur-md rounded-2xl w-14 h-14 sm:w-16 sm:h-16 flex flex-col items-center justify-center shadow-lg shadow-black/20 border border-white/10">
     <span className="text-text-primary font-bold text-xs sm:text-sm tracking-wide">VS</span>
     <div className="flex gap-0.5 mt-0.5">
       <span className="w-1 h-1 rounded-full bg-text-tertiary/40" />
