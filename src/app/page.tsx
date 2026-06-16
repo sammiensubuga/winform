@@ -50,7 +50,7 @@ export default function HomePage() {
     
 <Link 
   href="/results" 
- className="flex items-center justify-center gap-2 px-6 py-2 text-center bg-accent hover:bg-accent-hover text-white rounded-lg mx-fit"
+ className="flex items-center justify-center gap-2 px-6 py-2 text-center bg-accent hover:bg-accent-hover text-white rounded-lg w-fit"
                     style={{ border: '1px solid #22C55E' }}
                   >
 
