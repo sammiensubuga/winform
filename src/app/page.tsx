@@ -296,41 +296,41 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* World Cup 2026 - Centered with full-width button */}
-        <section className="py-6 sm:py-10 border-t border-border">
-          <div className="text-center mb-8">
-            <div className="flex items-center justify-center gap-3 mb-2">
-              <Trophy className="w-6 h-6 sm:w-7 sm:h-7 text-amber-400" />
-              <h2 className="text-2xl sm:text-3xl font-bold text-text-primary">World Cup 2026</h2>
-            </div>
-            <p className="text-text-secondary text-sm sm:text-base">Tournament predictions · Group stage</p>
-            
-            {/* Full width centered button */}
-            <Link 
-              href="/world-cup" 
-              className="inline-flex items-center justify-center w-full sm:w-auto px-8 py-2.5 mt-5 rounded-lg text-sm sm:text-base font-medium transition mx-auto"
-              style={{ 
-                border: '1px solid #D4AF37',
-                color: 'white',
-                backgroundColor: 'transparent'
-              }}
-            >
-              View all
-            </Link>
-          </div>
+    {/* World Cup 2026 - Matching Top Picks size */}
+<section className="py-10 border-t border-border">
+  <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-6">
+    <div>
+      <div className="flex items-center gap-2 mb-1">
+        <Trophy className="w-5 h-5 text-amber-400" />
+        <h2 className="text-2xl font-bold text-text-primary">World Cup 2026</h2>
+      </div>
+      <p className="text-text-secondary text-sm">Tournament predictions · Group stage</p>
+    </div>
+    <Link 
+      href="/world-cup" 
+      className="inline-flex items-center justify-center w-full sm:w-auto px-4 py-1.5 mt-3 sm:mt-0 rounded-lg text-sm font-medium transition"
+      style={{ 
+        border: '1px solid #D4AF37',
+        color: 'white',
+        backgroundColor: 'transparent'
+      }}
+    >
+      View all
+    </Link>
+  </div>
 
-          {/* Group by group - All groups */}
-          {['Group A', 'Group B', 'Group C', 'Group D', 'Group E', 'Group F', 'Group G', 'Group H'].map((groupName) => {
-            const groupMatches = mockWorldCupMatches.filter(match => match.group === groupName)
-            if (groupMatches.length === 0) return null
-            
-            return (
-              <div key={groupName} className="mb-4 sm:mb-6">
-                <h3 className="text-xs sm:text-sm text-text-tertiary uppercase tracking-wider mb-2 sm:mb-3 font-medium">
-                  {groupName}
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-                  {groupMatches.map((match) => (
+  {/* Group by group - All groups */}
+  {['Group A', 'Group B', 'Group C', 'Group D', 'Group E', 'Group F', 'Group G', 'Group H'].map((groupName) => {
+    const groupMatches = mockWorldCupMatches.filter(match => match.group === groupName)
+    if (groupMatches.length === 0) return null
+    
+    return (
+      <div key={groupName} className="mb-4 sm:mb-6">
+        <h3 className="text-xs sm:text-sm text-text-tertiary uppercase tracking-wider mb-2 sm:mb-3 font-medium">
+          {groupName}
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+          {groupMatches.map((match) => (
                     <Link key={match.id} href={`/matches/${match.slug}`}>
                       <div className="bg-card border border-border hover:border-accent/50 rounded-xl p-3 sm:p-4 transition-all duration-200 cursor-pointer h-full flex flex-col gap-2 sm:gap-3">
                         
