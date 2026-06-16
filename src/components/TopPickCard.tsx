@@ -273,10 +273,18 @@ const getProgressColor = () => {
               year: 'numeric'
             })}
           </span>
-          <Link href={`/matches/${match.slug}`} className="flex items-center gap-1 text-amber-400 text-xs font-medium hover:underline">
-            <span>Details</span>
-            <ChevronRight className="w-3 h-3" />
-          </Link>
+        <Link 
+  href={`/matches/${match.slug}`} 
+  className="inline-flex items-center gap-1 text-xs font-medium px-3 py-1.5 rounded-lg transition"
+  style={{ 
+    color: 'white',
+    border: '1px solid #D4AF37',
+    backgroundColor: 'transparent'
+  }}
+>
+  <span>Details</span>
+  <ChevronRight className="w-3 h-3" />
+</Link>
         </div>
 
       </div>
