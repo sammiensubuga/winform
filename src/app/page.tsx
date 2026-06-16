@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Hero from '@/components/Hero'
 import TopPickCard from '@/components/TopPickCard'
 import LiveMatchBanner from '@/components/LiveMatchBanner'
-import { CheckCircle, XCircle } from 'lucide-react'
+import { Star, Zap, Target, CheckCircle, XCircle } from 'lucide-react'
 import ConfidenceBadge from '@/components/ConfidenceBadge'
 import {
   mockTopPicks,
@@ -13,6 +13,7 @@ import {
   mockYesterdayStats,
   mockLeagues,
 } from '@/lib/mock-data'
+
 
 const SHOW_LIVE = mockLiveMatches.length > 0
 
@@ -72,44 +73,53 @@ export default function HomePage() {
             </Link>
           </div>
 
-          {elitePicks.length > 0 && (
-            <div className="mb-8">
-              <p className="text-xs text-text-tertiary uppercase tracking-widest mb-4 font-medium">
-                ⭐ Elite Picks — 80%+ confidence
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {elitePicks.map(match => (
-                  <TopPickCard key={match.id} match={match} />
-                ))}
-              </div>
-            </div>
-          )}
+       {elitePicks.length > 0 && (
+  <div className="mb-8">
+    <div className="flex items-center gap-2 mb-4">
+      <Star className="w-4 h-4 text-amber-400" />
+      <p className="text-xs text-text-tertiary uppercase tracking-wider font-medium">
+        Elite Picks 80%+ confidence
+      </p>
+    </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {elitePicks.map(match => (
+        <TopPickCard key={match.id} match={match} />
+      ))}
+    </div>
+  </div>
+)}
 
-          {strongPicks.length > 0 && (
-            <div className="mb-8">
-              <p className="text-xs text-text-tertiary uppercase tracking-widest mb-4 font-medium">
-                💪 Strong Picks — 70–79% confidence
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {strongPicks.map(match => (
-                  <TopPickCard key={match.id} match={match} />
-                ))}
-              </div>
-            </div>
-          )}
+{strongPicks.length > 0 && (
+  <div className="mb-8">
+    <div className="flex items-center gap-2 mb-4">
+      <Zap className="w-4 h-4 text-green-500" />
+      <p className="text-xs text-text-tertiary uppercase tracking-wider font-medium">
+        Strong Picks  70–79% confidence
+      </p>
+    </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {strongPicks.map(match => (
+        <TopPickCard key={match.id} match={match} />
+      ))}
+    </div>
+  </div>
+)}
 
-          {valuePicks.length > 0 && (
-            <div className="mb-8">
-              <p className="text-xs text-text-tertiary uppercase tracking-widest mb-4 font-medium">
-                🎯 Value Picks — 55–69% confidence
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {valuePicks.map(match => (
-                  <TopPickCard key={match.id} match={match} />
-                ))}
-              </div>
-            </div>
-          )}
+{valuePicks.length > 0 && (
+  <div className="mb-8">
+    <div className="flex items-center gap-2 mb-4">
+      <Target className="w-4 h-4 text-blue-500" />
+      <p className="text-xs text-text-tertiary uppercase tracking-wider font-medium">
+        Value Picks  55–69% confidence
+      </p>
+    </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {valuePicks.map(match => (
+        <TopPickCard key={match.id} match={match} />
+      ))}
+    </div>
+  </div>
+)}
         </section>
 
         {/* Yesterday's Performance */}
