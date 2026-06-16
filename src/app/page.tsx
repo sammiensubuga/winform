@@ -435,7 +435,6 @@ const CircularProgress = ({ percentage, color }: { percentage: number; color: st
                     }}
                   >
                     <span>Details</span>
-                    <ChevronRight className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                   </Link>
                 </div>
 
