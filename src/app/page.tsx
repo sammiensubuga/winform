@@ -301,18 +301,10 @@ export default function HomePage() {
               <span className="text-text-primary font-semibold text-xs sm:text-sm text-center truncate w-full max-w-[80px]">{match.homeTeam}</span>
             </div>
             
-{/* VS Card - Transparent glass effect */}
+{/* VS Card - Premium transparent button with only VS */}
 <div className="relative flex-shrink-0">
-  {/* Glow effect behind */}
-  <div className="absolute inset-0 bg-white/5 blur-xl rounded-full" />
-  
-  <div className="relative bg-white/5 backdrop-blur-md rounded-2xl w-14 h-14 sm:w-16 sm:h-16 flex flex-col items-center justify-center shadow-lg shadow-black/20 border border-white/10">
+  <div className="relative bg-transparent backdrop-blur-sm rounded-xl w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center border border-white/20 hover:border-white/40 transition-all duration-200 cursor-default">
     <span className="text-text-primary font-bold text-xs sm:text-sm tracking-wide">VS</span>
-    <div className="flex gap-0.5 mt-0.5">
-      <span className="w-1 h-1 rounded-full bg-text-tertiary/40" />
-      <span className="w-1 h-1 rounded-full bg-text-tertiary/40" />
-      <span className="w-1 h-1 rounded-full bg-text-tertiary/40" />
-    </div>
   </div>
 </div>
             
