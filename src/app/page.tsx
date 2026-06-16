@@ -57,7 +57,7 @@ export default function HomePage() {
           backgroundColor: 'transparent'
         }}
       >
-        See all results →
+        See all results
       </Link>
     </div>
   </div>
