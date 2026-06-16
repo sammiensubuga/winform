@@ -209,67 +209,70 @@ useEffect(() => {
         </div>
 
         {/* Main row: Teams, Logos, and Score */}
-        <div className="flex items-center justify-between gap-2 sm:gap-3 mt-2">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-1.5 sm:gap-2 mb-1">
-              <div className="relative w-5 h-5 sm:w-6 sm:h-6 shrink-0">
-                <Image
-                  src={match.homeTeamLogo}
-                  alt={match.homeTeam}
-                  fill
-                  className="object-contain"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none'
-                  }}
-                />
-              </div>
-              <p className="text-text-primary font-bold text-sm sm:text-lg truncate">
-                {match.homeTeam}
-              </p>
-            </div>
-            <div className="flex items-center gap-2 sm:gap-3 pl-6 sm:pl-8">
-              <span className="text-text-tertiary text-[8px] sm:text-[10px]">
-                Shots {match.shots.home}
-              </span>
-              <span className="text-text-tertiary text-[8px] sm:text-[10px]">
-                {possessionHome}%
-              </span>
-            </div>
-          </div>
+<div className="flex items-center justify-between gap-2 sm:gap-3 mt-2">
+  {/* Home Team */}
+  <div className="flex-1 min-w-0">
+    <div className="flex flex-col items-center gap-1">
+      <div className="relative w-8 h-8 sm:w-10 sm:h-10 shrink-0">
+        <Image
+          src={match.homeTeamLogo}
+          alt={match.homeTeam}
+          fill
+          className="object-contain"
+          onError={(e) => {
+            (e.target as HTMLImageElement).style.display = 'none'
+          }}
+        />
+      </div>
+      <p className="text-text-primary font-bold text-xs sm:text-sm truncate text-center">
+        {match.homeTeam}
+      </p>
+    </div>
+    <div className="flex items-center justify-center gap-2 sm:gap-3 mt-1">
+      <span className="text-text-tertiary text-[8px] sm:text-[10px]">
+        Shots {match.shots.home}
+      </span>
+      <span className="text-text-tertiary text-[8px] sm:text-[10px]">
+        {possessionHome}%
+      </span>
+    </div>
+  </div>
 
-          <div className="text-center shrink-0 px-2">
-            <span className="text-text-primary font-bold text-xl sm:text-3xl whitespace-nowrap">
-              {homeScore} — {awayScore}
-            </span>
-          </div>
+  {/* Score - Horizontal on one line */}
+  <div className="text-center shrink-0 px-2">
+    <span className="text-text-primary font-bold text-xl sm:text-3xl whitespace-nowrap">
+      {homeScore} — {awayScore}
+    </span>
+  </div>
 
-          <div className="flex-1 min-w-0 text-right">
-            <div className="flex items-center justify-end gap-1.5 sm:gap-2 mb-1">
-              <p className="text-text-primary font-bold text-sm sm:text-lg truncate">
-                {match.awayTeam}
-              </p>
-              <div className="relative w-5 h-5 sm:w-6 sm:h-6 shrink-0">
-                <Image
-                  src={match.awayTeamLogo}
-                  alt={match.awayTeam}
-                  fill
-                  className="object-contain"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none'
-                  }}
-                />
-              </div>
-            </div>
-            <div className="flex items-center justify-end gap-2 sm:gap-3 pr-6 sm:pr-8">
-              <span className="text-text-tertiary text-[8px] sm:text-[10px]">
-                {possessionAway}%
-              </span>
-              <span className="text-text-tertiary text-[8px] sm:text-[10px]">
-                Shots {match.shots.away}
-              </span>
-            </div>
-          </div>
-        </div>
+  {/* Away Team */}
+  <div className="flex-1 min-w-0 text-right">
+    <div className="flex flex-col items-center gap-1">
+      <div className="relative w-8 h-8 sm:w-10 sm:h-10 shrink-0">
+        <Image
+          src={match.awayTeamLogo}
+          alt={match.awayTeam}
+          fill
+          className="object-contain"
+          onError={(e) => {
+            (e.target as HTMLImageElement).style.display = 'none'
+          }}
+        />
+      </div>
+      <p className="text-text-primary font-bold text-xs sm:text-sm truncate text-center">
+        {match.awayTeam}
+      </p>
+    </div>
+    <div className="flex items-center justify-center gap-2 sm:gap-3 mt-1">
+      <span className="text-text-tertiary text-[8px] sm:text-[10px]">
+        {possessionAway}%
+      </span>
+      <span className="text-text-tertiary text-[8px] sm:text-[10px]">
+        Shots {match.shots.away}
+      </span>
+    </div>
+  </div>
+</div>
 
         {/* Speedometer Gauge */}
         <div className="mt-3">
