@@ -420,16 +420,24 @@ const CircularProgress = ({ percentage, color }: { percentage: number; color: st
                   </p>
                 </div>
 
-                {/* Match Date and Details */}
-                <div className="mt-auto pt-1 flex items-center justify-between">
-                  <span className="text-text-tertiary text-[10px]">
-                    {new Date(match.matchDate || '2026-06-15').toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}
-                  </span>
-                  <div className="flex items-center gap-1 text-amber-400 text-xs font-medium hover:underline">
-                    <span>Details</span>
-                    <ChevronRight className="w-3 h-3" />
-                  </div>
-                </div>
+           {/* Match Date and Premium Details Button */}
+<div className="mt-auto pt-1 flex items-center justify-between">
+  <span className="text-text-tertiary text-[10px]">
+    {new Date(match.matchDate || '2026-06-15').toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}
+  </span>
+  <Link 
+    href={`/matches/${match.slug}`}
+    className="inline-flex items-center gap-1 text-xs font-medium px-3 py-1.5 rounded-lg transition"
+    style={{ 
+      color: 'white',
+      border: '1px solid #D4AF37',
+      backgroundColor: 'transparent'
+    }}
+  >
+    <span>Details</span>
+    <ChevronRight className="w-3 h-3" />
+  </Link>
+</div>
 
               </div>
             </Link>
