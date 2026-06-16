@@ -255,52 +255,154 @@ export default function HomePage() {
   </div>
 </section>
 
-        {/* World Cup 2026 */}
-        <section className="py-10 border-t border-border">
-          <div className="relative bg-gradient-to-br from-accent/10 via-card to-warning/5 border border-accent/20 rounded-2xl p-6 overflow-hidden">
-            <div className="absolute top-0 right-0 text-8xl opacity-5 select-none pointer-events-none leading-none">
-              🏆
+     {/* World Cup 2026 */}
+<section className="py-10 border-t border-border">
+  <div className="flex items-center justify-between mb-6">
+    <div>
+      <div className="flex items-center gap-2 mb-1">
+        <Trophy className="w-5 h-5 text-amber-400" />
+        <h2 className="text-2xl font-bold text-text-primary">World Cup 2026</h2>
+      </div>
+      <p className="text-text-secondary text-sm">Tournament predictions · Group stage</p>
+    </div>
+    <Link href="/world-cup" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition" style={{ border: '1px solid #D4AF37', color: 'white', backgroundColor: 'transparent' }}>
+      View all
+      <ChevronRight className="w-3.5 h-3.5" />
+    </Link>
+  </div>
+  
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    {mockWorldCupMatches.map((match) => (
+      <Link key={match.id} href={`/matches/${match.slug}`}>
+        <div className="bg-card border border-border hover:border-accent/50 rounded-xl p-4 transition-all duration-200 cursor-pointer h-full flex flex-col gap-3">
+          
+          {/* League, Stadium, Time */}
+          <div className="flex items-center justify-between gap-2 mb-1">
+            <div className="flex items-center gap-1.5 min-w-0 flex-1">
+              <Trophy className="w-4 h-4 text-amber-400 shrink-0" />
+              <span className="text-xs text-text-secondary font-medium truncate">World Cup 2026</span>
             </div>
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-warning text-lg">🏆</span>
-                  <h2 className="text-xl font-bold text-text-primary">World Cup 2026</h2>
-                </div>
-                <p className="text-text-secondary text-sm">Today&apos;s tournament predictions</p>
-              </div>
-              <Link href="/world-cup" className="text-accent text-sm hover:underline">
-                View all →
-              </Link>
+            <div className="flex-1 text-center">
+              <span className="text-xs text-text-secondary">{match.kickoff}</span>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {mockWorldCupMatches.map(match => (
-                <Link key={match.id} href={`/matches/${match.slug}`}>
-                  <div className="bg-background/60 border border-border hover:border-accent/40 rounded-xl p-4 transition-all cursor-pointer">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-text-secondary text-xs">{match.kickoff}</span>
-                      <ConfidenceBadge tier={match.confidenceTier} confidence={match.confidence} size="sm" />
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="relative w-8 h-8 flex-shrink-0">
-                        <Image src={match.homeTeamLogo} alt={match.homeTeam} fill className="object-contain" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-text-primary text-sm font-medium truncate">
-                          {match.homeTeam} vs {match.awayTeam}
-                        </p>
-                        <p className="text-accent text-xs font-medium mt-0.5">{match.topPick}</p>
-                      </div>
-                      <div className="relative w-8 h-8 flex-shrink-0">
-                        <Image src={match.awayTeamLogo} alt={match.awayTeam} fill className="object-contain" />
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
+            <div className="flex-1 text-right">
+              <span className="text-xs text-text-tertiary">{match.venue || 'Stadium'}</span>
             </div>
           </div>
-        </section>
+
+          {/* Divider */}
+          <div className="border-t border-border" />
+
+          {/* Teams and Form */}
+          <div className="flex items-center justify-between gap-3">
+            {/* Home Team */}
+            <div className="flex-1 text-center">
+              <div className="relative w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2">
+                <Image src={match.homeTeamLogo} alt={match.homeTeam} fill className="object-contain" />
+              </div>
+              <p className="text-text-primary font-semibold text-xs sm:text-sm truncate px-1">{match.homeTeam}</p>
+              <div className="flex justify-center gap-0.5 sm:gap-1 mt-2">
+                {match.homeForm?.split('').map((letter, idx) => (
+                  <span key={idx} className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold ${letter === 'W' ? 'bg-green-500 text-white' : letter === 'L' ? 'bg-red-500 text-white' : 'bg-gray-500 text-white'}`}>
+                    {letter}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* VS */}
+            <div className="text-text-tertiary text-[10px] sm:text-xs font-medium shrink-0">VS</div>
+
+            {/* Away Team */}
+            <div className="flex-1 text-center">
+              <div className="relative w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2">
+                <Image src={match.awayTeamLogo} alt={match.awayTeam} fill className="object-contain" />
+              </div>
+              <p className="text-text-primary font-semibold text-xs sm:text-sm truncate px-1">{match.awayTeam}</p>
+              <div className="flex justify-center gap-0.5 sm:gap-1 mt-2">
+                {match.awayForm?.split('').map((letter, idx) => (
+                  <span key={idx} className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold ${letter === 'W' ? 'bg-green-500 text-white' : letter === 'L' ? 'bg-red-500 text-white' : 'bg-gray-500 text-white'}`}>
+                    {letter}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Win, Draw, Win - One line with headings */}
+          <div className="flex items-center justify-center gap-4 mt-2">
+            <div className="text-center">
+              <p className="text-text-tertiary text-[10px] uppercase tracking-wider">Win</p>
+              <div className="flex items-center justify-center gap-1">
+                <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                <span className="text-text-primary text-xs font-semibold">{match.homeProbability || 58}%</span>
+              </div>
+            </div>
+            <div className="text-center">
+              <p className="text-text-tertiary text-[10px] uppercase tracking-wider">Draw</p>
+              <div className="flex items-center justify-center gap-1">
+                <div className="w-2 h-2 rounded-full bg-orange-500"></div>
+                <span className="text-text-primary text-xs font-semibold">{match.drawProbability || 24}%</span>
+              </div>
+            </div>
+            <div className="text-center">
+              <p className="text-text-tertiary text-[10px] uppercase tracking-wider">Win</p>
+              <div className="flex items-center justify-center gap-1">
+                <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                <span className="text-text-primary text-xs font-semibold">{match.awayProbability || 20}%</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="border-t border-border" />
+
+          {/* Top Pick and Odds */}
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-1 min-w-0">
+              <Trophy className="w-4 h-4 text-amber-400 shrink-0" />
+              <p className="text-text-primary font-semibold text-sm truncate">{match.topPick}</p>
+            </div>
+            <div className="flex items-center gap-1 shrink-0">
+              <span className="text-text-primary font-bold text-sm">{match.odds.toFixed(2)}</span>
+            </div>
+          </div>
+
+          {/* Confidence */}
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-text-secondary text-xs">Confidence</span>
+              <span className={`text-sm font-bold ${match.confidenceTier === 'elite' ? 'text-amber-400' : match.confidenceTier === 'strong' ? 'text-green-500' : 'text-blue-500'}`}>{match.confidence}%</span>
+            </div>
+            <div className="w-full bg-gray-700 rounded-full h-1.5">
+              <div className={`rounded-full h-1.5 ${match.confidenceTier === 'elite' ? 'bg-amber-400' : match.confidenceTier === 'strong' ? 'bg-green-500' : 'bg-blue-500'}`} style={{ width: `${match.confidence}%` }} />
+            </div>
+          </div>
+
+          {/* Analysis */}
+          <div>
+            <p className="text-text-tertiary text-xs uppercase tracking-wider mb-1">Analysis</p>
+            <p className="text-text-secondary text-xs leading-relaxed line-clamp-2">
+              {match.aiPreviewShort || 'Both teams have shown strong form in recent matches.'}
+            </p>
+          </div>
+
+          {/* Match Date and Details */}
+          <div className="mt-auto pt-1 flex items-center justify-between">
+            <span className="text-text-tertiary text-[10px]">
+              {new Date().toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}
+            </span>
+            <div className="flex items-center gap-1 text-amber-400 text-xs font-medium hover:underline">
+              <span>Details</span>
+              <ChevronRight className="w-3 h-3" />
+            </div>
+          </div>
+
+        </div>
+      </Link>
+    ))}
+  </div>
+</section>
 
         {/* League Explorer */}
         <section className="py-10 border-t border-border">
