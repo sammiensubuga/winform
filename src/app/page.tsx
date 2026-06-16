@@ -434,28 +434,28 @@ export default function HomePage() {
                   </p>
                 </div>
 
-                {/* Match Date and Full-width Details Button */}
-                <div className="mt-auto pt-1 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
-                  <span className="text-text-tertiary text-[8px] sm:text-[10px]">
-                    {new Date(match.matchDate || '2026-06-15').toLocaleDateString('en-GB', {
-                      weekday: 'short',
-                      day: 'numeric',
-                      month: 'short',
-                      year: 'numeric'
-                    })}
-                  </span>
-                  <Link 
-                    href={`/matches/${match.slug}`}
-                    className="inline-flex items-center justify-center text-[8px] sm:text-xs font-medium px-3 py-1.5 rounded-lg transition w-full sm:w-auto"
-                    style={{ 
-                      color: 'white',
-                      border: '1px solid #D4AF37',
-                      backgroundColor: 'transparent'
-                    }}
-                  >
-                    <span>Details</span>
-                  </Link>
-                </div>
+   {/* Match Date and Details - Matching TopPickCard exactly */}
+<div className="mt-auto pt-1 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
+  <span className="text-text-tertiary text-[8px] sm:text-[10px] text-center sm:text-left w-full sm:w-auto">
+    {new Date(match.matchDate || '2026-06-15').toLocaleDateString('en-GB', {
+      weekday: 'short',
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    })}
+  </span>
+  <Link 
+    href={`/matches/${match.slug}`}
+    className="inline-flex items-center justify-center text-[8px] sm:text-xs font-medium px-3 py-1.5 rounded-lg transition w-full sm:w-auto"
+    style={{ 
+      color: 'white',
+      border: '1px solid #D4AF37',
+      backgroundColor: 'transparent'
+    }}
+  >
+    <span>Details</span>
+  </Link>
+</div>
 
               </div>
             </Link>

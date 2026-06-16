@@ -263,13 +263,13 @@ const getProgressColor = () => {
           </p>
         </div>
 
-{/* Match Date and Details - Matching TopPickCard */}
+{/* Match Date and Full-width Details Button */}
 <div className="mt-auto pt-1 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
-  <span className="text-text-tertiary text-[8px] sm:text-[10px] text-center sm:text-left w-full sm:w-auto">
-    {new Date(match.matchDate || '2026-06-15').toLocaleDateString('en-GB', {
-      weekday: 'short',
+  <span className="text-text-tertiary text-[8px] sm:text-[10px]">
+    {new Date(match.matchDate).toLocaleDateString('en-GB', {
+      weekday: 'long',
       day: 'numeric',
-      month: 'short',
+      month: 'long',
       year: 'numeric'
     })}
   </span>
