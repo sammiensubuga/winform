@@ -36,6 +36,19 @@ export default function LiveMatchBanner({ match }: LiveMatchProps) {
   const [possessionHome, setPossessionHome] = useState(match.possession.home)
   const [possessionAway, setPossessionAway] = useState(match.possession.away)
   
+  // Get match session display
+  const getMatchSession = (minute: number) => {
+    if (minute < 45) return `${minute}'`
+    if (minute === 45) return '45\' HT'
+    if (minute > 45 && minute < 90) return `${minute}'`
+    if (minute === 90) return '90\' FT'
+    if (minute > 90 && minute < 105) return `${minute}'`
+    if (minute === 105) return 'ET HT'
+    if (minute > 105 && minute < 120) return `ET ${minute - 90}'`
+    if (minute === 120) return 'ET FT'
+    return `${minute}'`
+  }
+
   // Update time every second
   useEffect(() => {
     const timer = setInterval(() => {
@@ -81,7 +94,7 @@ export default function LiveMatchBanner({ match }: LiveMatchProps) {
   useEffect(() => {
     const possessionTimer = setInterval(() => {
       setPossessionHome(prev => {
-        const change = (Math.random() * 4) - 2 // -2 to +2
+        const change = (Math.random() * 4) - 2
         const newVal = Math.max(30, Math.min(70, prev + change))
         const roundedVal = Math.round(newVal)
         setPossessionAway(100 - roundedVal)
@@ -95,44 +108,36 @@ export default function LiveMatchBanner({ match }: LiveMatchProps) {
   const possessionTotal = possessionHome + possessionAway
   const possessionPercent = possessionTotal > 0 ? (possessionHome / possessionTotal) * 100 : 50
 
+  const sessionDisplay = getMatchSession(time.minutes)
+
   return (
     <Link href={`/matches/${match.slug}`}>
       <div className="relative bg-gradient-to-br from-red-950/40 to-card border-l-4 border-red-500 border border-border rounded-xl p-3 sm:p-4 hover:border-red-500/70 transition-all cursor-pointer h-full overflow-hidden">
         
-        {/* iPhone-style Recording Indicator - Top Center */}
-        <div className="absolute top-1 left-1/2 -translate-x-1/2 z-10">
-          <div className="bg-black/80 backdrop-blur-md rounded-full px-3 py-0.5 flex items-center gap-1.5 border border-white/10 shadow-lg">
-            <div className="relative">
-              <span className="w-1.5 h-1.5 rounded-full bg-red-500 inline-block animate-pulse" />
-              <span className="absolute inset-0 w-1.5 h-1.5 rounded-full bg-red-500 animate-ping opacity-75" />
-            </div>
-            <span className="text-white text-[10px] font-mono font-bold tabular tracking-wider">
-              {String(time.minutes).padStart(2, '0')}:{String(time.seconds).padStart(2, '0')}
-            </span>
-            <div className="flex gap-0.5">
-              <span className="w-0.5 h-0.5 rounded-full bg-white/40" />
-              <span className="w-0.5 h-0.5 rounded-full bg-white/40" />
-              <span className="w-0.5 h-0.5 rounded-full bg-white/40" />
-            </div>
+        {/* Top row: League + Session */}
+        <div className="flex items-center justify-between mt-1">
+          {/* League name with logo - Left */}
+          <div className="flex items-center gap-1.5">
+            {match.leagueLogo && (
+              <div className="relative w-4 h-4 shrink-0">
+                <Image
+                  src={match.leagueLogo}
+                  alt={match.league}
+                  fill
+                  className="object-contain"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = 'none'
+                  }}
+                />
+              </div>
+            )}
+            <span className="text-text-secondary text-[10px] sm:text-xs font-medium">{match.league}</span>
           </div>
-        </div>
-
-        {/* League name with logo - Left */}
-        <div className="flex items-center gap-1.5 mt-2">
-          {match.leagueLogo && (
-            <div className="relative w-4 h-4 shrink-0">
-              <Image
-                src={match.leagueLogo}
-                alt={match.league}
-                fill
-                className="object-contain"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = 'none'
-                }}
-              />
-            </div>
-          )}
-          <span className="text-text-secondary text-[10px] sm:text-xs font-medium">{match.league}</span>
+          
+          {/* Match Session - Right */}
+          <div className="text-text-secondary text-[10px] sm:text-xs font-medium tabular">
+            {sessionDisplay}
+          </div>
         </div>
 
         {/* Main row: Teams, Logos, and Score */}
@@ -258,7 +263,7 @@ export default function LiveMatchBanner({ match }: LiveMatchProps) {
           </div>
         </div>
 
-        {/* Possession Bar - Now dynamic */}
+        {/* Possession Bar - Dynamic */}
         <div className="mt-3 sm:mt-4">
           <div className="flex items-center justify-between mb-1">
             <span className="text-text-tertiary text-[8px] sm:text-[10px]">{possessionHome}%</span>
