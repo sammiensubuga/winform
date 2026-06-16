@@ -134,42 +134,63 @@ export default function HomePage() {
 )}
         </section>
 
-        {/* Yesterday's Performance */}
-        <section className="py-10 border-t border-border">
-          <h2 className="text-2xl font-bold text-text-primary mb-6">Yesterday&apos;s Performance</h2>
-          <div className="bg-card border border-border rounded-2xl p-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {[
-                { value: mockYesterdayStats.wins, label: 'Wins', color: 'text-success' },
-                { value: mockYesterdayStats.losses, label: 'Losses', color: 'text-danger' },
-                { value: `${mockYesterdayStats.accuracy}%`, label: 'Accuracy', color: 'text-text-primary' },
-                {
-                  value: `${mockYesterdayStats.record.wins}W/${mockYesterdayStats.record.losses}L`,
-                  label: 'Last 30 picks',
-                  color: 'text-accent',
-                },
-              ].map(stat => (
-                <div key={stat.label} className="text-center">
-                  <p className={`text-3xl font-bold tabular ${stat.color}`}>{stat.value}</p>
-                  <p className="text-text-secondary text-sm mt-1">{stat.label}</p>
-                </div>
-              ))}
-            </div>
-            <div className="border-t border-border mt-6 pt-5 flex flex-wrap items-center gap-6">
-              <div className="flex items-center gap-2">
-                <span className="text-text-secondary text-sm">Last 7 days:</span>
-                <span className="text-text-primary font-semibold text-sm tabular">{mockYesterdayStats.last7Days}%</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-text-secondary text-sm">Last 30 days:</span>
-                <span className="text-text-primary font-semibold text-sm tabular">{mockYesterdayStats.last30Days}%</span>
-              </div>
-              <Link href="/results" className="ml-auto text-accent text-sm hover:underline">
-                Full record →
-              </Link>
-            </div>
-          </div>
-        </section>
+       {/* Yesterday's Performance */}
+<section className="py-10 border-t border-border">
+  <div className="text-center mb-8">
+   <h2 className="text-2xl font-bold text-text-primary mb-2">Yesterday&apos;s Performance</h2>
+    <p className="text-text-secondary text-sm">Full transparency — every prediction logged and tracked</p>
+  </div>
+  
+  <div className="bg-card border border-border rounded-2xl p-6">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div className="text-center">
+        <p className="text-3xl font-bold tabular" style={{ color: '#22C55E' }}>{mockYesterdayStats.wins}</p>
+        <p className="text-text-secondary text-sm mt-1">Wins</p>
+      </div>
+      <div className="text-center">
+        <p className="text-3xl font-bold tabular" style={{ color: '#EF4444' }}>{mockYesterdayStats.losses}</p>
+        <p className="text-text-secondary text-sm mt-1">Losses</p>
+      </div>
+      <div className="text-center">
+        <p className="text-3xl font-bold tabular text-text-primary">{mockYesterdayStats.accuracy}%</p>
+        <p className="text-text-secondary text-sm mt-1">Accuracy</p>
+      </div>
+      <div className="text-center">
+        <p className="text-3xl font-bold tabular text-accent">{mockYesterdayStats.record.wins}W-{mockYesterdayStats.record.losses}L</p>
+        <p className="text-text-secondary text-sm mt-1">Last 30 picks</p>
+      </div>
+    </div>
+    
+    <div className="border-t border-border mt-6 pt-5 flex flex-wrap items-center justify-center gap-6">
+      <div className="flex items-center gap-2">
+        <span className="text-text-secondary text-sm">Last 7 days:</span>
+        <span className="text-text-primary font-semibold text-sm tabular">{mockYesterdayStats.last7Days}%</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <span className="text-text-secondary text-sm">Last 30 days:</span>
+        <span className="text-text-primary font-semibold text-sm tabular">{mockYesterdayStats.last30Days}%</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <span className="text-text-secondary text-sm">All time:</span>
+        <span className="text-text-primary font-semibold text-sm tabular">68.4%</span>
+      </div>
+    </div>
+    
+    <div className="flex justify-center mt-6">
+      <Link
+        href="/results"
+        className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition"
+        style={{ 
+          border: '1px solid #D4AF37',
+          color: 'white',
+          backgroundColor: 'transparent'
+        }}
+      >
+        Full record
+      </Link>
+    </div>
+  </div>
+</section>
 
         {/* Live Matches — only shown when live matches exist */}
         {SHOW_LIVE && (
