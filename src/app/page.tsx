@@ -98,9 +98,9 @@ const CircularProgress = ({ percentage, color }: { percentage: number; color: st
     <div>
       <h2 className="text-2xl font-bold text-text-primary">Today&apos;s Top Picks</h2>
       <p className="text-text-secondary text-sm mt-1">
-        AI-selected best opportunities ·{' '}
+        Selected best opportunities ·{' '}
         {new Date().toLocaleDateString('en-GB', {
-          weekday: 'long',
+          weekday: 'short',
           day: 'numeric',
           month: 'long',
           year: 'numeric',
@@ -428,7 +428,7 @@ const CircularProgress = ({ percentage, color }: { percentage: number; color: st
                   </p>
                 </div>
 
-                {/* Match Date and Premium Details Button - Mobile optimized */}
+              
                {/* Match Date and Premium Details Button - Full width on mobile */}
 <div className="mt-auto pt-1 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
   <span className="text-text-tertiary text-[8px] sm:text-[10px]">

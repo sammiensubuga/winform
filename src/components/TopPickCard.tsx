@@ -267,9 +267,9 @@ const getProgressColor = () => {
         <div className="mt-auto pt-1 flex items-center justify-between">
           <span className="text-text-tertiary text-[10px]">
             {new Date(match.matchDate).toLocaleDateString('en-GB', {
-              weekday: 'short',
+              weekday: 'long',
               day: 'numeric',
-              month: 'short',
+              month: 'long',
               year: 'numeric'
             })}
           </span>
