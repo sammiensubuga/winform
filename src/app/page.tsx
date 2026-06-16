@@ -110,7 +110,7 @@ export default function HomePage() {
   <div className="mb-8">
     <div className="flex items-center gap-2 mb-4">
       <Star className="w-4 h-4 text-amber-400" />
-      <p className="text-xs font-medium text-amber-400">
+      <p className="text-xs font-medium" style={{ color: '#fbbf24' }}>
         Elite Picks 80%+ confidence
       </p>
     </div>
@@ -126,7 +126,7 @@ export default function HomePage() {
   <div className="mb-8">
     <div className="flex items-center gap-2 mb-4">
       <Zap className="w-4 h-4 text-green-500" />
-      <p className="text-xs font-medium text-green-500">
+      <p className="text-xs font-medium" style={{ color: '#22c55e' }}>
         Strong Picks 70–79% confidence
       </p>
     </div>
@@ -142,7 +142,7 @@ export default function HomePage() {
   <div className="mb-8">
     <div className="flex items-center gap-2 mb-4">
       <Target className="w-4 h-4 text-blue-500" />
-      <p className="text-xs font-medium text-blue-500">
+      <p className="text-xs font-medium" style={{ color: '#3b82f6' }}>
         Value Picks 55–69% confidence
       </p>
     </div>
