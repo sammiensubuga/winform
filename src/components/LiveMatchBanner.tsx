@@ -288,21 +288,18 @@ export default function LiveMatchBanner({ match }: LiveMatchProps) {
             {/* Dynamic gradient zones based on match state */}
             <div className="absolute inset-0 flex">
               {homeScore > awayScore ? (
-                // Home team winning - Green home zone
                 <>
                   <div className="w-1/3 bg-green-500/40"></div>
                   <div className="w-1/3 bg-gray-600/30"></div>
                   <div className="w-1/3 bg-gray-600/30"></div>
                 </>
               ) : homeScore < awayScore ? (
-                // Away team winning - Green away zone
                 <>
                   <div className="w-1/3 bg-gray-600/30"></div>
                   <div className="w-1/3 bg-gray-600/30"></div>
                   <div className="w-1/3 bg-green-500/40"></div>
                 </>
               ) : (
-                // Draw - Orange draw zone
                 <>
                   <div className="w-1/3 bg-gray-600/30"></div>
                   <div className="w-1/3 bg-orange-500/40"></div>
@@ -347,7 +344,11 @@ export default function LiveMatchBanner({ match }: LiveMatchProps) {
           {/* W/D/W percentages below gauge with dynamic colors */}
           <div className="flex items-center justify-between mt-4">
             <div className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-green-500"></span>
+              <span className={`w-2 h-2 rounded-full ${
+                homeScore > awayScore ? 'bg-green-500' : 
+                homeScore < awayScore ? 'bg-red-500' : 
+                'bg-green-500'
+              }`}></span>
               <span className={`text-xs font-bold ${
                 homeScore > awayScore ? 'text-green-500' : 
                 homeScore < awayScore ? 'text-red-500' : 
@@ -366,7 +367,11 @@ export default function LiveMatchBanner({ match }: LiveMatchProps) {
               </span>
             </div>
             <div className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+              <span className={`w-2 h-2 rounded-full ${
+                awayScore > homeScore ? 'bg-green-500' : 
+                awayScore < homeScore ? 'bg-red-500' : 
+                'bg-blue-500'
+              }`}></span>
               <span className={`text-xs font-bold ${
                 awayScore > homeScore ? 'text-green-500' : 
                 awayScore < homeScore ? 'text-red-500' : 
