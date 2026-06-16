@@ -100,9 +100,9 @@ export default function HomePage() {
 )}
 
 {strongPicks.length > 0 && (
- <div className="mb-8">
+  <div className="mb-8">
     <div className="flex items-center gap-2 mb-4">
-      <Star className="w-4 h-4 text-green-500" />
+      <Zap className="w-4 h-4 text-green-500" />
       <p className="text-xs font-medium">
         <span className="text-text-tertiary"> Strong Picks </span>
         <span className="text-green-500">70-79% confidence</span>
@@ -116,11 +116,10 @@ export default function HomePage() {
   </div>
 )}
 
-
 {valuePicks.length > 0 && (
- <div className="mb-8">
+  <div className="mb-8">
     <div className="flex items-center gap-2 mb-4">
-      <Star className="w-4 h-4 text-blue-500" />
+      <Target className="w-4 h-4 text-blue-500" />
       <p className="text-xs font-medium">
         <span className="text-text-tertiary"> Value Picks </span>
         <span className="text-blue-500">55-69% confidence</span>
