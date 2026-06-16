@@ -47,9 +47,25 @@ export default function HomePage() {
         {mockYesterdayStats.accuracy}% accuracy
       </span>
     </div>
-    <Link href="/results" className="inline-block text-accent text-xs hover:underline mt-3">
-      See all results →
-    </Link>
+  <Link 
+  href="/results" 
+  className="inline-block text-xs font-medium px-4 py-1.5 rounded-lg transition-all duration-200 mt-3"
+  style={{ 
+    color: '#22C55E',
+    border: '1px solid #22C55E',
+    backgroundColor: 'transparent'
+  }}
+  onMouseEnter={(e) => {
+    e.currentTarget.style.backgroundColor = '#22C55E'
+    e.currentTarget.style.color = 'white'
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.backgroundColor = 'transparent'
+    e.currentTarget.style.color = '#22C55E'
+  }}
+>
+  See all results →
+</Link>
   </div>
 </div>
 
