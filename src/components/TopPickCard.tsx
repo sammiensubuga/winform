@@ -257,7 +257,7 @@ const getProgressColor = () => {
 
         {/* Analysis Section */}
         <div>
-          <p className="text-text-tertiary text-xs uppercase tracking-wider mb-1">Analysis</p>
+          <p className="text-text-tertiary text-xs tracking-wider mb-1">Analysis</p>
           <p className="text-text-secondary text-xs leading-relaxed line-clamp-2">
             {match.aiPreviewShort}
           </p>

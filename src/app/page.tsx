@@ -246,56 +246,60 @@ export default function HomePage() {
             </div>
           </section>
         )}
-
-        {/* Upcoming Matches */}
-        <section className="py-10 border-t border-border">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-text-secondary" />
-              <h2 className="text-2xl font-bold text-text-primary">Upcoming Matches</h2>
+{/* Upcoming Matches */}
+<section className="py-10 border-t border-border">
+  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6">
+    <div className="flex items-center gap-2">
+      <Calendar className="w-5 h-5 text-text-secondary" />
+      <h2 className="text-2xl font-bold text-text-primary">Upcoming Matches</h2>
+    </div>
+    <Link 
+      href="/matches" 
+      className="inline-flex items-center justify-center w-full sm:w-auto px-4 py-1.5 mt-3 sm:mt-0 rounded-lg text-sm font-medium transition"
+      style={{ 
+        border: '1px solid #D4AF37',
+        color: 'white',
+        backgroundColor: 'transparent'
+      }}
+    >
+      View all
+      <ChevronRight className="w-3.5 h-3.5 ml-1" />
+    </Link>
+  </div>
+  
+  <div className="bg-card border border-border rounded-2xl overflow-hidden">
+    {mockUpcomingMatches.map((match, index) => (
+      <Link key={match.id} href={`/matches/${match.slug}`}>
+        <div className={`flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 sm:p-4 hover:bg-card-hover transition-colors cursor-pointer ${index !== mockUpcomingMatches.length - 1 ? 'border-b border-border' : ''}`}>
+          
+          {/* Teams - Mobile optimized */}
+          <div className="flex items-center gap-2 flex-1 min-w-0 w-full sm:w-auto mb-2 sm:mb-0">
+            <div className="relative w-5 h-5 sm:w-6 sm:h-6 shrink-0">
+              <Image src={match.homeTeamLogo} alt={match.homeTeam} fill className="object-contain" />
             </div>
-            <Link 
-              href="/matches" 
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition"
-              style={{ 
-                border: '1px solid #D4AF37',
-                color: 'white',
-                backgroundColor: 'transparent'
-              }}
-            >
-              View all
-              <ChevronRight className="w-3.5 h-3.5" />
-            </Link>
+            <span className="text-text-primary text-xs sm:text-sm font-medium truncate">{match.homeTeam}</span>
+            <span className="text-text-tertiary text-[8px] sm:text-xs shrink-0">vs</span>
+            <div className="relative w-5 h-5 sm:w-6 sm:h-6 shrink-0">
+              <Image src={match.awayTeamLogo} alt={match.awayTeam} fill className="object-contain" />
+            </div>
+            <span className="text-text-primary text-xs sm:text-sm font-medium truncate">{match.awayTeam}</span>
           </div>
-          <div className="bg-card border border-border rounded-2xl overflow-hidden">
-            {mockUpcomingMatches.map((match, index) => (
-              <Link key={match.id} href={`/matches/${match.slug}`}>
-                <div className={`flex items-center justify-between p-4 hover:bg-card-hover transition-colors cursor-pointer ${index !== mockUpcomingMatches.length - 1 ? 'border-b border-border' : ''}`}>
-                  <div className="flex items-center gap-3 flex-1 min-w-0">
-                    <div className="relative w-6 h-6 shrink-0">
-                      <Image src={match.homeTeamLogo} alt={match.homeTeam} fill className="object-contain" />
-                    </div>
-                    <span className="text-text-primary text-sm font-medium truncate">{match.homeTeam}</span>
-                    <span className="text-text-tertiary text-xs shrink-0">vs</span>
-                    <div className="relative w-6 h-6 shrink-0">
-                      <Image src={match.awayTeamLogo} alt={match.awayTeam} fill className="object-contain" />
-                    </div>
-                    <span className="text-text-primary text-sm font-medium truncate">{match.awayTeam}</span>
-                  </div>
-                  <div className="flex items-center gap-3 shrink-0 ml-4">
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-3 h-3 text-text-tertiary" />
-                      <span className="text-text-secondary text-xs hidden sm:block">{match.kickoff}</span>
-                    </div>
-                    <ConfidenceBadge tier={match.confidenceTier} confidence={match.confidence} size="sm" />
-                    <span className="text-text-secondary text-xs hidden lg:block">{match.topPick}</span>
-                  </div>
-                </div>
-              </Link>
-            ))}
+          
+          {/* Details - Mobile optimized */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0 w-full sm:w-auto justify-start sm:justify-end">
+            <div className="flex items-center gap-1">
+              <Clock className="w-3 h-3 text-text-tertiary" />
+              <span className="text-text-secondary text-[10px] sm:text-xs">{match.kickoff}</span>
+            </div>
+            <ConfidenceBadge tier={match.confidenceTier} confidence={match.confidence} size="sm" />
+            <span className="text-text-secondary text-[10px] sm:text-xs hidden lg:block">{match.topPick}</span>
           </div>
-        </section>
-
+          
+        </div>
+      </Link>
+    ))}
+  </div>
+</section>
   {/* World Cup 2026 - Matching TopPickCard size */}
 <section className="py-10 border-t border-border">
   <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-6">
