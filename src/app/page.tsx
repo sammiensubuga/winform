@@ -246,7 +246,7 @@ export default function HomePage() {
             </div>
           </section>
         )}
-
+        
 {/* Upcoming Matches */}
 <section className="py-10 border-t border-border">
   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6">
@@ -271,31 +271,26 @@ export default function HomePage() {
   <div className="bg-card border border-border rounded-2xl overflow-hidden">
     {mockUpcomingMatches.map((match, index) => (
       <Link key={match.id} href={`/matches/${match.slug}`}>
-        <div className={`flex flex-col sm:flex-row items-start sm:items-center p-3 sm:p-4 hover:bg-card-hover transition-colors cursor-pointer ${index !== mockUpcomingMatches.length - 1 ? 'border-b border-border' : ''}`}>
+        <div className={`flex flex-col items-center p-3 sm:p-4 hover:bg-card-hover transition-colors cursor-pointer ${index !== mockUpcomingMatches.length - 1 ? 'border-b border-border' : ''}`}>
           
-          {/* Teams - Home on left, Away on right */}
-          <div className="flex flex-col items-center w-full sm:flex-1 gap-1 mb-2 sm:mb-0">
-            <div className="flex items-center w-full gap-2">
+          {/* VS with Time, Teams, and ConfidenceBadge - All centered */}
+          <div className="flex flex-col items-center w-full gap-1">
+            
+            {/* Teams row */}
+            <div className="flex items-center justify-between w-full gap-2">
               {/* Home Team - Left */}
-              <div className="flex items-center gap-2 min-w-0 flex-1">
+              <div className="flex items-center gap-2 min-w-0">
                 <div className="relative w-5 h-5 sm:w-6 sm:h-6 shrink-0">
                   <Image src={match.homeTeamLogo} alt={match.homeTeam} fill className="object-contain" />
                 </div>
                 <span className="text-text-primary text-xs sm:text-sm font-medium truncate">{match.homeTeam}</span>
               </div>
               
-              {/* VS with Time and Top Pick - Center */}
-              <div className="flex flex-col items-center shrink-0">
-                <span className="text-text-tertiary text-[8px] sm:text-xs font-medium">vs</span>
-                <div className="flex items-center gap-1 mt-0.5">
-                  <Clock className="w-3 h-3 text-text-tertiary hidden sm:block" />
-                  <span className="text-text-secondary text-[8px] sm:text-xs">{match.kickoff}</span>
-                </div>
-                <span className="text-text-secondary text-[8px] sm:text-xs mt-0.5">{match.topPick}</span>
-              </div>
+              {/* VS - Center */}
+              <span className="text-text-tertiary text-[8px] sm:text-xs font-medium shrink-0">vs</span>
               
               {/* Away Team - Right */}
-              <div className="flex items-center gap-2 min-w-0 flex-1 justify-end">
+              <div className="flex items-center gap-2 min-w-0">
                 <span className="text-text-primary text-xs sm:text-sm font-medium truncate">{match.awayTeam}</span>
                 <div className="relative w-5 h-5 sm:w-6 sm:h-6 shrink-0">
                   <Image src={match.awayTeamLogo} alt={match.awayTeam} fill className="object-contain" />
@@ -303,16 +298,15 @@ export default function HomePage() {
               </div>
             </div>
             
-            {/* Time - Mobile only */}
-            <div className="flex items-center gap-1 sm:hidden">
-              <Clock className="w-3 h-3 text-text-tertiary" />
-              <span className="text-text-secondary text-[10px]">{match.kickoff}</span>
+            {/* Time and ConfidenceBadge - Centered below */}
+            <div className="flex flex-col items-center gap-0.5 mt-1">
+              <div className="flex items-center gap-1">
+                <Clock className="w-3 h-3 text-text-tertiary" />
+                <span className="text-text-secondary text-[10px] sm:text-xs">{match.kickoff}</span>
+              </div>
+              <ConfidenceBadge tier={match.confidenceTier} confidence={match.confidence} size="sm" />
             </div>
-          </div>
-          
-          {/* Details - Right side */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0 w-full sm:w-auto justify-start sm:justify-end">
-            <ConfidenceBadge tier={match.confidenceTier} confidence={match.confidence} size="sm" />
+            
           </div>
           
         </div>
