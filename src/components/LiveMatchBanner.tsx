@@ -30,6 +30,9 @@ interface LiveMatchProps {
 
 export default function LiveMatchBanner({ match }: LiveMatchProps) {
   const [time, setTime] = useState({ minutes: match.minute, seconds: 0 })
+  const [homeProb, setHomeProb] = useState(match.homeProbability || 52)
+  const [drawProb, setDrawProb] = useState(match.drawProbability || 24)
+  const [awayProb, setAwayProb] = useState(match.awayProbability || 24)
   
   // Update time every second
   useEffect(() => {
@@ -47,6 +50,31 @@ export default function LiveMatchBanner({ match }: LiveMatchProps) {
     
     return () => clearInterval(timer)
   }, [])
+
+  // Update probabilities every 3 seconds (simulate match dynamics)
+  useEffect(() => {
+    const probTimer = setInterval(() => {
+      setHomeProb(prev => {
+        const change = (Math.random() * 6) - 3 // -3 to +3
+        const newVal = Math.max(30, Math.min(70, prev + change))
+        const roundedVal = Math.round(newVal)
+        // Adjust draw and away to keep total 100%
+        const remaining = 100 - roundedVal
+        const currentDraw = drawProb
+        const currentAway = awayProb
+        const totalDA = currentDraw + currentAway
+        if (totalDA > 0) {
+          const newDraw = Math.round((currentDraw / totalDA) * remaining)
+          const newAway = remaining - newDraw
+          setDrawProb(Math.max(15, Math.min(40, newDraw)))
+          setAwayProb(Math.max(15, Math.min(40, newAway)))
+        }
+        return roundedVal
+      })
+    }, 3000)
+    
+    return () => clearInterval(probTimer)
+  }, [drawProb, awayProb])
 
   const possessionHome = match.possession.home
   const possessionAway = match.possession.away
@@ -91,27 +119,6 @@ export default function LiveMatchBanner({ match }: LiveMatchProps) {
             </div>
           )}
           <span className="text-text-secondary text-[10px] sm:text-xs font-medium">{match.league}</span>
-        </div>
-
-        {/* Right - Win/Draw/Win Probabilities in circles with labels */}
-        <div className="absolute right-3 top-3 sm:right-4 sm:top-4 z-10">
-          <div className="flex items-center gap-1.5">
-            <div className="flex items-center gap-0.5 bg-green-500/10 border border-green-500/20 rounded-full px-1.5 py-0.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-              <span className="text-green-500 font-bold text-[8px] sm:text-[10px]">W</span>
-              <span className="text-text-primary font-bold text-[10px] sm:text-xs">{match.homeProbability || 52}%</span>
-            </div>
-            <div className="flex items-center gap-0.5 bg-orange-500/10 border border-orange-500/20 rounded-full px-1.5 py-0.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
-              <span className="text-orange-500 font-bold text-[8px] sm:text-[10px]">D</span>
-              <span className="text-text-primary font-bold text-[10px] sm:text-xs">{match.drawProbability || 24}%</span>
-            </div>
-            <div className="flex items-center gap-0.5 bg-blue-500/10 border border-blue-500/20 rounded-full px-1.5 py-0.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-              <span className="text-blue-500 font-bold text-[8px] sm:text-[10px]">W</span>
-              <span className="text-text-primary font-bold text-[10px] sm:text-xs">{match.awayProbability || 20}%</span>
-            </div>
-          </div>
         </div>
 
         {/* Main row: Teams, Logos, and Score */}
@@ -176,6 +183,63 @@ export default function LiveMatchBanner({ match }: LiveMatchProps) {
               <span className="text-text-tertiary text-[8px] sm:text-[10px]">
                 Shots {match.shots.away}
               </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Speedometer Gauge - Like a car tachometer */}
+        <div className="mt-3">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-text-tertiary text-[8px] sm:text-[10px]">Home Win</span>
+            <span className="text-text-tertiary text-[8px] sm:text-[10px]">Draw</span>
+            <span className="text-text-tertiary text-[8px] sm:text-[10px]">Away Win</span>
+          </div>
+          
+          <div className="relative w-full h-8 bg-gray-800 rounded-full overflow-hidden">
+            {/* Gradient zones */}
+            <div className="absolute inset-0 flex">
+              <div className="w-1/3 bg-green-500/30"></div>
+              <div className="w-1/3 bg-orange-500/30"></div>
+              <div className="w-1/3 bg-blue-500/30"></div>
+            </div>
+            
+            {/* Needle */}
+            <div 
+              className="absolute top-0 w-0.5 h-full bg-white shadow-lg transition-all duration-700 ease-out"
+              style={{ 
+                left: `${(homeProb - 30) / 40 * 100}%`,
+                transform: 'translateX(-50%)'
+              }}
+            >
+              <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-red-500 rounded-full shadow-lg shadow-red-500/50"></div>
+            </div>
+            
+            {/* Percentage labels on the gauge */}
+            <div className="absolute inset-0 flex items-center justify-between px-2">
+              <span className="text-[8px] font-bold text-white/60">30%</span>
+              <span className="text-[8px] font-bold text-white/60">50%</span>
+              <span className="text-[8px] font-bold text-white/60">70%</span>
+            </div>
+            
+            {/* Needle value indicator */}
+            <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 text-[8px] font-bold text-white">
+              {homeProb}%
+            </div>
+          </div>
+          
+          {/* W/D/W percentages below gauge */}
+          <div className="flex items-center justify-between mt-4">
+            <div className="flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-green-500"></span>
+              <span className="text-text-primary font-bold text-xs">{homeProb}%</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-orange-500"></span>
+              <span className="text-text-primary font-bold text-xs">{drawProb}%</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+              <span className="text-text-primary font-bold text-xs">{awayProb}%</span>
             </div>
           </div>
         </div>
