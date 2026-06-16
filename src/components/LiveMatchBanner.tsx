@@ -89,14 +89,14 @@ export default function LiveMatchBanner({ match }: LiveMatchProps) {
   const [awayProb, setAwayProb] = useState(probs.away)
 
   // Update probabilities when score or time changes
-useEffect(() => {
-  const newProbs = calculateProbabilities()
-  /* eslint-disable react-hooks/set-state-in-effect */
-  setHomeProb(newProbs.home)
-  setDrawProb(newProbs.draw)
-  setAwayProb(newProbs.away)
-  /* eslint-enable react-hooks/set-state-in-effect */
-}, [homeScore, awayScore, time.minutes])
+  useEffect(() => {
+    const newProbs = calculateProbabilities()
+    /* eslint-disable react-hooks/set-state-in-effect */
+    setHomeProb(newProbs.home)
+    setDrawProb(newProbs.draw)
+    setAwayProb(newProbs.away)
+    /* eslint-enable react-hooks/set-state-in-effect */
+  }, [homeScore, awayScore, time.minutes])
 
   // Update time every second
   useEffect(() => {
@@ -131,20 +131,22 @@ useEffect(() => {
     return () => clearInterval(possessionTimer)
   }, [])
 
-  // Simulate a goal every 20-30 seconds (for demo)
+  // Simulate goals every 20 seconds
   useEffect(() => {
     const goalTimer = setInterval(() => {
-      if (Math.random() < 0.15) {
-        if (Math.random() < 0.6) {
-          setHomeScore(prev => prev + 1)
-        } else {
-          setAwayScore(prev => prev + 1)
+      if (time.minutes < 90) {
+        if (Math.random() < 0.12) {
+          if (Math.random() < 0.55) {
+            setHomeScore(prev => prev + 1)
+          } else {
+            setAwayScore(prev => prev + 1)
+          }
         }
       }
     }, 20000)
     
     return () => clearInterval(goalTimer)
-  }, [])
+  }, [time.minutes])
 
   const possessionTotal = possessionHome + possessionAway
   const possessionPercent = possessionTotal > 0 ? (possessionHome / possessionTotal) * 100 : 50
@@ -209,72 +211,72 @@ useEffect(() => {
         </div>
 
         {/* Main row: Teams, Logos, and Score */}
-<div className="flex items-center justify-between gap-2 sm:gap-3 mt-2">
-  {/* Home Team */}
-  <div className="flex-1 min-w-0">
-    <div className="flex flex-col items-center gap-1">
-      <div className="relative w-8 h-8 sm:w-10 sm:h-10 shrink-0">
-        <Image
-          src={match.homeTeamLogo}
-          alt={match.homeTeam}
-          fill
-          className="object-contain"
-          onError={(e) => {
-            (e.target as HTMLImageElement).style.display = 'none'
-          }}
-        />
-      </div>
-      <p className="text-text-primary font-bold text-xs sm:text-sm truncate text-center">
-        {match.homeTeam}
-      </p>
-    </div>
-    <div className="flex items-center justify-center gap-2 sm:gap-3 mt-1">
-      <span className="text-text-tertiary text-[8px] sm:text-[10px]">
-        Shots {match.shots.home}
-      </span>
-      <span className="text-text-tertiary text-[8px] sm:text-[10px]">
-        {possessionHome}%
-      </span>
-    </div>
-  </div>
+        <div className="flex items-center justify-between gap-2 sm:gap-3 mt-2">
+          {/* Home Team */}
+          <div className="flex-1 min-w-0">
+            <div className="flex flex-col items-center gap-1">
+              <div className="relative w-8 h-8 sm:w-10 sm:h-10 shrink-0">
+                <Image
+                  src={match.homeTeamLogo}
+                  alt={match.homeTeam}
+                  fill
+                  className="object-contain"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = 'none'
+                  }}
+                />
+              </div>
+              <p className="text-text-primary font-bold text-xs sm:text-sm truncate text-center">
+                {match.homeTeam}
+              </p>
+            </div>
+            <div className="flex items-center justify-center gap-2 sm:gap-3 mt-1">
+              <span className="text-text-tertiary text-[8px] sm:text-[10px]">
+                Shots {match.shots.home}
+              </span>
+              <span className="text-text-tertiary text-[8px] sm:text-[10px]">
+                {possessionHome}%
+              </span>
+            </div>
+          </div>
 
-  {/* Score - Horizontal on one line */}
-  <div className="text-center shrink-0 px-2">
-    <span className="text-text-primary font-bold text-xl sm:text-3xl whitespace-nowrap">
-      {homeScore} — {awayScore}
-    </span>
-  </div>
+          {/* Score - Horizontal on one line */}
+          <div className="text-center shrink-0 px-2">
+            <span className="text-text-primary font-bold text-xl sm:text-3xl whitespace-nowrap">
+              {homeScore} — {awayScore}
+            </span>
+          </div>
 
-  {/* Away Team */}
-  <div className="flex-1 min-w-0 text-right">
-    <div className="flex flex-col items-center gap-1">
-      <div className="relative w-8 h-8 sm:w-10 sm:h-10 shrink-0">
-        <Image
-          src={match.awayTeamLogo}
-          alt={match.awayTeam}
-          fill
-          className="object-contain"
-          onError={(e) => {
-            (e.target as HTMLImageElement).style.display = 'none'
-          }}
-        />
-      </div>
-      <p className="text-text-primary font-bold text-xs sm:text-sm truncate text-center">
-        {match.awayTeam}
-      </p>
-    </div>
-    <div className="flex items-center justify-center gap-2 sm:gap-3 mt-1">
-      <span className="text-text-tertiary text-[8px] sm:text-[10px]">
-        {possessionAway}%
-      </span>
-      <span className="text-text-tertiary text-[8px] sm:text-[10px]">
-        Shots {match.shots.away}
-      </span>
-    </div>
-  </div>
-</div>
+          {/* Away Team */}
+          <div className="flex-1 min-w-0 text-right">
+            <div className="flex flex-col items-center gap-1">
+              <div className="relative w-8 h-8 sm:w-10 sm:h-10 shrink-0">
+                <Image
+                  src={match.awayTeamLogo}
+                  alt={match.awayTeam}
+                  fill
+                  className="object-contain"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = 'none'
+                  }}
+                />
+              </div>
+              <p className="text-text-primary font-bold text-xs sm:text-sm truncate text-center">
+                {match.awayTeam}
+              </p>
+            </div>
+            <div className="flex items-center justify-center gap-2 sm:gap-3 mt-1">
+              <span className="text-text-tertiary text-[8px] sm:text-[10px]">
+                {possessionAway}%
+              </span>
+              <span className="text-text-tertiary text-[8px] sm:text-[10px]">
+                Shots {match.shots.away}
+              </span>
+            </div>
+          </div>
+        </div>
 
-        {/* Speedometer Gauge */}
+        {/* Speedometer Gauge - Dynamic colors */}
         <div className="mt-3">
           <div className="flex items-center justify-between mb-1">
             <span className="text-text-tertiary text-[8px] sm:text-[10px]">Home Win</span>
@@ -283,45 +285,95 @@ useEffect(() => {
           </div>
           
           <div className="relative w-full h-8 bg-gray-800 rounded-full overflow-hidden">
+            {/* Dynamic gradient zones based on match state */}
             <div className="absolute inset-0 flex">
-              <div className="w-1/3 bg-green-500/30"></div>
-              <div className="w-1/3 bg-orange-500/30"></div>
-              <div className="w-1/3 bg-blue-500/30"></div>
+              {homeScore > awayScore ? (
+                // Home team winning - Green home zone
+                <>
+                  <div className="w-1/3 bg-green-500/40"></div>
+                  <div className="w-1/3 bg-gray-600/30"></div>
+                  <div className="w-1/3 bg-gray-600/30"></div>
+                </>
+              ) : homeScore < awayScore ? (
+                // Away team winning - Green away zone
+                <>
+                  <div className="w-1/3 bg-gray-600/30"></div>
+                  <div className="w-1/3 bg-gray-600/30"></div>
+                  <div className="w-1/3 bg-green-500/40"></div>
+                </>
+              ) : (
+                // Draw - Orange draw zone
+                <>
+                  <div className="w-1/3 bg-gray-600/30"></div>
+                  <div className="w-1/3 bg-orange-500/40"></div>
+                  <div className="w-1/3 bg-gray-600/30"></div>
+                </>
+              )}
             </div>
             
+            {/* Needle */}
             <div 
-              className="absolute top-0 w-0.5 h-full bg-white shadow-lg transition-all duration-700 ease-out"
+              className="absolute top-0 w-0.5 h-full shadow-lg transition-all duration-700 ease-out"
               style={{ 
                 left: `${(homeProb - 30) / 40 * 100}%`,
-                transform: 'translateX(-50%)'
+                transform: 'translateX(-50%)',
+                backgroundColor: homeScore > awayScore ? '#22C55E' : homeScore < awayScore ? '#22C55E' : '#F97316'
               }}
             >
-              <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-red-500 rounded-full shadow-lg shadow-red-500/50"></div>
+              <div 
+                className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full shadow-lg"
+                style={{ 
+                  backgroundColor: homeScore > awayScore ? '#22C55E' : homeScore < awayScore ? '#22C55E' : '#F97316',
+                  boxShadow: homeScore > awayScore ? '0 0 12px rgba(34, 197, 94, 0.6)' : 
+                              homeScore < awayScore ? '0 0 12px rgba(34, 197, 94, 0.6)' : 
+                              '0 0 12px rgba(249, 115, 22, 0.6)'
+                }}
+              />
             </div>
             
+            {/* Percentage labels on the gauge */}
             <div className="absolute inset-0 flex items-center justify-between px-2">
               <span className="text-[8px] font-bold text-white/60">30%</span>
               <span className="text-[8px] font-bold text-white/60">50%</span>
               <span className="text-[8px] font-bold text-white/60">70%</span>
             </div>
             
+            {/* Needle value indicator */}
             <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 text-[8px] font-bold text-white">
               {homeProb}%
             </div>
           </div>
           
+          {/* W/D/W percentages below gauge with dynamic colors */}
           <div className="flex items-center justify-between mt-4">
             <div className="flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-green-500"></span>
-              <span className="text-text-primary font-bold text-xs">{homeProb}%</span>
+              <span className={`text-xs font-bold ${
+                homeScore > awayScore ? 'text-green-500' : 
+                homeScore < awayScore ? 'text-red-500' : 
+                'text-text-primary'
+              }`}>
+                {homeProb}%
+              </span>
             </div>
             <div className="flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-orange-500"></span>
-              <span className="text-text-primary font-bold text-xs">{drawProb}%</span>
+              <span className={`text-xs font-bold ${
+                homeScore === awayScore ? 'text-orange-500' : 
+                'text-text-primary'
+              }`}>
+                {drawProb}%
+              </span>
             </div>
             <div className="flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-              <span className="text-text-primary font-bold text-xs">{awayProb}%</span>
+              <span className={`text-xs font-bold ${
+                awayScore > homeScore ? 'text-green-500' : 
+                awayScore < homeScore ? 'text-red-500' : 
+                'text-text-primary'
+              }`}>
+                {awayProb}%
+              </span>
             </div>
           </div>
         </div>
