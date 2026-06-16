@@ -285,23 +285,26 @@ const CircularProgress = ({ percentage, color }: { percentage: number; color: st
   </div>
 </section>
 
-{/* World Cup 2026 */}
+{/* World Cup 2026 - Centered with full-width button */}
 <section className="py-6 sm:py-10 border-t border-border">
-  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 sm:mb-6">
-    <div>
-      <div className="flex items-center gap-2 mb-1">
-        <Trophy className="w-5 h-5 text-amber-400" />
-        <h2 className="text-xl sm:text-2xl font-bold text-text-primary">World Cup 2026</h2>
-      </div>
-      <p className="text-text-secondary text-xs sm:text-sm">Tournament predictions · Group stage</p>
+  <div className="text-center mb-6">
+    <div className="flex items-center justify-center gap-2 mb-1">
+      <Trophy className="w-5 h-5 text-amber-400" />
+      <h2 className="text-xl sm:text-2xl font-bold text-text-primary">World Cup 2026</h2>
     </div>
+    <p className="text-text-secondary text-xs sm:text-sm">Tournament predictions · Group stage</p>
+    
+    {/* Full width centered button */}
     <Link 
       href="/world-cup" 
-      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition"
-      style={{ border: '1px solid #D4AF37', color: 'white', backgroundColor: 'transparent' }}
+      className="inline-flex items-center justify-center w-full sm:w-auto px-6 py-2 mt-4 rounded-lg text-sm font-medium transition mx-auto"
+      style={{ 
+        border: '1px solid #D4AF37',
+        color: 'white',
+        backgroundColor: 'transparent'
+      }}
     >
       View all
-      <ChevronRight className="w-3.5 h-3.5" />
     </Link>
   </div>
 
@@ -420,23 +423,24 @@ const CircularProgress = ({ percentage, color }: { percentage: number; color: st
                   </p>
                 </div>
 
-            {/* Match Date and Premium Details Button - Clean, no arrow */}
-<div className="mt-auto pt-1 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
-  <span className="text-text-tertiary text-[8px] sm:text-[10px]">
-    {new Date(match.matchDate || '2026-06-15').toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}
-  </span>
-  <Link 
-    href={`/matches/${match.slug}`}
-    className="inline-flex items-center justify-center text-[8px] sm:text-xs font-medium px-3 sm:px-3 py-1.5 sm:py-1.5 rounded-lg transition w-full sm:w-auto"
-    style={{ 
-      color: 'white',
-      border: '1px solid #D4AF37',
-      backgroundColor: 'transparent'
-    }}
-  >
-    <span>Details</span>
-  </Link>
-</div>
+                {/* Match Date and Premium Details Button - Mobile optimized */}
+                <div className="mt-auto pt-1 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
+                  <span className="text-text-tertiary text-[8px] sm:text-[10px]">
+                    {new Date(match.matchDate || '2026-06-15').toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}
+                  </span>
+                  <Link 
+                    href={`/matches/${match.slug}`}
+                    className="inline-flex items-center justify-center text-[8px] sm:text-xs font-medium px-3 sm:px-3 py-1.5 sm:py-1.5 rounded-lg transition w-full sm:w-auto"
+                    style={{ 
+                      color: 'white',
+                      border: '1px solid #D4AF37',
+                      backgroundColor: 'transparent'
+                    }}
+                  >
+                    <span>Details</span>
+                  </Link>
+                </div>
+
               </div>
             </Link>
           ))}
