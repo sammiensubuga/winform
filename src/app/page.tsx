@@ -22,6 +22,36 @@ export default function HomePage() {
   const strongPicks = mockTopPicks.filter(m => m.confidenceTier === 'strong')
   const valuePicks = mockTopPicks.filter(m => m.confidenceTier === 'value')
 
+  // Circular Progress Component
+const CircularProgress = ({ percentage, color }: { percentage: number; color: string }) => {
+  const radius = 20
+  const circumference = 2 * Math.PI * radius
+  const offset = circumference - (percentage / 100) * circumference
+  
+  return (
+    <div className="relative inline-flex items-center justify-center">
+      <svg className="w-12 h-12 sm:w-14 sm:h-14 transform -rotate-90">
+        <circle cx="50%" cy="50%" r={radius} stroke="#334155" strokeWidth="3" fill="none" />
+        <circle
+          cx="50%"
+          cy="50%"
+          r={radius}
+          stroke={color}
+          strokeWidth="3"
+          fill="none"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          strokeLinecap="round"
+          className="transition-all duration-500"
+        />
+      </svg>
+      <span className="absolute text-text-primary text-xs sm:text-sm font-bold">
+        {percentage}%
+      </span>
+    </div>
+  )
+}
+
   return (
     <>
       {/* Hero — full viewport, sits behind the transparent nav */}
@@ -255,7 +285,7 @@ export default function HomePage() {
   </div>
 </section>
 
-     {/* World Cup 2026 */}
+ {/* World Cup 2026 */}
 <section className="py-10 border-t border-border">
   <div className="flex items-center justify-between mb-6">
     <div>
@@ -265,7 +295,11 @@ export default function HomePage() {
       </div>
       <p className="text-text-secondary text-sm">Tournament predictions · Group stage</p>
     </div>
-    <Link href="/world-cup" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition" style={{ border: '1px solid #D4AF37', color: 'white', backgroundColor: 'transparent' }}>
+    <Link 
+      href="/world-cup" 
+      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition"
+      style={{ border: '1px solid #D4AF37', color: 'white', backgroundColor: 'transparent' }}
+    >
       View all
       <ChevronRight className="w-3.5 h-3.5" />
     </Link>
@@ -329,28 +363,24 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Win, Draw, Win - One line with headings */}
-          <div className="flex items-center justify-center gap-4 mt-2">
-            <div className="text-center">
-              <p className="text-text-tertiary text-[10px] uppercase tracking-wider">Win</p>
-              <div className="flex items-center justify-center gap-1">
-                <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                <span className="text-text-primary text-xs font-semibold">{match.homeProbability || 58}%</span>
-              </div>
+          {/* Win, Draw, Win - Circular Progress with Headings */}
+          <div className="flex items-center justify-between gap-2 mt-2">
+            {/* Home Win */}
+            <div className="flex-1 flex flex-col items-center">
+              <span className="text-text-tertiary text-[10px] uppercase tracking-wider mb-1">Win</span>
+              <CircularProgress percentage={match.homeProbability || 58} color="#22C55E" />
             </div>
-            <div className="text-center">
-              <p className="text-text-tertiary text-[10px] uppercase tracking-wider">Draw</p>
-              <div className="flex items-center justify-center gap-1">
-                <div className="w-2 h-2 rounded-full bg-orange-500"></div>
-                <span className="text-text-primary text-xs font-semibold">{match.drawProbability || 24}%</span>
-              </div>
+            
+            {/* Draw */}
+            <div className="flex flex-col items-center">
+              <span className="text-text-tertiary text-[10px] uppercase tracking-wider mb-1">Draw</span>
+              <CircularProgress percentage={match.drawProbability || 24} color="#F97316" />
             </div>
-            <div className="text-center">
-              <p className="text-text-tertiary text-[10px] uppercase tracking-wider">Win</p>
-              <div className="flex items-center justify-center gap-1">
-                <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                <span className="text-text-primary text-xs font-semibold">{match.awayProbability || 20}%</span>
-              </div>
+            
+            {/* Away Win */}
+            <div className="flex-1 flex flex-col items-center">
+              <span className="text-text-tertiary text-[10px] uppercase tracking-wider mb-1">Win</span>
+              <CircularProgress percentage={match.awayProbability || 20} color="#3B82F6" />
             </div>
           </div>
 
@@ -390,7 +420,12 @@ export default function HomePage() {
           {/* Match Date and Details */}
           <div className="mt-auto pt-1 flex items-center justify-between">
             <span className="text-text-tertiary text-[10px]">
-              {new Date().toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}
+              {new Date(match.matchDate || '2026-06-15').toLocaleDateString('en-GB', { 
+                weekday: 'short', 
+                day: 'numeric', 
+                month: 'short', 
+                year: 'numeric' 
+              })}
             </span>
             <div className="flex items-center gap-1 text-amber-400 text-xs font-medium hover:underline">
               <span>Details</span>
