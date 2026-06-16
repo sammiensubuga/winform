@@ -260,7 +260,6 @@ export default function HomePage() {
       }}
     >
       View all
-      <ChevronRight className="w-3.5 h-3.5 ml-1" />
     </Link>
   </div>
   
@@ -269,11 +268,10 @@ export default function HomePage() {
       <Link key={match.id} href={`/matches/${match.slug}`}>
         <div className="bg-card border border-border hover:border-accent/50 rounded-xl p-4 transition-all duration-200 cursor-pointer flex flex-col items-center gap-3">
           
-          {/* Date and Time - Outside the VS card */}
-          <div className="flex items-center gap-2 text-text-secondary text-xs">
+          {/* Date and Time - Stacked vertically */}
+          <div className="flex flex-col items-center text-text-secondary text-xs">
             <span>{match.kickoff.includes('Tomorrow') ? 'Tomorrow' : 'Today'}</span>
-            <span>·</span>
-            <span>{match.kickoff.replace('Tomorrow ', '').replace('Today ', '')}</span>
+            <span className="text-[10px] text-text-tertiary">{match.kickoff.replace('Tomorrow ', '').replace('Today ', '')}</span>
           </div>
           
           {/* Teams - Logos above names */}
@@ -305,6 +303,7 @@ export default function HomePage() {
     ))}
   </div>
 </section>
+
   {/* World Cup 2026 - Matching TopPickCard size */}
 <section className="py-10 border-t border-border">
   <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-6">
