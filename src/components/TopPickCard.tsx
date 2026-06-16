@@ -263,29 +263,28 @@ const getProgressColor = () => {
           </p>
         </div>
 
-        {/* Match Date and Details Link */}
-        <div className="mt-auto pt-1 flex items-center justify-between">
-          <span className="text-text-tertiary text-[10px]">
-            {new Date(match.matchDate).toLocaleDateString('en-GB', {
-              weekday: 'long',
-              day: 'numeric',
-              month: 'long',
-              year: 'numeric'
-            })}
-          </span>
-        <Link 
-  href={`/matches/${match.slug}`} 
-  className="inline-flex items-center gap-1 text-xs font-medium px-3 py-1.5 rounded-lg transition"
-  style={{ 
-    color: 'white',
-    border: '1px solid #D4AF37',
-    backgroundColor: 'transparent'
-  }}
->
-  <span>Details</span>
-  <ChevronRight className="w-3 h-3" />
-</Link>
-        </div>
+{/* Match Date and Full-width Details Button */}
+<div className="mt-auto pt-1 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
+  <span className="text-text-tertiary text-[8px] sm:text-[10px]">
+    {new Date(match.matchDate).toLocaleDateString('en-GB', {
+      weekday: 'short',
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    })}
+  </span>
+  <Link 
+    href={`/matches/${match.slug}`}
+    className="inline-flex items-center justify-center text-[8px] sm:text-xs font-medium px-3 py-1.5 rounded-lg transition w-full sm:w-auto"
+    style={{ 
+      color: 'white',
+      border: '1px solid #D4AF37',
+      backgroundColor: 'transparent'
+    }}
+  >
+    <span>Details</span>
+  </Link>
+</div>
 
       </div>
     </Link>

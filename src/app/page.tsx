@@ -100,7 +100,7 @@ const CircularProgress = ({ percentage, color }: { percentage: number; color: st
       <p className="text-text-secondary text-sm mt-1">
         Selected best opportunities ·{' '}
         {new Date().toLocaleDateString('en-GB', {
-          weekday: 'short',
+          weekday: 'long',
           day: 'numeric',
           month: 'long',
           year: 'numeric',
@@ -429,19 +429,14 @@ const CircularProgress = ({ percentage, color }: { percentage: number; color: st
                 </div>
 
               
-{/* Match Date and Full-width Details Button */}
-<div className="mt-auto pt-1 flex flex-col gap-2">
-  <span className="text-text-tertiary text-[8px] sm:text-[10px] text-center sm:text-left">
-    {new Date(match.matchDate).toLocaleDateString('en-GB', {
-      weekday: 'short',
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric'
-    })}
+               {/* Match Date and Premium Details Button - Full width on mobile */}
+<div className="mt-auto pt-1 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
+  <span className="text-text-tertiary text-[8px] sm:text-[10px]">
+    {new Date(match.matchDate || '2026-06-15').toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}
   </span>
   <Link 
     href={`/matches/${match.slug}`}
-    className="inline-flex items-center justify-center text-[8px] sm:text-xs font-medium px-3 py-1.5 rounded-lg transition w-full"
+    className="inline-flex items-center justify-center text-[8px] sm:text-xs font-medium px-3 sm:px-3 py-1.5 sm:py-1.5 rounded-lg transition w-full sm:w-auto"
     style={{ 
       color: 'white',
       border: '1px solid #D4AF37',
