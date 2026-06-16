@@ -301,12 +301,12 @@ export default function HomePage() {
               <span className="text-text-primary font-semibold text-xs sm:text-sm text-center truncate w-full max-w-[80px]">{match.homeTeam}</span>
             </div>
             
-        {/* VS Card - iPhone style with glass effect */}
+{/* VS Card - Transparent glass effect */}
 <div className="relative flex-shrink-0">
   {/* Glow effect behind the VS card */}
   <div className="absolute inset-0 bg-red-500/20 blur-xl rounded-full" />
   
-  <div className="relative bg-gradient-to-br from-red-500/80 to-red-600/80 backdrop-blur-xl rounded-2xl w-14 h-14 sm:w-16 sm:h-16 flex flex-col items-center justify-center shadow-lg shadow-red-500/30 border border-white/20">
+  <div className="relative bg-red-500/10 backdrop-blur-xl rounded-2xl w-14 h-14 sm:w-16 sm:h-16 flex flex-col items-center justify-center shadow-lg shadow-red-500/20 border border-red-500/30">
     <span className="text-white font-bold text-xs sm:text-sm tracking-wide">VS</span>
     <div className="flex gap-0.5 mt-0.5">
       <span className="w-1 h-1 rounded-full bg-white/40" />
