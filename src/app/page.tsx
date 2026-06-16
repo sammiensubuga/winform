@@ -49,13 +49,10 @@ export default function HomePage() {
     </div>
 <Link 
   href="/results" 
-  className="px-4 py-1.5 rounded-lg text-sm font-medium transition"
-  style={{ 
-    color: '#22C55E',
-    border: '1px solid #22C55E',
-    backgroundColor: 'transparent'
-  }}
->
+ className="flex items-center justify-center gap-2 px-3 py-2 text-center bg-accent hover:bg-accent-hover text-white rounded-lg mx-3"
+                    style={{ border: '1px solid #22C55E' }}
+                  >
+
   See all results →
 </Link>
   </div>
