@@ -138,7 +138,7 @@ export default function HomePage() {
 <section className="py-10 border-t border-border">
   <div className="text-center mb-8">
    <h2 className="text-2xl font-bold text-text-primary mb-2">Yesterday&apos;s Performance</h2>
-    <p className="text-text-secondary text-sm">Full transparency — every prediction logged and tracked</p>
+    <p className="text-text-secondary text-sm">Full transparency, every prediction tracked</p>
   </div>
   
   <div className="bg-card border border-border rounded-2xl p-6">
