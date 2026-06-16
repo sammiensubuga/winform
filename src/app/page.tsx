@@ -106,13 +106,28 @@ export default function HomePage() {
   </div>
 )}
 
+{elitePicks.length > 0 && (
+  <div className="mb-8">
+    <div className="flex items-center gap-2 mb-4">
+      <Star className="w-4 h-4 text-amber-400" />
+      <p className="text-xs font-medium text-amber-400">
+        Elite Picks 80%+ confidence
+      </p>
+    </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {elitePicks.map(match => (
+        <TopPickCard key={match.id} match={match} />
+      ))}
+    </div>
+  </div>
+)}
+
 {strongPicks.length > 0 && (
   <div className="mb-8">
     <div className="flex items-center gap-2 mb-4">
       <Zap className="w-4 h-4 text-green-500" />
-      <p className="text-xs font-medium">
-        <span className="text-text-tertiary">Strong Picks </span>
-        <span className="text-green-500">70–79% confidence</span>
+      <p className="text-xs font-medium text-green-500">
+        Strong Picks 70–79% confidence
       </p>
     </div>
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -127,9 +142,8 @@ export default function HomePage() {
   <div className="mb-8">
     <div className="flex items-center gap-2 mb-4">
       <Target className="w-4 h-4 text-blue-500" />
-      <p className="text-xs font-medium">
-        <span className="text-text-tertiary">Value Picks </span>
-        <span className="text-blue-500">55–69% confidence</span>
+      <p className="text-xs font-medium text-blue-500">
+        Value Picks 55–69% confidence
       </p>
     </div>
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
