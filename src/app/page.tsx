@@ -302,16 +302,17 @@ export default function HomePage() {
             </div>
             
 {/* VS Card - Transparent glass effect */}
+{/* VS Card - Pure glass effect */}
 <div className="relative flex-shrink-0">
-  {/* Glow effect behind the VS card */}
-  <div className="absolute inset-0 bg-red-500/20 blur-xl rounded-full" />
+  {/* Subtle glow behind */}
+  <div className="absolute inset-0 bg-white/5 blur-xl rounded-full" />
   
-  <div className="relative bg-red-500/10 backdrop-blur-xl rounded-2xl w-14 h-14 sm:w-16 sm:h-16 flex flex-col items-center justify-center shadow-lg shadow-red-500/20 border border-red-500/30">
-    <span className="text-white font-bold text-xs sm:text-sm tracking-wide">VS</span>
+  <div className="relative bg-white/5 backdrop-blur-xl rounded-2xl w-14 h-14 sm:w-16 sm:h-16 flex flex-col items-center justify-center shadow-lg shadow-black/20 border border-white/10">
+    <span className="text-text-primary font-bold text-xs sm:text-sm tracking-wide">VS</span>
     <div className="flex gap-0.5 mt-0.5">
-      <span className="w-1 h-1 rounded-full bg-white/40" />
-      <span className="w-1 h-1 rounded-full bg-white/40" />
-      <span className="w-1 h-1 rounded-full bg-white/40" />
+      <span className="w-1 h-1 rounded-full bg-text-tertiary/40" />
+      <span className="w-1 h-1 rounded-full bg-text-tertiary/40" />
+      <span className="w-1 h-1 rounded-full bg-text-tertiary/40" />
     </div>
   </div>
 </div>
