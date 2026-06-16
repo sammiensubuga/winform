@@ -269,12 +269,12 @@ export default function HomePage() {
   <div className="bg-card border border-border rounded-2xl overflow-hidden">
     {mockUpcomingMatches.map((match, index) => (
       <Link key={match.id} href={`/matches/${match.slug}`}>
-        <div className={`flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 sm:p-4 hover:bg-card-hover transition-colors cursor-pointer ${index !== mockUpcomingMatches.length - 1 ? 'border-b border-border' : ''}`}>
+        <div className={`flex flex-col sm:flex-row items-start sm:items-center p-3 sm:p-4 hover:bg-card-hover transition-colors cursor-pointer ${index !== mockUpcomingMatches.length - 1 ? 'border-b border-border' : ''}`}>
           
           {/* Teams - Home on left, Away on right */}
-          <div className="flex items-center justify-between w-full sm:w-auto flex-1 min-w-0 mb-2 sm:mb-0">
+          <div className="flex items-center justify-between w-full sm:flex-1 gap-2 mb-2 sm:mb-0">
             {/* Home Team - Left */}
-            <div className="flex items-center gap-2 min-w-0 flex-1">
+            <div className="flex items-center gap-2 min-w-0">
               <div className="relative w-5 h-5 sm:w-6 sm:h-6 shrink-0">
                 <Image src={match.homeTeamLogo} alt={match.homeTeam} fill className="object-contain" />
               </div>
@@ -282,10 +282,10 @@ export default function HomePage() {
             </div>
             
             {/* VS - Center */}
-            <span className="text-text-tertiary text-[8px] sm:text-xs shrink-0 mx-2">vs</span>
+            <span className="text-text-tertiary text-[8px] sm:text-xs shrink-0">vs</span>
             
             {/* Away Team - Right */}
-            <div className="flex items-center gap-2 min-w-0 flex-1 justify-end">
+            <div className="flex items-center gap-2 min-w-0">
               <span className="text-text-primary text-xs sm:text-sm font-medium truncate">{match.awayTeam}</span>
               <div className="relative w-5 h-5 sm:w-6 sm:h-6 shrink-0">
                 <Image src={match.awayTeamLogo} alt={match.awayTeam} fill className="object-contain" />
