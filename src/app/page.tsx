@@ -31,31 +31,30 @@ export default function HomePage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
 {/* Yesterday's Results Bar */}
-<div className="border-b border-border py-4">
-  <div className="text-center">
-    <p className="text-text-secondary text-xs uppercase tracking-wider mb-3">Yesterday</p>
-    <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
-      <span className="text-success font-semibold tabular flex items-center gap-1.5">
-        <CheckCircle className="w-4 h-4 text-success" />
+<div className="border-b border-border py-3">
+  <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 text-sm">
+    <span className="text-text-secondary">Yesterday:</span>
+    <div className="flex items-center gap-2">
+      <span className="font-semibold tabular flex items-center gap-1" style={{ color: '#22C55E' }}>
+        <CheckCircle className="w-4 h-4" style={{ color: '#22C55E' }} />
         {mockYesterdayStats.wins} wins
       </span>
-      <span className="text-danger font-semibold tabular flex items-center gap-1.5">
-        <XCircle className="w-4 h-4 text-danger" />
+      <span className="text-text-tertiary">·</span>
+      <span className="font-semibold tabular flex items-center gap-1" style={{ color: '#EF4444' }}>
+        <XCircle className="w-4 h-4" style={{ color: '#EF4444' }} />
         {mockYesterdayStats.losses} losses
       </span>
-      <span className="text-text-primary font-bold tabular">
-        {mockYesterdayStats.accuracy}% accuracy
-      </span>
+      <span className="text-text-tertiary">·</span>
+      <span className="text-text-primary font-bold tabular">{mockYesterdayStats.accuracy}% accuracy</span>
     </div>
-    
-<Link
-  href="/results"
-  className="inline-flex items-center justify-center gap-2 px-3 py-2 bg-accent hover:bg-accent-hover text-white rounded-lg"
-  style={{ border: '1px solid #22C55E' }}
->
-  See all results →
-</Link>
-  </div> 
+    <Link
+      href="/results"
+      className="inline-flex items-center justify-center gap-2 px-3 py-1.5 bg-accent hover:bg-accent-hover text-white rounded-lg text-xs"
+      style={{ border: '1px solid #22C55E' }}
+    >
+      See all results →
+    </Link>
+  </div>
 </div>
 
         {/* Today's Top Picks */}
