@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
+import { useState, useEffect } from 'react'
 
 interface LiveMatchProps {
   match: {
@@ -24,6 +25,24 @@ interface LiveMatchProps {
 }
 
 export default function LiveMatchBanner({ match }: LiveMatchProps) {
+  const [time, setTime] = useState({ minutes: match.minute, seconds: 0 })
+  
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTime(prev => {
+        let newSeconds = prev.seconds + 1
+        let newMinutes = prev.minutes
+        if (newSeconds >= 60) {
+          newSeconds = 0
+          newMinutes += 1
+        }
+        return { minutes: newMinutes, seconds: newSeconds }
+      })
+    }, 1000)
+    
+    return () => clearInterval(timer)
+  }, [])
+
   const possessionHome = match.possession.home
   const possessionAway = match.possession.away
   const possessionTotal = possessionHome + possessionAway
@@ -33,15 +52,27 @@ export default function LiveMatchBanner({ match }: LiveMatchProps) {
     <Link href={`/matches/${match.slug}`}>
       <div className="bg-gradient-to-br from-red-950/40 to-card border-l-4 border-red-500 border border-border rounded-xl p-3 sm:p-4 hover:border-red-500/70 transition-all cursor-pointer h-full">
         
-        {/* Top row: League with red dot + Minute */}
+        {/* Top row: Dynamic Live Card */}
         <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-1.5">
-            <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
-            <span className="text-text-secondary text-[10px] sm:text-xs font-medium">{match.league}</span>
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse inline-block" />
+              <span className="absolute inset-0 w-2 h-2 rounded-full bg-red-500 animate-ping opacity-75" />
+            </div>
+            <span className="text-red-500 text-xs font-bold">LIVE</span>
           </div>
-          <div className="flex items-center gap-1">
-            <span className="text-red-500 text-[10px] sm:text-xs font-bold">{match.minute}</span>
+          
+          {/* Dynamic Time Card */}
+          <div className="bg-red-500/10 backdrop-blur-sm border border-red-500/20 rounded-lg px-3 py-1">
+            <span className="text-red-500 text-xs font-mono tabular font-bold">
+              {String(time.minutes).padStart(2, '0')}:{String(time.seconds).padStart(2, '0')}
+            </span>
           </div>
+        </div>
+
+        {/* League name */}
+        <div className="flex items-center gap-1.5 mb-2">
+          <span className="text-text-secondary text-[10px] sm:text-xs font-medium">{match.league}</span>
         </div>
 
         {/* Main row: Teams, Logos, and Score */}

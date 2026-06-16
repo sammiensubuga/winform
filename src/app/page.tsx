@@ -227,37 +227,27 @@ export default function HomePage() {
           </div>
         </section>
 
- {/* Live Matches — only shown when live matches exist */}
-{SHOW_LIVE && (
-  <section className="py-10 border-t border-border">
-    {/* Live Now Header with Dynamic Card */}
-    <div className="flex flex-col items-center mb-6">
-      {/* Red dot and Live text */}
-      <div className="flex items-center gap-2 mb-1">
-        <div className="relative">
-          <span className="w-3 h-3 rounded-full bg-red-500 animate-pulse inline-block" />
-          <span className="absolute inset-0 w-3 h-3 rounded-full bg-red-500 animate-ping opacity-75" />
-        </div>
-        <h2 className="text-2xl font-bold text-text-primary">Live</h2>
-      </div>
-      
-      {/* Dynamic time counter */}
-      <div className="bg-card/50 backdrop-blur-sm border border-border rounded-lg px-4 py-1.5">
-        <span className="text-text-secondary text-sm font-mono tabular">
-          00:00:00
-        </span>
-      </div>
-    </div>
-    
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {mockLiveMatches.map(match => (
-        <LiveMatchBanner key={match.id} match={match} />
-      ))}
-    </div>
-  </section>
-)}
+        {/* Live Matches — only shown when live matches exist */}
+        {SHOW_LIVE && (
+          <section className="py-10 border-t border-border">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                <h2 className="text-xl font-bold text-text-primary">Live now</h2>
+              </div>
+              <span className="text-text-secondary text-sm">
+                {mockLiveMatches.length} match{ mockLiveMatches.length !== 1 ? 'es' : '' } in progress
+              </span>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {mockLiveMatches.map(match => (
+                <LiveMatchBanner key={match.id} match={match} />
+              ))}
+            </div>
+          </section>
+        )}
 
-
+        
 {/* Upcoming Matches */}
 <section className="py-10 border-t border-border">
   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6">
