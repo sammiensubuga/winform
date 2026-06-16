@@ -22,14 +22,14 @@ interface LiveMatchProps {
     topPick?: string
     confidence?: number
     confidenceTier?: string
-    odds?: number
+    homeProbability?: number
+    drawProbability?: number
+    awayProbability?: number
   }
 }
 
 export default function LiveMatchBanner({ match }: LiveMatchProps) {
   const [time, setTime] = useState({ minutes: match.minute, seconds: 0 })
-  const [odds, setOdds] = useState(match.odds || 1.72)
-  const [oddsDirection, setOddsDirection] = useState<'up' | 'down' | null>(null)
   
   // Update time every second
   useEffect(() => {
@@ -46,27 +46,6 @@ export default function LiveMatchBanner({ match }: LiveMatchProps) {
     }, 1000)
     
     return () => clearInterval(timer)
-  }, [])
-
-  // Update odds every 10 seconds (simulate live movement)
-  useEffect(() => {
-    const oddsTimer = setInterval(() => {
-      setOdds(prev => {
-        // Random movement between -0.03 and +0.03
-        const change = (Math.random() * 0.06) - 0.03
-        const newOdds = Math.max(1.10, Math.min(3.00, prev + change))
-        const rounded = Math.round(newOdds * 100) / 100
-        
-        // Set direction for arrow indicator
-        if (rounded > prev) setOddsDirection('up')
-        else if (rounded < prev) setOddsDirection('down')
-        else setOddsDirection(null)
-        
-        return rounded
-      })
-    }, 10000) // Update every 10 seconds
-    
-    return () => clearInterval(oddsTimer)
   }, [])
 
   const possessionHome = match.possession.home
@@ -96,41 +75,41 @@ export default function LiveMatchBanner({ match }: LiveMatchProps) {
           </div>
         </div>
 
-     {/* League name with logo - Left */}
-<div className="flex items-center gap-1.5 mt-2">
-  {match.leagueLogo && (
-    <div className="relative w-4 h-4 shrink-0">
-      <Image
-        src={match.leagueLogo}
-        alt={match.league}
-        fill
-        className="object-contain"
-        onError={(e) => {
-          (e.target as HTMLImageElement).style.display = 'none'
-        }}
-      />
-    </div>
-  )}
-  <span className="text-text-secondary text-[10px] sm:text-xs font-medium">{match.league}</span>
-</div>
+        {/* League name with logo - Left */}
+        <div className="flex items-center gap-1.5 mt-2">
+          {match.leagueLogo && (
+            <div className="relative w-4 h-4 shrink-0">
+              <Image
+                src={match.leagueLogo}
+                alt={match.league}
+                fill
+                className="object-contain"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none'
+                }}
+              />
+            </div>
+          )}
+          <span className="text-text-secondary text-[10px] sm:text-xs font-medium">{match.league}</span>
+        </div>
 
-        {/* Right - Live Odds with direction indicator */}
+        {/* Right - Win/Draw/Win Probabilities in circles with labels */}
         <div className="absolute right-3 top-3 sm:right-4 sm:top-4 z-10">
           <div className="flex items-center gap-1.5">
-            <span className="text-text-secondary text-[8px] sm:text-[10px]">Odds</span>
-            <div className="flex items-center gap-0.5">
-              {oddsDirection === 'up' && (
-                <span className="text-green-500 text-[10px]">↑</span>
-              )}
-              {oddsDirection === 'down' && (
-                <span className="text-red-500 text-[10px]">↓</span>
-              )}
-              <span className={`text-text-primary font-bold text-xs sm:text-sm transition-colors duration-300 ${
-                oddsDirection === 'up' ? 'text-green-500' : 
-                oddsDirection === 'down' ? 'text-red-500' : ''
-              }`}>
-                {odds.toFixed(2)}
-              </span>
+            <div className="flex items-center gap-0.5 bg-green-500/10 border border-green-500/20 rounded-full px-1.5 py-0.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+              <span className="text-green-500 font-bold text-[8px] sm:text-[10px]">W</span>
+              <span className="text-text-primary font-bold text-[10px] sm:text-xs">{match.homeProbability || 52}%</span>
+            </div>
+            <div className="flex items-center gap-0.5 bg-orange-500/10 border border-orange-500/20 rounded-full px-1.5 py-0.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+              <span className="text-orange-500 font-bold text-[8px] sm:text-[10px]">D</span>
+              <span className="text-text-primary font-bold text-[10px] sm:text-xs">{match.drawProbability || 24}%</span>
+            </div>
+            <div className="flex items-center gap-0.5 bg-blue-500/10 border border-blue-500/20 rounded-full px-1.5 py-0.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+              <span className="text-blue-500 font-bold text-[8px] sm:text-[10px]">W</span>
+              <span className="text-text-primary font-bold text-[10px] sm:text-xs">{match.awayProbability || 20}%</span>
             </div>
           </div>
         </div>

@@ -144,7 +144,9 @@ export const mockLiveMatches = [
     topPick: 'Over 1.5 Goals',
     confidence: 78,
     confidenceTier: 'strong' as const,
-    odds: 1.72,
+    homeProbability: 52,
+    drawProbability: 24,
+    awayProbability: 24,
   },
   {
     id: 102,
@@ -163,7 +165,9 @@ export const mockLiveMatches = [
     topPick: 'Home Win',
     confidence: 81,
     confidenceTier: 'elite' as const,
-    odds: 1.45,
+    homeProbability: 68,
+    drawProbability: 18,
+    awayProbability: 14,
   },
 ]
 
@@ -182,6 +186,9 @@ export const mockUpcomingMatches = [
     topPick: 'Over 2.5 Goals',
     confidence: 76,
     confidenceTier: 'strong' as const,
+    homeProbability: 58,
+    drawProbability: 26,
+    awayProbability: 16,        
   },
   {
     id: 202,
