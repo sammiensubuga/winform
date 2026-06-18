@@ -15,20 +15,23 @@ export default function Footer() {
     <footer className="bg-black border-t border-gray-800 mt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Brand */}
-          <div className="col-span-1 md:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-green-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">WF</span>
-              </div>
-              <span className="text-lg font-bold text-white">
-                Win<span className="text-green-500">Form</span>
-              </span>
-            </div>
-            <p className="text-gray-500 text-sm leading-relaxed">
-              AI-powered football intelligence. Data-driven predictions with transparent tracking.
-            </p>
-          </div>
+         
+      {/* Brand */}
+<div className="col-span-1 md:col-span-1">
+  <div className="flex items-center gap-2 mb-4">
+    <img 
+      src="/logo.png" 
+      alt="WinForm Logo" 
+      className="w-8 h-8 object-contain rounded-lg"
+    />
+    <span className="text-lg font-bold text-white">
+      Win<span className="text-green-500">Form</span>
+    </span>
+  </div>
+  <p className="text-gray-500 text-sm leading-relaxed">
+    AI-powered football intelligence. Data-driven predictions with transparent tracking.
+  </p>
+</div>
 
           {/* Leagues */}
           <div>
