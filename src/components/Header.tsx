@@ -1,278 +1,101 @@
 'use client'
 
+import { usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
-import { useEffect, useState } from 'react'
-import type { User } from '@supabase/supabase-js'
-import { Search, Trophy, Menu, X, ChevronDown, LogOut, User as UserIcon, Home, Star, Flame, Calendar, Globe } from 'lucide-react'
-import SearchModal from './SearchModal'
 
-const leagues = [
-  { name: 'Premier League', slug: 'premier-league', logo: 'https://media.api-sports.io/football/leagues/39.png' },
-  { name: 'La Liga', slug: 'la-liga', logo: 'https://media.api-sports.io/football/leagues/140.png' },
-  { name: 'Serie A', slug: 'serie-a', logo: 'https://media.api-sports.io/football/leagues/135.png' },
-  { name: 'Bundesliga', slug: 'bundesliga', logo: 'https://media.api-sports.io/football/leagues/78.png' },
-  { name: 'Champions League', slug: 'champions-league', logo: 'https://media.api-sports.io/football/leagues/2.png' },
-]
-
-export default function Header() {
+export default function Footer() {
   const pathname = usePathname()
-  const router = useRouter()
-  const [user, setUser] = useState<User | null>(null)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [scrolled, setScrolled] = useState(false)
-  const [leaguesOpen, setLeaguesOpen] = useState(false)
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const supabase = createClient()
+  const isAuthPage = pathname === '/login' || pathname === '/register' || pathname === '/forgot-password' || pathname === '/update-password'
 
-  const isHeroPage = pathname === '/'
-
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setUser(data.user))
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_, session) => setUser(session?.user ?? null)
-    )
-    return () => subscription.unsubscribe()
-  }, [supabase.auth])
-
-  useEffect(() => {
-    if (!isHeroPage) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setScrolled(true)
-      return
-    }
-    const handleScroll = () => setScrolled(window.scrollY > 80)
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [isHeroPage])
-
-  const handleSignOut = async () => {
-    await supabase.auth.signOut()
-    router.push('/')
+  if (isAuthPage) {
+    return null
   }
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (searchQuery.trim()) {
-      router.push(`/search?q=${encodeURIComponent(searchQuery)}`)
-      setSearchQuery('')
-    }
-  }
-
-  const navLinkClass = (href: string) => {
-    const isActive = pathname === href
-    const base = 'px-3 py-2 rounded-lg text-sm font-medium transition'
-    if (isActive) return `${base} bg-accent/10 text-accent`
-    if (!scrolled && isHeroPage) return `${base} text-white/80 hover:text-white hover:bg-white/10`
-    return `${base} text-text-secondary hover:text-text-primary hover:bg-card`
-  }
-
-  const headerBg = scrolled || !isHeroPage
-    ? 'bg-background/95 backdrop-blur-md border-b border-border'
-    : 'bg-transparent'
 
   return (
-    <>
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${headerBg}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 shrink-0">
-              <img src="/logo.png" alt="WinForm" className="w-8 h-8 object-contain" />
-              <span className={`text-xl font-bold hidden sm:inline ${!scrolled && isHeroPage ? 'text-white' : 'text-text-primary'}`}>
-                Win<span className="text-accent">Form</span>
+    <footer className="bg-black border-t border-gray-800 mt-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Brand */}
+          <div className="col-span-1 md:col-span-1">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-green-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">WF</span>
+              </div>
+              <span className="text-lg font-bold text-white">
+                Win<span className="text-green-500">Form</span>
               </span>
-            </Link>
-
-            {/* Desktop nav */}
-            <nav className="hidden lg:flex items-center gap-1">
-              <Link href="/" className={navLinkClass('/')}>Home</Link>
-              <Link href="/top-picks" className={navLinkClass('/top-picks')}>Predictions</Link>
-              <Link href="/matches" className={navLinkClass('/matches')}>Live</Link>
-              
-            {/* Leagues Dropdown - Hover to open */}
-<div className="relative group">
-  <button className={`${navLinkClass('/leagues')} flex items-center gap-1`}>
-    Leagues
-    <ChevronDown className="w-3.5 h-3.5 transition-transform group-hover:rotate-180" />
-  </button>
-  <div className="absolute top-full left-0 mt-2 w-56 bg-black/80 backdrop-blur-xl border border-white/20 rounded-xl shadow-2xl overflow-hidden z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
-    {leagues.map(league => (
-      <Link
-        key={league.slug}
-        href={`/leagues/${league.slug}`}
-        className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-200 hover:text-white hover:bg-white/15 transition-colors"
-      >
-        <div className="relative w-5 h-5">
-          <img src={league.logo} alt={league.name} className="w-full h-full object-contain" />
-        </div>
-        {league.name}
-      </Link>
-    ))}
-    <Link href="/world-cup" className="flex items-center gap-3 px-4 py-2.5 text-sm text-amber-400 hover:text-amber-300 hover:bg-white/15 transition-colors border-t border-white/10">
-      <Trophy className="w-4 h-4 text-amber-400" />
-      World Cup 2026
-    </Link>
-  </div>
-</div>
-
-              <Link href="/world-cup" className={navLinkClass('/world-cup')}>
-                <Trophy className="w-4 h-4 inline mr-1" />
-                World Cup
-              </Link>
-              <Link href="/results" className={navLinkClass('/results')}>Results</Link>
-            </nav>
-
-            {/* Desktop Search + Sign Up */}
-            <div className="hidden lg:flex items-center gap-3">
-              <form onSubmit={handleSearch}>
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search..."
-                    className="w-56 bg-gray-900/80 border border-gray-700 rounded-xl px-4 py-2 pl-10 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/20"
-                  />
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                </div>
-              </form>
-
-              {user ? (
-                <button onClick={handleSignOut} className="text-sm text-text-secondary hover:text-text-primary px-3 py-1.5">
-                  Sign Out
-                </button>
-              ) : (
-                <>
-                  <Link href="/login" className="text-sm text-text-secondary hover:text-text-primary px-3 py-1.5">
-                    Login
-                  </Link>
-                  <Link href="/register" className="px-4 py-1.5 rounded-lg text-sm font-medium bg-accent hover:bg-accent-hover text-white transition" style={{ border: '1px solid #22C55E' }}>
-                    Sign Up
-                  </Link>
-                </>
-              )}
             </div>
-
-            {/* Mobile buttons */}
-            <div className="flex items-center gap-2 lg:hidden">
-              <button 
-                onClick={() => setIsSearchOpen(true)}
-                className="p-2 text-text-secondary hover:text-text-primary"
-              >
-                <Search className="w-5 h-5" />
-              </button>
-
-              {!user && (
-                <Link href="/register" className="px-3 py-1.5 rounded-lg text-sm font-medium bg-accent text-white" style={{ border: '1px solid #22C55E' }}>
-                  Sign Up
-                </Link>
-              )}
-
-              <button className="p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-              </button>
-            </div>
-
+            <p className="text-gray-500 text-sm leading-relaxed">
+              AI-powered football intelligence. Data-driven predictions with transparent tracking.
+            </p>
           </div>
 
-          {/* Mobile menu */}
-          {mobileMenuOpen && (
-            <div className="lg:hidden py-4 border-t border-border space-y-1">
-              <Link href="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 px-3 py-2 text-text-secondary hover:text-text-primary">
-                <Home className="w-4 h-4" /> Home
-              </Link>
-              <Link href="/top-picks" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 px-3 py-2 text-text-secondary hover:text-text-primary">
-                <Star className="w-4 h-4" /> Predictions
-              </Link>
-              <Link href="/matches" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 px-3 py-2 text-text-secondary hover:text-text-primary">
-                <Flame className="w-4 h-4" /> Live
-              </Link>
-              <Link href="/world-cup" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 px-3 py-2 text-text-secondary hover:text-text-primary">
-                <Trophy className="w-4 h-4" /> World Cup
-              </Link>
-              <Link href="/results" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 px-3 py-2 text-text-secondary hover:text-text-primary">
-                <Calendar className="w-4 h-4" /> Results
-              </Link>
-              
-              {/* Leagues section in mobile */}
-              <div className="pt-2 mt-2 border-t border-border">
-                <p className="px-3 py-1 text-xs text-text-tertiary uppercase tracking-wider flex items-center gap-2">
-                  <Globe className="w-3 h-3" /> Leagues
-                </p>
-                {leagues.map(league => (
-                  <Link
-                    key={league.slug}
-                    href={`/leagues/${league.slug}`}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-3 py-2 text-text-secondary hover:text-text-primary"
-                  >
-                    <div className="relative w-5 h-5">
-                      <img src={league.logo} alt={league.name} className="w-full h-full object-contain" />
-                    </div>
-                    {league.name}
-                  </Link>
-                ))}
+          {/* Leagues */}
+          <div>
+            <p className="text-white text-sm font-medium mb-4">Leagues</p>
+            <div className="flex flex-col gap-2">
+              {[
+                { label: 'Premier League', href: '/leagues/premier-league' },
+                { label: 'La Liga', href: '/leagues/la-liga' },
+                { label: 'Serie A', href: '/leagues/serie-a' },
+                { label: 'Bundesliga', href: '/leagues/bundesliga' },
+                { label: 'Champions League', href: '/leagues/champions-league' },
+                { label: 'World Cup 2026', href: '/world-cup' },
+              ].map(link => (
                 <Link
-                  href="/world-cup"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-3 px-3 py-2 text-text-secondary hover:text-text-primary"
+                  key={link.href}
+                  href={link.href}
+                  className="text-gray-500 hover:text-green-500 text-sm transition-colors"
                 >
-                  <Trophy className="w-4 h-4 text-amber-400" />
-                  World Cup 2026
+                  {link.label}
                 </Link>
-              </div>
-
-              {/* Login/Sign Up for mobile */}
-              {!user && (
-                <div className="pt-2 mt-2 border-t border-border space-y-2">
-                  <Link
-                    href="/login"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-3 py-2 text-text-secondary hover:text-text-primary"
-                  >
-                    <UserIcon className="w-4 h-4" />
-                    Login
-                  </Link>
-                  <Link
-                    href="/register"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center justify-center gap-2 px-3 py-2 text-center bg-accent hover:bg-accent-hover text-white rounded-lg mx-3"
-                    style={{ border: '1px solid #22C55E' }}
-                  >
-                    Sign Up
-                  </Link>
-                </div>
-              )}
-
-              {/* Sign Out for mobile */}
-              {user && (
-                <div className="pt-2 mt-2 border-t border-border">
-                  <button
-                    onClick={() => {
-                      handleSignOut()
-                      setMobileMenuOpen(false)
-                    }}
-                    className="flex items-center gap-3 w-full text-left px-3 py-2 text-danger hover:text-danger/80"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    Sign Out
-                  </button>
-                </div>
-              )}
+              ))}
             </div>
-          )}
+          </div>
+
+          {/* Company */}
+          <div>
+            <p className="text-white text-sm font-medium mb-4">Company</p>
+            <div className="flex flex-col gap-2">
+              <Link href="/about" className="text-gray-500 hover:text-green-500 text-sm transition-colors">
+                About Us
+              </Link>
+              <Link href="/contact" className="text-gray-500 hover:text-green-500 text-sm transition-colors">
+                Contact
+              </Link>
+              <Link href="/blog" className="text-gray-500 hover:text-green-500 text-sm transition-colors">
+                Blog
+              </Link>
+            </div>
+          </div>
+
+          {/* Legal */}
+          <div>
+            <p className="text-white text-sm font-medium mb-4">Legal</p>
+            <div className="flex flex-col gap-2">
+              <Link href="/privacy" className="text-gray-500 hover:text-green-500 text-sm transition-colors">
+                Privacy Policy
+              </Link>
+              <Link href="/terms" className="text-gray-500 hover:text-green-500 text-sm transition-colors">
+                Terms of Service
+              </Link>
+              <Link href="/responsible-gambling" className="text-gray-500 hover:text-green-500 text-sm transition-colors">
+                Responsible Gambling
+              </Link>
+            </div>
+          </div>
+
         </div>
-      </header>
 
-      {/* Search Modal */}
-      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-
-      {/* Spacer for non-hero pages */}
-      {!isHeroPage && <div className="h-16" />}
-    </>
+        <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-gray-600 text-xs">
+            © 2026 WinForm. For entertainment purposes. Please gamble responsibly.
+          </p>
+          <p className="text-gray-600 text-xs">
+            Predictions do not guarantee outcomes.
+          </p>
+        </div>
+      </div>
+    </footer>
   )
 }
