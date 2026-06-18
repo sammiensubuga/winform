@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { useEffect, useState } from 'react'
 import type { User } from '@supabase/supabase-js'
-import { Search, Trophy, Menu, X, LogOut, User as UserIcon, Home, Star, Flame, Calendar, Globe } from 'lucide-react'
+import { Search, Trophy, Menu, X, ChevronDown, LogOut, User as UserIcon, Home, Star, Flame, Calendar, Globe } from 'lucide-react'
 import SearchModal from './SearchModal'
 
 const leagues = [
@@ -22,6 +22,7 @@ export default function Header() {
   const [user, setUser] = useState<User | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [scrolled, setScrolled] = useState(false)
+  const [leaguesOpen, setLeaguesOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const supabase = createClient()
@@ -36,16 +37,16 @@ export default function Header() {
     return () => subscription.unsubscribe()
   }, [supabase.auth])
 
-useEffect(() => {
-  if (!isHeroPage) {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setScrolled(true)
-    return
-  }
-  const handleScroll = () => setScrolled(window.scrollY > 80)
-  window.addEventListener('scroll', handleScroll)
-  return () => window.removeEventListener('scroll', handleScroll)
-}, [isHeroPage])
+  useEffect(() => {
+    if (!isHeroPage) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setScrolled(true)
+      return
+    }
+    const handleScroll = () => setScrolled(window.scrollY > 80)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [isHeroPage])
 
   const handleSignOut = async () => {
     await supabase.auth.signOut()
@@ -92,29 +93,36 @@ useEffect(() => {
               <Link href="/top-picks" className={navLinkClass('/top-picks')}>Predictions</Link>
               <Link href="/matches" className={navLinkClass('/matches')}>Live</Link>
               
-              {/* Leagues Dropdown - Hover */}
-              <div className="relative group">
-                <button className={navLinkClass('/leagues')}>
+              {/* Leagues Dropdown - Glass background */}
+              <div className="relative">
+                <button 
+                  onClick={() => setLeaguesOpen(!leaguesOpen)} 
+                  className={`${navLinkClass('/leagues')} flex items-center gap-1`}
+                >
                   Leagues
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform ${leaguesOpen ? 'rotate-180' : ''}`} />
                 </button>
-            <div className="absolute top-full left-0 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-xl z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-  {leagues.map(league => (
-    <Link
-      key={league.slug}
-      href={`/leagues/${league.slug}`}
-      className="flex items-center gap-3 px-4 py-2.5 text-sm text-black hover:text-black hover:bg-gray-100 transition-colors"
-    >
-      <div className="relative w-5 h-5">
-        <img src={league.logo} alt={league.name} className="w-full h-full object-contain" />
-      </div>
-      {league.name}
-    </Link>
-  ))}
-  <Link href="/world-cup" className="flex items-center gap-3 px-4 py-2.5 text-sm text-amber-600 hover:text-amber-700 hover:bg-gray-100 transition-colors border-t border-gray-100">
-    <Trophy className="w-4 h-4 text-amber-600" />
-    World Cup 2026
-  </Link>
-</div>
+                {leaguesOpen && (
+                  <div className="absolute top-full left-0 mt-2 w-56 bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl shadow-2xl overflow-hidden z-50">
+                    {leagues.map(league => (
+                      <Link
+                        key={league.slug}
+                        href={`/leagues/${league.slug}`}
+                        onClick={() => setLeaguesOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-200 hover:text-white hover:bg-white/10 transition-colors"
+                      >
+                        <div className="relative w-5 h-5">
+                          <img src={league.logo} alt={league.name} className="w-full h-full object-contain" />
+                        </div>
+                        {league.name}
+                      </Link>
+                    ))}
+                    <Link href="/world-cup" onClick={() => setLeaguesOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm text-amber-400 hover:text-amber-300 hover:bg-white/10 transition-colors border-t border-white/10">
+                      <Trophy className="w-4 h-4 text-amber-400" />
+                      World Cup 2026
+                    </Link>
+                  </div>
+                )}
               </div>
 
               <Link href="/world-cup" className={navLinkClass('/world-cup')}>
@@ -219,7 +227,7 @@ useEffect(() => {
                   onClick={() => setMobileMenuOpen(false)}
                   className="flex items-center gap-3 px-3 py-2 text-text-secondary hover:text-text-primary"
                 >
-                  <Trophy className="w-4 h-4 text-warning" />
+                  <Trophy className="w-4 h-4 text-amber-400" />
                   World Cup 2026
                 </Link>
               </div>
