@@ -1,10 +1,15 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
+import { useRouter } from 'next/navigation'
+import { User } from '@supabase/supabase-js'
 import Link from 'next/link'
 import Image from 'next/image'
 import Hero from '@/components/Hero'
 import TopPickCard from '@/components/TopPickCard'
 import LiveMatchBanner from '@/components/LiveMatchBanner'
-import ConfidenceBadge from '@/components/ConfidenceBadge'
-import { Star, Zap, Target, CheckCircle, XCircle, Calendar, Clock, ChevronRight, Trophy } from 'lucide-react'
+import { Star, Zap, Target, CheckCircle, XCircle, ChevronRight, Trophy } from 'lucide-react'
 import {
   mockTopPicks,
   mockLiveMatches,
@@ -47,16 +52,46 @@ const CircularProgress = ({ percentage, color }: { percentage: number; color: st
 const SHOW_LIVE = mockLiveMatches.length > 0
 
 export default function HomePage() {
+  const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState<User | null>(null)
+  const router = useRouter()
+  const supabase = createClient()
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      setUser(user)
+      setLoading(false)
+      
+      // If user is logged in, redirect to watchlist
+      if (user) {
+        router.push('/watchlist')
+      }
+    }
+    checkUser()
+  }, [router, supabase.auth])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-text-primary">Loading...</div>
+      </div>
+    )
+  }
+
+  // If logged in, show nothing (redirecting)
+  if (user) {
+    return null
+  }
+
   const elitePicks = mockTopPicks.filter(m => m.confidenceTier === 'elite')
   const strongPicks = mockTopPicks.filter(m => m.confidenceTier === 'strong')
   const valuePicks = mockTopPicks.filter(m => m.confidenceTier === 'value')
 
   return (
     <>
-      {/* Hero — full viewport, sits behind the transparent nav */}
       <Hero />
 
-      {/* Page content starts here */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Yesterday's Results Bar */}
@@ -247,253 +282,237 @@ export default function HomePage() {
           </section>
         )}
 
-        
-{/* Upcoming Matches */}
-<section className="py-10 border-t border-border">
-  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6">
-    <h2 className="text-2xl font-bold text-text-primary">Upcoming Matches</h2>
-    <Link 
-      href="/matches" 
-      className="inline-flex items-center justify-center w-full sm:w-auto px-4 py-1.5 mt-3 sm:mt-0 rounded-lg text-sm font-medium transition"
-      style={{ 
-        border: '1px solid #D4AF37',
-        color: 'white',
-        backgroundColor: 'transparent'
-      }}
-    >
-      View all
-      <ChevronRight className="w-3.5 h-3.5 ml-1" />
-    </Link>
-  </div>
-  
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-    {mockUpcomingMatches.map((match, index) => (
-      <Link key={match.id} href={`/matches/${match.slug}`}>
-        <div className="relative bg-gradient-to-br from-card/90 to-card border border-border/50 hover:border-accent/50 rounded-2xl p-4 transition-all duration-200 cursor-pointer flex flex-col items-center gap-3 shadow-lg shadow-black/10 backdrop-blur-sm overflow-hidden">
-          
-          {/* Glass effect overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none rounded-2xl" />
-          
-          {/* League and Stadium - Top row */}
-          <div className="flex items-center justify-between w-full relative z-10">
-            <div className="flex items-center gap-1.5">
-              <div className="relative w-4 h-4">
-                <Image src={match.leagueLogo} alt={match.league} fill className="object-contain" />
-              </div>
-              <span className="text-text-secondary text-[10px] sm:text-xs font-medium truncate">{match.league}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <span className="text-text-tertiary text-[10px] sm:text-xs truncate max-w-[100px]">{match.venue}</span>
-            </div>
-          </div>
-          
-          {/* Date and Time - Stacked vertically */}
-          <div className="flex flex-col items-center text-text-secondary text-xs relative z-10">
-            <span className="font-medium">{match.kickoff.includes('Tomorrow') ? 'Tomorrow' : 'Today'}</span>
-            <span className="text-[10px] text-text-tertiary">{match.kickoff.replace('Tomorrow ', '').replace('Today ', '')}</span>
-          </div>
-          
-          {/* Teams - Logos above names */}
-          <div className="flex items-center justify-between w-full gap-2 relative z-10">
-            {/* Home Team */}
-            <div className="flex flex-col items-center gap-1.5 flex-1">
-              <div className="relative w-10 h-10 sm:w-12 sm:h-12 transition-transform hover:scale-105 duration-200">
-                <Image src={match.homeTeamLogo} alt={match.homeTeam} fill className="object-contain" />
-              </div>
-              <span className="text-text-primary font-semibold text-xs sm:text-sm text-center truncate w-full max-w-[80px]">{match.homeTeam}</span>
-            </div>
-            
-{/* VS Card - Premium transparent button with only VS */}
-<div className="relative flex-shrink-0">
-  <div className="relative bg-transparent backdrop-blur-sm rounded-xl w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center border border-white/20 hover:border-white/40 transition-all duration-200 cursor-default">
-    <span className="text-text-primary font-bold text-xs sm:text-sm tracking-wide">VS</span>
-  </div>
-</div>
-            
-            {/* Away Team */}
-            <div className="flex flex-col items-center gap-1.5 flex-1">
-              <div className="relative w-10 h-10 sm:w-12 sm:h-12 transition-transform hover:scale-105 duration-200">
-                <Image src={match.awayTeamLogo} alt={match.awayTeam} fill className="object-contain" />
-              </div>
-              <span className="text-text-primary font-semibold text-xs sm:text-sm text-center truncate w-full max-w-[80px]">{match.awayTeam}</span>
-            </div>
-          </div>
-          
-        </div>
-      </Link>
-    ))}
-  </div>
-</section>
-
-  {/* World Cup 2026 - Matching TopPickCard size */}
-<section className="py-10 border-t border-border">
-  <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-6">
-    <div>
-      <div className="flex items-center gap-2 mb-1">
-        <Trophy className="w-5 h-5 text-amber-400" />
-        <h2 className="text-2xl font-bold text-text-primary">World Cup 2026</h2>
-      </div>
-      <p className="text-text-secondary text-sm">Tournament predictions · Group stage</p>
-    </div>
-    <Link 
-      href="/world-cup" 
-      className="inline-flex items-center justify-center w-full sm:w-auto px-4 py-1.5 mt-3 sm:mt-0 rounded-lg text-sm font-medium transition"
-      style={{ 
-        border: '1px solid #D4AF37',
-        color: 'white',
-        backgroundColor: 'transparent'
-      }}
-    >
-      View all
-    </Link>
-  </div>
-
-  {/* Group by group - All groups */}
-  {['Group A', 'Group B', 'Group C', 'Group D', 'Group E', 'Group F', 'Group G', 'Group H'].map((groupName) => {
-    const groupMatches = mockWorldCupMatches.filter(match => match.group === groupName)
-    if (groupMatches.length === 0) return null
-    
-    return (
-      <div key={groupName} className="mb-4 sm:mb-6">
-        <h3 className="text-[10px] sm:text-xs text-text-tertiary uppercase tracking-wider mb-2 sm:mb-3 font-medium">
-          {groupName}
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {groupMatches.map((match) => (
-            <Link key={match.id} href={`/matches/${match.slug}`}>
-              <div className="bg-card border border-border hover:border-accent/50 rounded-xl p-4 transition-all duration-200 cursor-pointer h-full flex flex-col gap-3">
-                
-                {/* League, Stadium, Time with Bookmark */}
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-1.5 min-w-0 flex-1">
-                    <Trophy className="w-4 h-4 text-amber-400 shrink-0" />
-                    <span className="text-xs text-text-secondary font-medium truncate">World Cup</span>
-                  </div>
-                  <div className="flex-1 text-center">
-                    <span className="text-xs text-text-secondary">{match.kickoff}</span>
-                  </div>
-                  <div className="flex-1 flex items-center justify-end gap-1.5">
-                    <span className="text-xs text-text-tertiary truncate">{match.venue || 'Stadium'}</span>
-                    <svg className="w-3.5 h-3.5 text-text-secondary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
-                    </svg>
-                  </div>
-                </div>
-
-                <div className="border-t border-border" />
-
-                {/* Teams and Form */}
-                <div className="flex items-center justify-between gap-3">
-                  <div className="flex-1 text-center">
-                    <div className="relative w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2">
-                      <Image src={match.homeTeamLogo} alt={match.homeTeam} fill className="object-contain" />
-                    </div>
-                    <p className="text-text-primary font-semibold text-xs sm:text-sm truncate px-1">{match.homeTeam}</p>
-                    <div className="flex justify-center gap-0.5 sm:gap-1 mt-2">
-                      {match.homeForm?.split('').map((letter, idx) => (
-                        <span key={idx} className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold ${letter === 'W' ? 'bg-green-500 text-white' : letter === 'L' ? 'bg-red-500 text-white' : 'bg-gray-500 text-white'}`}>
-                          {letter}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="text-text-tertiary text-[10px] sm:text-xs font-medium shrink-0">VS</div>
-
-                  <div className="flex-1 text-center">
-                    <div className="relative w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2">
-                      <Image src={match.awayTeamLogo} alt={match.awayTeam} fill className="object-contain" />
-                    </div>
-                    <p className="text-text-primary font-semibold text-xs sm:text-sm truncate px-1">{match.awayTeam}</p>
-                    <div className="flex justify-center gap-0.5 sm:gap-1 mt-2">
-                      {match.awayForm?.split('').map((letter, idx) => (
-                        <span key={idx} className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold ${letter === 'W' ? 'bg-green-500 text-white' : letter === 'L' ? 'bg-red-500 text-white' : 'bg-gray-500 text-white'}`}>
-                          {letter}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Win, Draw, Win - Circular Progress */}
-                <div className="flex items-center justify-between gap-3 mt-2">
-                  <div className="flex-1 flex flex-col items-center gap-1">
-                    <span className="text-[10px] text-text-tertiary uppercase tracking-wider">Win</span>
-                    <CircularProgress percentage={match.homeProbability || 58} color="#22C55E" />
-                  </div>
-                  <div className="flex flex-col items-center gap-1">
-                    <span className="text-[10px] text-text-tertiary uppercase tracking-wider">Draw</span>
-                    <CircularProgress percentage={match.drawProbability || 24} color="#F97316" />
-                  </div>
-                  <div className="flex-1 flex flex-col items-center gap-1">
-                    <span className="text-[10px] text-text-tertiary uppercase tracking-wider">Win</span>
-                    <CircularProgress percentage={match.awayProbability || 20} color="#3B82F6" />
-                  </div>
-                </div>
-
-                <div className="border-t border-border" />
-
-                {/* Top Pick and Odds */}
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-1 min-w-0">
-                    <Trophy className="w-4 h-4 text-amber-400 shrink-0" />
-                    <p className="text-text-primary font-semibold text-sm truncate">{match.topPick}</p>
-                  </div>
-                  <div className="flex items-center gap-1 shrink-0">
-                    <span className="text-text-primary font-bold text-sm">{match.odds.toFixed(2)}</span>
-                  </div>
-                </div>
-
-                {/* Confidence */}
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-text-secondary text-xs">Confidence</span>
-                    <span className={`text-sm font-bold ${match.confidenceTier === 'elite' ? 'text-amber-400' : match.confidenceTier === 'strong' ? 'text-green-500' : 'text-blue-500'}`}>{match.confidence}%</span>
-                  </div>
-                  <div className="w-full bg-gray-700 rounded-full h-1.5">
-                    <div className={`rounded-full h-1.5 ${match.confidenceTier === 'elite' ? 'bg-amber-400' : match.confidenceTier === 'strong' ? 'bg-green-500' : 'bg-blue-500'}`} style={{ width: `${match.confidence}%` }} />
-                  </div>
-                </div>
-
-                {/* Analysis */}
-                <div>
-                  <p className="text-text-tertiary text-xs uppercase tracking-wider mb-1">Analysis</p>
-                  <p className="text-text-secondary text-xs leading-relaxed line-clamp-2">
-                    {match.aiPreviewShort || 'Both teams have shown strong form in recent matches.'}
-                  </p>
-                </div>
-
-   {/* Match Date and Details - Matching TopPickCard exactly */}
-<div className="mt-auto pt-1 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
-  <span className="text-text-tertiary text-[8px] sm:text-[10px] text-center sm:text-left w-full sm:w-auto">
-    {new Date(match.matchDate || '2026-06-15').toLocaleDateString('en-GB', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
-    })}
-  </span>
-  <Link 
-    href={`/matches/${match.slug}`}
-    className="inline-flex items-center justify-center text-[8px] sm:text-xs font-medium px-3 py-1.5 rounded-lg transition w-full sm:w-auto"
-    style={{ 
-      color: 'white',
-      border: '1px solid #D4AF37',
-      backgroundColor: 'transparent'
-    }}
-  >
-    <span>Details</span>
-  </Link>
-</div>
-
-              </div>
+        {/* Upcoming Matches */}
+        <section className="py-10 border-t border-border">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-text-primary">Upcoming Matches</h2>
+            <Link 
+              href="/matches" 
+              className="inline-flex items-center justify-center w-full sm:w-auto px-4 py-1.5 mt-3 sm:mt-0 rounded-lg text-sm font-medium transition"
+              style={{ 
+                border: '1px solid #D4AF37',
+                color: 'white',
+                backgroundColor: 'transparent'
+              }}
+            >
+              View all
+              <ChevronRight className="w-3.5 h-3.5 ml-1" />
             </Link>
-          ))}
-        </div>
-      </div>
-    )
-  })}
-</section>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {mockUpcomingMatches.map((match) => (
+              <Link key={match.id} href={`/matches/${match.slug}`}>
+                <div className="relative bg-gradient-to-br from-card/90 to-card border border-border/50 hover:border-accent/50 rounded-2xl p-4 transition-all duration-200 cursor-pointer flex flex-col items-center gap-3 shadow-lg shadow-black/10 backdrop-blur-sm overflow-hidden">
+                  
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none rounded-2xl" />
+                  
+                  <div className="flex items-center justify-between w-full relative z-10">
+                    <div className="flex items-center gap-1.5">
+                      <div className="relative w-4 h-4">
+                        <Image src={match.leagueLogo} alt={match.league} fill className="object-contain" />
+                      </div>
+                      <span className="text-text-secondary text-[10px] sm:text-xs font-medium truncate">{match.league}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="text-text-tertiary text-[10px] sm:text-xs truncate max-w-[100px]">{match.venue}</span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex flex-col items-center text-text-secondary text-xs relative z-10">
+                    <span className="font-medium">{match.kickoff.includes('Tomorrow') ? 'Tomorrow' : 'Today'}</span>
+                    <span className="text-[10px] text-text-tertiary">{match.kickoff.replace('Tomorrow ', '').replace('Today ', '')}</span>
+                  </div>
+                  
+                  <div className="flex items-center justify-between w-full gap-2 relative z-10">
+                    <div className="flex flex-col items-center gap-1.5 flex-1">
+                      <div className="relative w-10 h-10 sm:w-12 sm:h-12 transition-transform hover:scale-105 duration-200">
+                        <Image src={match.homeTeamLogo} alt={match.homeTeam} fill className="object-contain" />
+                      </div>
+                      <span className="text-text-primary font-semibold text-xs sm:text-sm text-center truncate w-full max-w-[80px]">{match.homeTeam}</span>
+                    </div>
+                    
+                    <div className="relative flex-shrink-0">
+                      <div className="relative bg-transparent backdrop-blur-sm rounded-xl w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center border border-white/20 hover:border-white/40 transition-all duration-200 cursor-default">
+                        <span className="text-text-primary font-bold text-xs sm:text-sm tracking-wide">VS</span>
+                      </div>
+                    </div>
+                    
+                    <div className="flex flex-col items-center gap-1.5 flex-1">
+                      <div className="relative w-10 h-10 sm:w-12 sm:h-12 transition-transform hover:scale-105 duration-200">
+                        <Image src={match.awayTeamLogo} alt={match.awayTeam} fill className="object-contain" />
+                      </div>
+                      <span className="text-text-primary font-semibold text-xs sm:text-sm text-center truncate w-full max-w-[80px]">{match.awayTeam}</span>
+                    </div>
+                  </div>
+                  
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* World Cup 2026 */}
+        <section className="py-10 border-t border-border">
+          <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-6">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <Trophy className="w-5 h-5 text-amber-400" />
+                <h2 className="text-2xl font-bold text-text-primary">World Cup 2026</h2>
+              </div>
+              <p className="text-text-secondary text-sm">Tournament predictions · Group stage</p>
+            </div>
+            <Link 
+              href="/world-cup" 
+              className="inline-flex items-center justify-center w-full sm:w-auto px-4 py-1.5 mt-3 sm:mt-0 rounded-lg text-sm font-medium transition"
+              style={{ 
+                border: '1px solid #D4AF37',
+                color: 'white',
+                backgroundColor: 'transparent'
+              }}
+            >
+              View all
+            </Link>
+          </div>
+
+          {['Group A', 'Group B', 'Group C', 'Group D', 'Group E', 'Group F', 'Group G', 'Group H'].map((groupName) => {
+            const groupMatches = mockWorldCupMatches.filter(match => match.group === groupName)
+            if (groupMatches.length === 0) return null
+            
+            return (
+              <div key={groupName} className="mb-4 sm:mb-6">
+                <h3 className="text-[10px] sm:text-xs text-text-tertiary uppercase tracking-wider mb-2 sm:mb-3 font-medium">
+                  {groupName}
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {groupMatches.map((match) => (
+                    <Link key={match.id} href={`/matches/${match.slug}`}>
+                      <div className="bg-card border border-border hover:border-accent/50 rounded-xl p-4 transition-all duration-200 cursor-pointer h-full flex flex-col gap-3">
+                        
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-1.5 min-w-0 flex-1">
+                            <Trophy className="w-4 h-4 text-amber-400 shrink-0" />
+                            <span className="text-xs text-text-secondary font-medium truncate">World Cup</span>
+                          </div>
+                          <div className="flex-1 text-center">
+                            <span className="text-xs text-text-secondary">{match.kickoff}</span>
+                          </div>
+                          <div className="flex-1 flex items-center justify-end gap-1.5">
+                            <span className="text-xs text-text-tertiary truncate">{match.venue || 'Stadium'}</span>
+                            <svg className="w-3.5 h-3.5 text-text-secondary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
+                            </svg>
+                          </div>
+                        </div>
+
+                        <div className="border-t border-border" />
+
+                        <div className="flex items-center justify-between gap-3">
+                          <div className="flex-1 text-center">
+                            <div className="relative w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2">
+                              <Image src={match.homeTeamLogo} alt={match.homeTeam} fill className="object-contain" />
+                            </div>
+                            <p className="text-text-primary font-semibold text-xs sm:text-sm truncate px-1">{match.homeTeam}</p>
+                            <div className="flex justify-center gap-0.5 sm:gap-1 mt-2">
+                              {match.homeForm?.split('').map((letter, idx) => (
+                                <span key={idx} className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold ${letter === 'W' ? 'bg-green-500 text-white' : letter === 'L' ? 'bg-red-500 text-white' : 'bg-gray-500 text-white'}`}>
+                                  {letter}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div className="text-text-tertiary text-[10px] sm:text-xs font-medium shrink-0">VS</div>
+
+                          <div className="flex-1 text-center">
+                            <div className="relative w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2">
+                              <Image src={match.awayTeamLogo} alt={match.awayTeam} fill className="object-contain" />
+                            </div>
+                            <p className="text-text-primary font-semibold text-xs sm:text-sm truncate px-1">{match.awayTeam}</p>
+                            <div className="flex justify-center gap-0.5 sm:gap-1 mt-2">
+                              {match.awayForm?.split('').map((letter, idx) => (
+                                <span key={idx} className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold ${letter === 'W' ? 'bg-green-500 text-white' : letter === 'L' ? 'bg-red-500 text-white' : 'bg-gray-500 text-white'}`}>
+                                  {letter}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between gap-3 mt-2">
+                          <div className="flex-1 flex flex-col items-center gap-1">
+                            <span className="text-[10px] text-text-tertiary uppercase tracking-wider">Win</span>
+                            <CircularProgress percentage={match.homeProbability || 58} color="#22C55E" />
+                          </div>
+                          <div className="flex flex-col items-center gap-1">
+                            <span className="text-[10px] text-text-tertiary uppercase tracking-wider">Draw</span>
+                            <CircularProgress percentage={match.drawProbability || 24} color="#F97316" />
+                          </div>
+                          <div className="flex-1 flex flex-col items-center gap-1">
+                            <span className="text-[10px] text-text-tertiary uppercase tracking-wider">Win</span>
+                            <CircularProgress percentage={match.awayProbability || 20} color="#3B82F6" />
+                          </div>
+                        </div>
+
+                        <div className="border-t border-border" />
+
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-1 min-w-0">
+                            <Trophy className="w-4 h-4 text-amber-400 shrink-0" />
+                            <p className="text-text-primary font-semibold text-sm truncate">{match.topPick}</p>
+                          </div>
+                          <div className="flex items-center gap-1 shrink-0">
+                            <span className="text-text-primary font-bold text-sm">{match.odds.toFixed(2)}</span>
+                          </div>
+                        </div>
+
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-text-secondary text-xs">Confidence</span>
+                            <span className={`text-sm font-bold ${match.confidenceTier === 'elite' ? 'text-amber-400' : match.confidenceTier === 'strong' ? 'text-green-500' : 'text-blue-500'}`}>{match.confidence}%</span>
+                          </div>
+                          <div className="w-full bg-gray-700 rounded-full h-1.5">
+                            <div className={`rounded-full h-1.5 ${match.confidenceTier === 'elite' ? 'bg-amber-400' : match.confidenceTier === 'strong' ? 'bg-green-500' : 'bg-blue-500'}`} style={{ width: `${match.confidence}%` }} />
+                          </div>
+                        </div>
+
+                        <div>
+                          <p className="text-text-tertiary text-xs uppercase tracking-wider mb-1">Analysis</p>
+                          <p className="text-text-secondary text-xs leading-relaxed line-clamp-2">
+                            {match.aiPreviewShort || 'Both teams have shown strong form in recent matches.'}
+                          </p>
+                        </div>
+
+                        <div className="mt-auto pt-1 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
+                          <span className="text-text-tertiary text-[8px] sm:text-[10px] text-center sm:text-left w-full sm:w-auto">
+                            {new Date(match.matchDate || '2026-06-15').toLocaleDateString('en-GB', {
+                              weekday: 'long',
+                              day: 'numeric',
+                              month: 'long',
+                              year: 'numeric'
+                            })}
+                          </span>
+                          <Link 
+                            href={`/matches/${match.slug}`}
+                            className="inline-flex items-center justify-center text-[8px] sm:text-xs font-medium px-3 py-1.5 rounded-lg transition w-full sm:w-auto"
+                            style={{ 
+                              color: 'white',
+                              border: '1px solid #D4AF37',
+                              backgroundColor: 'transparent'
+                            }}
+                          >
+                            <span>Details</span>
+                          </Link>
+                        </div>
+
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )
+          })}
+        </section>
 
         {/* League Explorer */}
         <section className="py-10 border-t border-border">

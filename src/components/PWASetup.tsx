@@ -41,17 +41,29 @@ export default function PWASetup() {
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault()
       setInstallPrompt(e as BeforeInstallPromptEvent)
-
-      // Only show banner if not dismissed before
-      const dismissed = localStorage.getItem('pwa-banner-dismissed')
-      if (!dismissed) {
-        setTimeout(() => setShowBanner(true), 3000)
-      }
     }
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
     return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
   }, [])
+
+  // Show banner after user engagement (scroll or click)
+  useEffect(() => {
+    const showAfterInteraction = () => {
+      if (!showBanner && !localStorage.getItem('pwa-banner-dismissed') && !isStandalone) {
+        setShowBanner(true)
+      }
+    }
+
+    // Trigger on scroll or click
+    window.addEventListener('scroll', showAfterInteraction, { once: true })
+    window.addEventListener('click', showAfterInteraction, { once: true })
+
+    return () => {
+      window.removeEventListener('scroll', showAfterInteraction)
+      window.removeEventListener('click', showAfterInteraction)
+    }
+  }, [showBanner, isStandalone])
 
   const handleInstall = async () => {
     if (!installPrompt) return
@@ -66,16 +78,16 @@ export default function PWASetup() {
     localStorage.setItem('pwa-banner-dismissed', 'true')
   }
 
-  // Already installed or on desktop — show nothing
+  // Already installed — show nothing
   if (isStandalone) return null
 
   // iOS banner — show manual instructions
   if (isIOS && !isStandalone && showBanner) {
     return (
-      <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-elevated border-t border-border shadow-2xl">
+      <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-blue-500/20 backdrop-blur-xl border-t border-blue-500/30 shadow-2xl">
         <div className="max-w-lg mx-auto flex items-start gap-3">
-          <div className="relative w-10 h-10 shrink-0 rounded-xl overflow-hidden">
-            <Image src="/icon-192.png" alt="WinForm" width={40} height={40} className="object-contain" />
+          <div className="relative w-10 h-10 shrink-0 rounded-xl overflow-hidden shadow-lg">
+            <Image src="/icon-192.png" alt="WinForm" width={40} height={40} className="object-contain rounded-xl" />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-text-primary text-sm font-semibold">Install WinForm</p>
@@ -100,10 +112,10 @@ export default function PWASetup() {
   // Android banner — native install prompt
   if (showBanner && installPrompt) {
     return (
-      <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-elevated border-t border-border shadow-2xl">
+      <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-blue-500/20 backdrop-blur-xl border-t border-blue-500/30 shadow-2xl">
         <div className="max-w-lg mx-auto flex items-center gap-3">
-          <div className="relative w-10 h-10 shrink-0 rounded-xl overflow-hidden">
-            <Image src="/icon-192.png" alt="WinForm" width={40} height={40} className="object-contain" />
+          <div className="relative w-10 h-10 shrink-0 rounded-xl overflow-hidden shadow-lg">
+            <Image src="/icon-192.png" alt="WinForm" width={40} height={40} className="object-contain rounded-xl" />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-text-primary text-sm font-semibold">Install WinForm</p>
@@ -114,13 +126,13 @@ export default function PWASetup() {
           <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={handleDismiss}
-              className="text-text-secondary text-sm px-3 py-1.5 rounded-lg hover:bg-card transition-colors"
+              className="text-text-secondary text-sm px-3 py-1.5 rounded-lg hover:bg-white/10 transition-colors"
             >
               Not now
             </button>
             <button
               onClick={handleInstall}
-              className="bg-accent hover:bg-accent-hover text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-colors"
+              className="bg-accent hover:bg-accent-hover text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-colors shadow-lg shadow-accent/25"
             >
               Install
             </button>
