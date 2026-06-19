@@ -13,6 +13,7 @@ export default function PWASetup() {
   const [showBanner, setShowBanner] = useState(false)
   const [isIOS, setIsIOS] = useState(false)
   const [isStandalone, setIsStandalone] = useState(false)
+  const [isInstalled, setIsInstalled] = useState(false)
 
   useEffect(() => {
     // Register service worker
@@ -30,22 +31,24 @@ export default function PWASetup() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsIOS(ios)
 
-    // Detect if already installed
+    // Detect if already installed (standalone mode)
     const standalone =
       window.matchMedia('(display-mode: standalone)').matches ||
       ('standalone' in window.navigator && (window.navigator as { standalone?: boolean }).standalone === true)
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsStandalone(standalone)
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsInstalled(standalone)
 
-    // Android install prompt
+    // Android install prompt - prevent default and show custom banner
     const handleBeforeInstallPrompt = (e: Event) => {
-      e.preventDefault()
+      e.preventDefault() // This prevents Chrome's default prompt
       setInstallPrompt(e as BeforeInstallPromptEvent)
       
-      // Show prompt immediately on Android
+      // Only show banner if not dismissed before and not installed
       const dismissed = localStorage.getItem('pwa-banner-dismissed')
       if (!dismissed && !standalone) {
-        setShowBanner(true)
+        setTimeout(() => setShowBanner(true), 1000)
       }
     }
 
@@ -55,18 +58,48 @@ export default function PWASetup() {
     if (ios && !standalone) {
       const dismissed = localStorage.getItem('pwa-banner-dismissed')
       if (!dismissed) {
-        setTimeout(() => setShowBanner(true), 500)
+        setTimeout(() => setShowBanner(true), 1000)
       }
     }
-    
-    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+
+    // Check if app was installed (for Android)
+    window.addEventListener('appinstalled', () => {
+      setIsInstalled(true)
+      setShowBanner(false)
+      localStorage.setItem('pwa-banner-dismissed', 'true')
+    })
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+    }
   }, [])
 
   const handleInstall = async () => {
-    if (!installPrompt) return
-    installPrompt.prompt()
-    const { outcome } = await installPrompt.userChoice
-    if (outcome === 'accepted') setShowBanner(false)
+    if (!installPrompt) {
+      // Fallback for iOS or if prompt not available
+      if (isIOS) {
+        alert('Tap the Share button and select "Add to Home Screen"')
+      }
+      return
+    }
+    
+    try {
+      // Show the native install prompt
+      installPrompt.prompt()
+      const { outcome } = await installPrompt.userChoice
+      
+      if (outcome === 'accepted') {
+        setShowBanner(false)
+        setIsInstalled(true)
+        localStorage.setItem('pwa-banner-dismissed', 'true')
+        console.log('App installed successfully!')
+      } else {
+        console.log('User dismissed the install prompt')
+      }
+    } catch (error) {
+      console.error('Install prompt error:', error)
+    }
+    
     setInstallPrompt(null)
   }
 
@@ -76,7 +109,7 @@ export default function PWASetup() {
   }
 
   // Already installed — show nothing
-  if (isStandalone) return null
+  if (isStandalone || isInstalled) return null
 
   // iOS banner — show manual instructions
   if (isIOS && !isStandalone && showBanner) {
@@ -134,6 +167,31 @@ export default function PWASetup() {
               Install
             </button>
           </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Android fallback if installPrompt is not available (rare)
+  if (showBanner && !installPrompt && !isIOS) {
+    return (
+      <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-blue-500/20 backdrop-blur-xl border-t border-blue-500/30 shadow-2xl">
+        <div className="max-w-lg mx-auto flex items-center gap-3">
+          <div className="relative w-10 h-10 shrink-0 rounded-xl overflow-hidden shadow-lg">
+            <Image src="/icon-192.png" alt="WinForm" width={40} height={40} className="object-contain rounded-xl" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-text-primary text-sm font-semibold">Install WinForm</p>
+            <p className="text-text-secondary text-xs mt-0.5">
+              Open in Chrome and tap the install banner to add to home screen.
+            </p>
+          </div>
+          <button
+            onClick={handleDismiss}
+            className="text-text-secondary text-sm px-3 py-1.5 rounded-lg hover:bg-white/10 transition-colors"
+          >
+            Dismiss
+          </button>
         </div>
       </div>
     )
