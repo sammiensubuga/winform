@@ -41,29 +41,26 @@ export default function PWASetup() {
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault()
       setInstallPrompt(e as BeforeInstallPromptEvent)
-    }
-
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-  }, [])
-
-  // Show banner after user engagement (scroll or click)
-  useEffect(() => {
-    const showAfterInteraction = () => {
-      if (!showBanner && !localStorage.getItem('pwa-banner-dismissed') && !isStandalone) {
+      
+      // Show prompt immediately on Android
+      const dismissed = localStorage.getItem('pwa-banner-dismissed')
+      if (!dismissed && !standalone) {
         setShowBanner(true)
       }
     }
 
-    // Trigger on scroll or click
-    window.addEventListener('scroll', showAfterInteraction, { once: true })
-    window.addEventListener('click', showAfterInteraction, { once: true })
-
-    return () => {
-      window.removeEventListener('scroll', showAfterInteraction)
-      window.removeEventListener('click', showAfterInteraction)
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+    
+    // For iOS, show banner immediately if not installed
+    if (ios && !standalone) {
+      const dismissed = localStorage.getItem('pwa-banner-dismissed')
+      if (!dismissed) {
+        setTimeout(() => setShowBanner(true), 500)
+      }
     }
-  }, [showBanner, isStandalone])
+    
+    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+  }, [])
 
   const handleInstall = async () => {
     if (!installPrompt) return
