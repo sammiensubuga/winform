@@ -9,45 +9,44 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 export default function PWASetup() {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
   const [showBanner, setShowBanner] = useState(false)
   const [isIOS, setIsIOS] = useState(false)
   const [isStandalone, setIsStandalone] = useState(false)
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
 
   useEffect(() => {
-    // Detect if already installed
-    const isInStandaloneMode = () => {
-      return (
-        window.matchMedia('(display-mode: standalone)').matches ||
-        ('standalone' in window.navigator && (window.navigator as { standalone?: boolean }).standalone === true)
-      )
+    // Check if already installed (standalone mode)
+    const checkStandalone = () => {
+      const standalone = window.matchMedia('(display-mode: standalone)').matches
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setIsStandalone(standalone)
+      return standalone
     }
 
+    // Check iOS
+    const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent)
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIsStandalone(isInStandaloneMode())
-
-    // Detect iOS
-    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIsIOS(iOS)
+    setIsIOS(isIOSDevice)
 
     // If already installed, don't show anything
-    if (isInStandaloneMode()) {
+    if (checkStandalone()) {
       return
     }
 
-    // Service worker registration
+    // Register service worker
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register('/sw.js')
-        .then(() => console.log('SW registered'))
-        .catch((err) => console.log('SW failed:', err))
+      navigator.serviceWorker.register('/sw.js')
+        .then(() => console.log('✅ SW registered'))
+        .catch((err) => console.log('❌ SW failed:', err))
     }
 
-    // Android install prompt
+    // Listen for install prompt
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault()
+      console.log('✅ beforeinstallprompt fired')
       setDeferredPrompt(e as BeforeInstallPromptEvent)
+      
+      // Check if user dismissed before
       const dismissed = localStorage.getItem('pwa-dismissed')
       if (!dismissed) {
         setTimeout(() => setShowBanner(true), 1000)
@@ -56,11 +55,11 @@ export default function PWASetup() {
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
 
-    // iOS - show banner if not dismissed
-    if (iOS && !isInStandaloneMode()) {
+    // iOS fallback - show banner after 2 seconds
+    if (isIOSDevice) {
       const dismissed = localStorage.getItem('pwa-dismissed')
       if (!dismissed) {
-        setTimeout(() => setShowBanner(true), 1500)
+        setTimeout(() => setShowBanner(true), 2000)
       }
     }
 
@@ -76,10 +75,11 @@ export default function PWASetup() {
       if (outcome === 'accepted') {
         setShowBanner(false)
         localStorage.setItem('pwa-dismissed', 'true')
+        console.log('✅ App installed')
       }
       setDeferredPrompt(null)
     } else if (isIOS) {
-      alert('Tap Share icon, then "Add to Home Screen"')
+      alert('Tap the Share button (square with arrow), then select "Add to Home Screen"')
     }
   }
 
@@ -89,7 +89,6 @@ export default function PWASetup() {
   }
 
   if (isStandalone) return null
-
   if (!showBanner) return null
 
   return (
@@ -100,13 +99,11 @@ export default function PWASetup() {
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-text-primary text-sm font-semibold">Install WinForm</p>
-          <p className="text-text-secondary text-xs mt-0.5">
-            {isIOS 
-              ? 'Tap Share then Add to Home Screen' 
-              : 'Get predictions on your home screen'}
+          <p className="text-text-secondary text-xs">
+            {isIOS ? 'Tap Share, then Add to Home Screen' : 'Add to home screen for quick access'}
           </p>
         </div>
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-1">
           <button
             onClick={handleDismiss}
             className="text-text-secondary text-sm px-2 py-1"
@@ -115,7 +112,7 @@ export default function PWASetup() {
           </button>
           <button
             onClick={handleInstall}
-            className="bg-accent hover:bg-accent-hover text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-colors"
+            className="bg-accent hover:bg-accent-hover text-white text-sm font-medium px-4 py-1.5 rounded-lg"
           >
             Install
           </button>
