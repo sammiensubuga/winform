@@ -18,7 +18,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: 'WinForm',
+    default: 'WinForm — AI Football Predictions',
     template: '%s | WinForm',
   },
   description: 'AI-powered football match analysis, confidence scores, and transparent prediction tracking.',
@@ -35,12 +35,12 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     siteName: 'WinForm',
-    title: 'WinForm',
+    title: 'WinForm — AI Football Predictions',
     description: 'Data-driven match analysis and predictions for every major league.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'WinForm',
+    title: 'WinForm — AI Football Predictions',
     description: 'Data-driven match analysis and predictions for every major league.',
   },
   icons: {

@@ -1,7 +1,7 @@
 {
   "name": "WinForm",
   "short_name": "WinForm",
-  "description": "AI-powered football match analysis and predictions.",
+  "description": "AI-powered football match analysis and predictions for every major league.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0A0F1E",
