@@ -21,27 +21,12 @@ export const metadata: Metadata = {
     default: 'WinForm',
     template: '%s | WinForm',
   },
-  description: 'AI-powered football match analysis, confidence scores, and transparent prediction tracking.',
+  description: 'AI-powered football match analysis.',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
     title: 'WinForm',
-    startupImage: '/icon-512.png',
-  },
-  formatDetection: {
-    telephone: false,
-  },
-  openGraph: {
-    type: 'website',
-    siteName: 'WinForm',
-    title: 'WinForm',
-    description: 'Data-driven match analysis and predictions for every major league.',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'WinForm',
-    description: 'Data-driven match analysis and predictions for every major league.',
   },
   icons: {
     icon: [
@@ -49,34 +34,24 @@ export const metadata: Metadata = {
       { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
       { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
     ],
-    apple: [
-      { url: '/icon-180.png', sizes: '180x180', type: 'image/png' },
-    ],
-    shortcut: '/favicon.ico',
+    apple: [{ url: '/icon-180.png', sizes: '180x180', type: 'image/png' }],
   },
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
+        <link rel="manifest" href="/manifest.json" />
         <meta name="application-name" content="WinForm" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="WinForm" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="msapplication-TileColor" content="#0A0F1E" />
-        <meta name="msapplication-tap-highlight" content="no" />
       </head>
       <body className={`${inter.className} bg-background text-text-primary min-h-screen`}>
         <Header />
-        <main>
-          {children}
-        </main>
+        <main>{children}</main>
         <Footer />
         <BottomNav />
         <PWASetup />

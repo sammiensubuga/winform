@@ -37,10 +37,8 @@ self.addEventListener('activate', event => {
 
 // Fetch — network first, fall back to cache
 self.addEventListener('fetch', event => {
-  // Skip non-GET requests
   if (event.request.method !== 'GET') return
 
-  // Skip Supabase and external API calls — never cache these
   const url = new URL(event.request.url)
   if (
     url.hostname.includes('supabase.co') ||
@@ -52,7 +50,6 @@ self.addEventListener('fetch', event => {
   event.respondWith(
     fetch(event.request)
       .then(response => {
-        // Cache successful responses
         if (response.status === 200) {
           const responseClone = response.clone()
           caches.open(CACHE_NAME).then(cache => {
@@ -62,10 +59,8 @@ self.addEventListener('fetch', event => {
         return response
       })
       .catch(() => {
-        // Network failed — try cache
         return caches.match(event.request).then(cached => {
           if (cached) return cached
-          // Return offline page for navigation requests
           if (event.request.mode === 'navigate') {
             return caches.match('/')
           }
@@ -74,7 +69,7 @@ self.addEventListener('fetch', event => {
   )
 })
 
-// Push notifications (ready for later)
+// Push notifications
 self.addEventListener('push', event => {
   if (!event.data) return
 
@@ -90,7 +85,7 @@ self.addEventListener('push', event => {
   )
 })
 
-// Notification click — open the app to the right page
+// Notification click
 self.addEventListener('notificationclick', event => {
   event.notification.close()
   event.waitUntil(
