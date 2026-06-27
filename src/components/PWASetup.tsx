@@ -15,48 +15,39 @@ export default function PWASetup() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
 
   useEffect(() => {
-    // Check if already installed (standalone mode)
-    const checkStandalone = () => {
-      const standalone = window.matchMedia('(display-mode: standalone)').matches
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setIsStandalone(standalone)
-      return standalone
-    }
+    // Check if already installed
+    const isStandaloneMode = window.matchMedia('(display-mode: standalone)').matches
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsStandalone(isStandaloneMode)
 
     // Check iOS
-    const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent)
+    const iOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent)
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIsIOS(isIOSDevice)
+    setIsIOS(iOSDevice)
 
-    // If already installed, don't show anything
-    if (checkStandalone()) {
-      return
-    }
+    if (isStandaloneMode) return
 
     // Register service worker
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js')
-        .then(() => console.log('✅ SW registered'))
-        .catch((err) => console.log('❌ SW failed:', err))
+        .then(() => console.log('SW registered'))
+        .catch((err) => console.log('SW failed:', err))
     }
 
-    // Listen for install prompt
-    const handleBeforeInstallPrompt = (e: Event) => {
+    // Android install prompt
+    const handlePrompt = (e: Event) => {
       e.preventDefault()
-      console.log('✅ beforeinstallprompt fired')
       setDeferredPrompt(e as BeforeInstallPromptEvent)
-      
-      // Check if user dismissed before
       const dismissed = localStorage.getItem('pwa-dismissed')
       if (!dismissed) {
-        setTimeout(() => setShowBanner(true), 1000)
+        setTimeout(() => setShowBanner(true), 1500)
       }
     }
 
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+    window.addEventListener('beforeinstallprompt', handlePrompt)
 
-    // iOS fallback - show banner after 2 seconds
-    if (isIOSDevice) {
+    // iOS banner
+    if (iOSDevice) {
       const dismissed = localStorage.getItem('pwa-dismissed')
       if (!dismissed) {
         setTimeout(() => setShowBanner(true), 2000)
@@ -64,7 +55,7 @@ export default function PWASetup() {
     }
 
     return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+      window.removeEventListener('beforeinstallprompt', handlePrompt)
     }
   }, [])
 
@@ -75,11 +66,10 @@ export default function PWASetup() {
       if (outcome === 'accepted') {
         setShowBanner(false)
         localStorage.setItem('pwa-dismissed', 'true')
-        console.log('✅ App installed')
       }
       setDeferredPrompt(null)
     } else if (isIOS) {
-      alert('Tap the Share button (square with arrow), then select "Add to Home Screen"')
+      alert('Tap Share, then Add to Home Screen')
     }
   }
 
@@ -104,20 +94,14 @@ export default function PWASetup() {
           </p>
         </div>
         <div className="flex items-center gap-1">
-          <button
-            onClick={handleDismiss}
-            className="text-text-secondary text-sm px-2 py-1"
-          >
+          <button onClick={handleDismiss} className="text-text-secondary text-sm px-2 py-1">
             Not now
           </button>
-          <button
-            onClick={handleInstall}
-            className="bg-accent hover:bg-accent-hover text-white text-sm font-medium px-4 py-1.5 rounded-lg"
-          >
+          <button onClick={handleInstall} className="bg-accent hover:bg-accent-hover text-white text-sm font-medium px-4 py-1.5 rounded-lg">
             Install
           </button>
         </div>
       </div>
     </div>
   )
-} 
+}
