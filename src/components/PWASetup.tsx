@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useMemo } from 'react'
 
-
 // Type for the beforeinstallprompt event
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => void
@@ -13,15 +12,25 @@ export default function PWASetup() {
   const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null)
   const [showBanner, setShowBanner] = useState(false)
 
-  // Use useMemo to avoid calling setState in useEffect
-  const isIOS = useMemo(() => /iphone|ipad|ipod/i.test(navigator.userAgent), [])
-  const isStandalone = useMemo(() => 
-    window.matchMedia('(display-mode: standalone)').matches ||
-    ('standalone' in window.navigator && (window.navigator as { standalone?: boolean }).standalone === true),
-    []
-  )
+  // Memoize browser checks - runs once, no setState in effect
+  const isBrowser = useMemo(() => typeof window !== 'undefined', [])
+  
+  const isIOS = useMemo(() => {
+    if (!isBrowser) return false
+    return /iphone|ipad|ipod/i.test(navigator.userAgent)
+  }, [isBrowser])
+
+  const isStandalone = useMemo(() => {
+    if (!isBrowser) return false
+    return (
+      window.matchMedia('(display-mode: standalone)').matches ||
+      ('standalone' in window.navigator && (window.navigator as { standalone?: boolean }).standalone === true)
+    )
+  }, [isBrowser])
 
   useEffect(() => {
+    if (!isBrowser) return
+
     // Register service worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
@@ -47,7 +56,7 @@ export default function PWASetup() {
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
     return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-  }, [])
+  }, [isBrowser])
 
   const handleInstall = async () => {
     if (!installPrompt) return
@@ -59,11 +68,13 @@ export default function PWASetup() {
 
   const handleDismiss = () => {
     setShowBanner(false)
-    localStorage.setItem('pwa-banner-dismissed', 'true')
+    if (isBrowser) {
+      localStorage.setItem('pwa-banner-dismissed', 'true')
+    }
   }
 
   // Already installed or on desktop — show nothing
-  if (isStandalone) return null
+  if (!isBrowser || isStandalone) return null
 
   // iOS banner — show manual instructions
   if (isIOS && !isStandalone && showBanner) {
