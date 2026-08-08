@@ -71,6 +71,10 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="msapplication-TileColor" content="#0A0F1E" />
         <meta name="msapplication-tap-highlight" content="no" />
+        
+        {/* Force Chrome to load icons */}
+        <link rel="icon" href="/icon-192.png" sizes="192x192" />
+        <link rel="apple-touch-icon" href="/icon-192.png" />
       </head>
       <body className={`${inter.className} bg-background text-text-primary min-h-screen pb-16`}>
         <Header />
