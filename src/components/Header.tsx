@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState } from 'react'
 import type { User } from '@supabase/supabase-js'
 import { Search, Trophy, Menu, X, ChevronDown, LogOut, User as UserIcon, Home, Star, Flame, Calendar, Globe } from 'lucide-react'
 import SearchModal from './SearchModal'
@@ -29,12 +29,6 @@ export default function Header() {
   const isHeroPage = pathname === '/'
   const isAuthPage = pathname === '/login' || pathname === '/register' || pathname === '/forgot-password' || pathname === '/update-password'
 
-  // Detect standalone mode using useMemo (no setState in effect)
-  const isStandalone = useMemo(() => {
-    if (typeof window === 'undefined') return false
-    return window.matchMedia('(display-mode: standalone)').matches
-  }, [])
-
   // Hooks must be called unconditionally
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUser(data.user))
@@ -59,6 +53,10 @@ export default function Header() {
   if (isAuthPage) {
     return null
   }
+
+  // Check standalone mode during render (safe for client-side only)
+  // This runs on every render but is cheap and avoids the ESLint warning
+  const isStandalone = typeof window !== 'undefined' && window.matchMedia('(display-mode: standalone)').matches
 
   // If in standalone mode, render absolutely nothing
   if (isStandalone) {
