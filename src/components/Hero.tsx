@@ -1,37 +1,102 @@
 'use client'
 
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { Sparkles } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 export default function Hero() {
+  const [mounted, setMounted] = useState(false)
+
+ useEffect(() => {
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  setMounted(true)
+}, [])
+
   return (
-    <section className="relative min-h-[80vh] flex flex-col items-center justify-center text-center px-4 py-20 overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-accent/5 via-background to-background -z-10" />
-      
-      <div className="space-y-6 max-w-3xl relative z-10">
-        <div className="inline-flex items-center gap-2 bg-accent/10 text-accent px-4 py-1.5 rounded-full text-sm font-medium mb-4">
-          <Sparkles className="w-4 h-4" />
-          AI-Powered Predictions
-        </div>
-        <h1 className="text-5xl sm:text-7xl font-bold tracking-tight">
-          WinForm
-          <span className="text-primary block sm:inline"> AI Football Predictions</span>
-        </h1>
-        <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto">
-          Leverage Llama 3 AI to predict match outcomes with confidence. 
-          Smart insights for smarter football decisions.
-        </p>
-        <div className="flex flex-wrap gap-4 justify-center">
-          <Link href="/matches">
-            <Button size="lg">Get Started →</Button>
-          </Link>
-          <Link href="/top-picks">
-            <Button size="lg" variant="outline">View Predictions</Button>
-          </Link>
+    <section className="relative w-full h-screen min-h-[600px] max-h-[900px] flex items-center justify-center overflow-hidden">
+
+   {/* Background image */}
+<div className="absolute inset-0">
+  <img 
+    src="/hero-stadium.jpg" 
+    alt="Football stadium"
+    className="w-full h-full object-cover"
+  />
+</div>
+
+      {/* Gradient overlay */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `linear-gradient(
+            to bottom,
+            rgba(10, 15, 30, 0.25) 0%,
+            rgba(10, 15, 30, 0.05) 25%,
+            rgba(10, 15, 30, 0.55) 60%,
+            rgba(10, 15, 30, 0.92) 85%,
+            rgba(10, 15, 30, 1.0) 100%
+          )`
+        }}
+      />
+
+      {/* Content — positioned in lower third */}
+    <div className={`relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-20 pb-20 text-center transition-all duration-700 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        <div className="max-w-2xl mx-auto">
+
+          {/* Tagline */}
+       <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight tracking-tight">
+  <span className="block sm:inline">Data First.</span>{' '}
+  <span className="text-accent block sm:inline">Then Bet.</span>
+</h1>
+
+          {/* Subtext */}
+       <p className="mt-4 text-lg sm:text-xl text-white/90 font-semibold max-w-lg mx-auto">
+  Smarter bets start with better data.
+</p>
+
+    {/* Buttons */}
+<div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+<a
+  href="#top-picks"
+  className="group inline-flex items-center gap-2 bg-accent hover:bg-accent-hover text-white font-semibold px-7 py-3.5 rounded-xl transition-all duration-300 text-sm shadow-lg shadow-accent/25 animate-float"
+  style={{ border: '1px solid #D4AF37' }}
+>
+  View Today&apos;s Picks
+  <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+  </svg>
+</a>
+
+<Link
+  href="/register"
+  className="inline-flex items-center gap-2 text-white font-medium px-7 py-3.5 rounded-xl transition-all duration-300 text-sm backdrop-blur-sm animate-float"
+  style={{ border: '1px solid #22C55E' }}
+>
+  Get Started Free
+</Link>
+</div>
+
+          {/* Trust line */}
+      <p className="mt-4 text-white/60 text-sm font-medium">
+  $0 forever · No credit card needed
+</p>
+
         </div>
       </div>
+
+      {/* Scroll indicator */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2">
+        <span className="text-white/30 text-xs tracking-widest uppercase">Scroll</span>
+        <svg
+          className="w-5 h-5 text-white/30 animate-bounce-slow"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={1.5}
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+        </svg>
+      </div>
+
     </section>
   )
 }
