@@ -72,7 +72,7 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#0A0F1E" />
         <meta name="msapplication-tap-highlight" content="no" />
       </head>
-      <body className={`${inter.className} bg-background text-text-primary min-h-screen`}>
+      <body className={`${inter.className} bg-background text-text-primary min-h-screen pb-16`}>
         <Header />
         <main>
           {children}

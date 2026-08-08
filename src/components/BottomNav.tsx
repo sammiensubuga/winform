@@ -2,9 +2,6 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
-import { useEffect, useState } from 'react'
-import type { User } from '@supabase/supabase-js'
 
 const navItems = [
   {
@@ -59,19 +56,6 @@ const navItems = [
 
 export default function BottomNav() {
   const pathname = usePathname()
-  const [user, setUser] = useState<User | null>(null)
-  const supabase = createClient()
-
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setUser(data.user))
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_, session) => setUser(session?.user ?? null)
-    )
-    return () => subscription.unsubscribe()
-  }, [supabase.auth])
-
-  // Only show bottom nav if user is logged in
-  if (!user) return null
 
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-elevated border-t border-border">

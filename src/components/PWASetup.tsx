@@ -1,18 +1,25 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import Image from 'next/image'
+import { useEffect, useState, useMemo } from 'react'
 
+
+// Type for the beforeinstallprompt event
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => void
-  userChoice: Promise<{ outcome: string }>
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
 }
 
 export default function PWASetup() {
   const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null)
   const [showBanner, setShowBanner] = useState(false)
-  const [isIOS, setIsIOS] = useState(false)
-  const [isStandalone, setIsStandalone] = useState(false)
+
+  // Use useMemo to avoid calling setState in useEffect
+  const isIOS = useMemo(() => /iphone|ipad|ipod/i.test(navigator.userAgent), [])
+  const isStandalone = useMemo(() => 
+    window.matchMedia('(display-mode: standalone)').matches ||
+    ('standalone' in window.navigator && (window.navigator as { standalone?: boolean }).standalone === true),
+    []
+  )
 
   useEffect(() => {
     // Register service worker
@@ -25,22 +32,11 @@ export default function PWASetup() {
       })
     }
 
-    // Detect iOS
-    const ios = /iphone|ipad|ipod/i.test(navigator.userAgent)
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIsIOS(ios)
-
-    // Detect if already installed
-    const standalone =
-      window.matchMedia('(display-mode: standalone)').matches ||
-      ('standalone' in window.navigator && (window.navigator as { standalone?: boolean }).standalone === true)
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIsStandalone(standalone)
-
     // Android install prompt
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault()
-      setInstallPrompt(e as BeforeInstallPromptEvent)
+      const promptEvent = e as BeforeInstallPromptEvent
+      setInstallPrompt(promptEvent)
 
       // Only show banner if not dismissed before
       const dismissed = localStorage.getItem('pwa-banner-dismissed')
@@ -55,7 +51,7 @@ export default function PWASetup() {
 
   const handleInstall = async () => {
     if (!installPrompt) return
-    installPrompt.prompt()
+    await installPrompt.prompt()
     const { outcome } = await installPrompt.userChoice
     if (outcome === 'accepted') setShowBanner(false)
     setInstallPrompt(null)
@@ -74,9 +70,7 @@ export default function PWASetup() {
     return (
       <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-elevated border-t border-border shadow-2xl">
         <div className="max-w-lg mx-auto flex items-start gap-3">
-      <div className="relative w-10 h-10 shrink-0 rounded-xl overflow-hidden">
-  <Image src="/icon-192.png" alt="WinForm" width={40} height={40} className="object-contain rounded-xl" />
-</div>
+          <img src="/icon-192.png" alt="WinForm" className="w-10 h-10 rounded-xl flex-shrink-0" />
           <div className="flex-1 min-w-0">
             <p className="text-text-primary text-sm font-semibold">Install WinForm</p>
             <p className="text-text-secondary text-xs mt-0.5">
@@ -86,7 +80,7 @@ export default function PWASetup() {
           </div>
           <button
             onClick={handleDismiss}
-            className="text-text-tertiary hover:text-text-secondary p-1 shrink-0"
+            className="text-text-tertiary hover:text-text-secondary p-1 flex-shrink-0"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -102,16 +96,14 @@ export default function PWASetup() {
     return (
       <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-elevated border-t border-border shadow-2xl">
         <div className="max-w-lg mx-auto flex items-center gap-3">
-     <div className="relative w-10 h-10 shrink-0 rounded-xl overflow-hidden">
-  <Image src="/icon-192.png" alt="WinForm" width={40} height={40} className="object-contain rounded-xl" />
-</div>
+          <img src="/icon-192.png" alt="WinForm" className="w-10 h-10 rounded-xl flex-shrink-0" />
           <div className="flex-1 min-w-0">
             <p className="text-text-primary text-sm font-semibold">Install WinForm</p>
             <p className="text-text-secondary text-xs mt-0.5">
               Get predictions and live scores on your home screen.
             </p>
           </div>
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-2 flex-shrink-0">
             <button
               onClick={handleDismiss}
               className="text-text-secondary text-sm px-3 py-1.5 rounded-lg hover:bg-card transition-colors"
