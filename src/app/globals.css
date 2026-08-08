@@ -74,9 +74,30 @@ body {
   }
 }
 
-/* HIDE HEADER IN PWA STANDALONE MODE */
+/* HIDE HEADER AND FOOTER IN PWA STANDALONE MODE */
 @media all and (display-mode: standalone) {
-  header {
+  /* Hide header - target both tag and class */
+  header,
+  .header,
+  [class*="Header"] {
+    display: none !important;
+  }
+  
+  /* Hide footer - target both tag and class */
+  footer,
+  .footer,
+  [class*="Footer"] {
+    display: none !important;
+  }
+
+  @media all and (display-mode: standalone) {
+  .bottom-nav {
+    display: none !important;
+  }
+}
+  
+  /* Also hide any fixed position elements that might be header/footer */
+  .fixed {
     display: none !important;
   }
 }
