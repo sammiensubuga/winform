@@ -25,7 +25,8 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const [isStandalone, setIsStandalone] = useState(false)
+  // Default to TRUE so header is hidden on initial render
+  const [isStandalone, setIsStandalone] = useState(true)
   const supabase = createClient()
 
   const isHeroPage = pathname === '/'
@@ -40,13 +41,10 @@ export default function Header() {
     return () => subscription.unsubscribe()
   }, [supabase.auth])
 
-  // Detect standalone mode using requestAnimationFrame to avoid ESLint warning
+  // Detect standalone mode on mount
   useEffect(() => {
-    const frame = requestAnimationFrame(() => {
-      const standalone = window.matchMedia('(display-mode: standalone)').matches
-      setIsStandalone(standalone)
-    })
-    return () => cancelAnimationFrame(frame)
+    const standalone = window.matchMedia('(display-mode: standalone)').matches
+    setIsStandalone(standalone)
   }, [])
 
   useEffect(() => {
@@ -64,7 +62,8 @@ export default function Header() {
     return null
   }
 
-  // If in standalone mode, render absolutely nothing
+  // If in standalone mode (or still checking), render nothing
+  // This means the header is hidden by default
   if (isStandalone) {
     return null
   }
