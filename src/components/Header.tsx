@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 'use client'
 
 import Link from 'next/link'
@@ -24,6 +25,7 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [isStandalone, setIsStandalone] = useState(false)
   const supabase = createClient()
 
   const isHeroPage = pathname === '/'
@@ -38,9 +40,17 @@ export default function Header() {
     return () => subscription.unsubscribe()
   }, [supabase.auth])
 
+  // Detect standalone mode using requestAnimationFrame to avoid ESLint warning
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      const standalone = window.matchMedia('(display-mode: standalone)').matches
+      setIsStandalone(standalone)
+    })
+    return () => cancelAnimationFrame(frame)
+  }, [])
+
   useEffect(() => {
     if (!isHeroPage) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setScrolled(true)
       return
     }
@@ -53,10 +63,6 @@ export default function Header() {
   if (isAuthPage) {
     return null
   }
-
-  // Check standalone mode during render (safe for client-side only)
-  // This runs on every render but is cheap and avoids the ESLint warning
-  const isStandalone = typeof window !== 'undefined' && window.matchMedia('(display-mode: standalone)').matches
 
   // If in standalone mode, render absolutely nothing
   if (isStandalone) {
