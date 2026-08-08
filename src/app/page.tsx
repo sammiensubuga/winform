@@ -9,7 +9,7 @@ import Image from 'next/image'
 import Hero from '@/components/Hero'
 import TopPickCard from '@/components/TopPickCard'
 import LiveMatchBanner from '@/components/LiveMatchBanner'
-import { Star, Zap, Target, CheckCircle, XCircle, ChevronRight, Trophy } from 'lucide-react'
+import { Star, Zap, Target, CheckCircle, XCircle, ChevronRight, Trophy, Clock } from 'lucide-react'
 import {
   mockTopPicks,
   mockLiveMatches,
@@ -54,6 +54,9 @@ const SHOW_LIVE = mockLiveMatches.length > 0
 export default function HomePage() {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<User | null>(null)
+  const [isStandalone, setIsStandalone] = useState(false)
+  const [greeting, setGreeting] = useState('')
+  const [currentDate, setCurrentDate] = useState('')
   const router = useRouter()
   const supabase = createClient()
 
@@ -69,6 +72,27 @@ export default function HomePage() {
       }
     }
     checkUser()
+
+    // Detect if running in standalone mode (PWA installed)
+    const standalone = window.matchMedia('(display-mode: standalone)').matches
+    setIsStandalone(standalone)
+
+    // Set greeting based on time of day
+    const hour = new Date().getHours()
+    let greetingText = 'Good evening'
+    if (hour >= 5 && hour < 12) greetingText = 'Good morning'
+    else if (hour >= 12 && hour < 18) greetingText = 'Good afternoon'
+    setGreeting(greetingText)
+
+    // Format date
+    const now = new Date()
+    const dateStr = now.toLocaleDateString('en-US', { 
+      weekday: 'long', 
+      day: 'numeric', 
+      month: 'long', 
+      year: 'numeric' 
+    })
+    setCurrentDate(dateStr)
   }, [router, supabase.auth])
 
   if (loading) {
@@ -88,6 +112,186 @@ export default function HomePage() {
   const strongPicks = mockTopPicks.filter(m => m.confidenceTier === 'strong')
   const valuePicks = mockTopPicks.filter(m => m.confidenceTier === 'value')
 
+  // Standalone mode: show slim layout without hero
+  if (isStandalone) {
+    return (
+      <main className="min-h-screen bg-background">
+        {/* Welcome Bar */}
+        <div className="w-full bg-[#111827] px-4 py-2.5">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <p className="text-sm text-gray-300">
+              {greeting} · {currentDate}
+            </p>
+            <Link href="/" className="text-xs text-gray-400 hover:text-gray-200 transition-colors">
+              WinForm
+            </Link>
+          </div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 space-y-8">
+          {/* Yesterday's Results Bar */}
+          <div className="border-b border-border py-4">
+            <div className="text-center">
+              <p className="text-text-secondary text-xs uppercase tracking-wider mb-3">Yesterday</p>
+              <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
+                <span className="font-semibold tabular flex items-center gap-1.5" style={{ color: '#22C55E' }}>
+                  <CheckCircle className="w-4 h-4" style={{ color: '#22C55E' }} />
+                  {mockYesterdayStats.wins} wins
+                </span>
+                <span className="font-semibold tabular flex items-center gap-1.5" style={{ color: '#EF4444' }}>
+                  <XCircle className="w-4 h-4" style={{ color: '#EF4444' }} />
+                  {mockYesterdayStats.losses} losses
+                </span>
+                <span className="text-text-primary font-bold tabular">
+                  {mockYesterdayStats.accuracy}% accuracy
+                </span>
+              </div>
+              <div className="mt-4">
+                <Link
+                  href="/results"
+                  className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg transition"
+                  style={{ 
+                    border: '1px solid #22C55E',
+                    color: 'white',
+                    backgroundColor: 'transparent'
+                  }}
+                >
+                  See all results →
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Today's Top Picks */}
+          <section id="top-picks">
+            <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-6">
+              <div>
+                <h2 className="text-2xl font-bold text-text-primary">Today&apos;s Top Picks</h2>
+                <p className="text-text-secondary text-sm mt-1">
+                  Selected best opportunities · {currentDate}
+                </p>
+              </div>
+              <Link 
+                href="/top-picks" 
+                className="inline-flex items-center justify-center w-full sm:w-auto px-4 py-1.5 mt-3 sm:mt-0 rounded-lg text-sm font-medium transition"
+                style={{ 
+                  border: '1px solid #D4AF37',
+                  color: 'white',
+                  backgroundColor: 'transparent'
+                }}
+              >
+                View all
+              </Link>
+            </div>
+
+            {elitePicks.length > 0 && (
+              <div className="mb-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <Star className="w-4 h-4 text-amber-400" />
+                  <p className="text-xs font-medium text-amber-400">
+                    Elite Picks 80%+ confidence
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {elitePicks.map(match => (
+                    <TopPickCard key={match.id} match={match} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {strongPicks.length > 0 && (
+              <div className="mb-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <Zap className="w-4 h-4 text-green-500" />
+                  <p className="text-xs font-medium text-green-500">
+                    Strong Picks 70-79% confidence
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {strongPicks.map(match => (
+                    <TopPickCard key={match.id} match={match} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {valuePicks.length > 0 && (
+              <div className="mb-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <Target className="w-4 h-4 text-blue-500" />
+                  <p className="text-xs font-medium text-blue-500">
+                    Value Picks 55-69% confidence
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {valuePicks.map(match => (
+                    <TopPickCard key={match.id} match={match} />
+                  ))}
+                </div>
+              </div>
+            )}
+          </section>
+
+          {/* Live Matches — only shown when live matches exist */}
+          {SHOW_LIVE && (
+            <section className="py-10 border-t border-border">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                  <h2 className="text-xl font-bold text-text-primary">Live now</h2>
+                </div>
+                <span className="text-text-secondary text-sm">
+                  {mockLiveMatches.length} match{ mockLiveMatches.length !== 1 ? 'es' : '' } in progress
+                </span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {mockLiveMatches.map(match => (
+                  <LiveMatchBanner key={match.id} match={match} />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* CTA Section */}
+          <section className="py-10 border-t border-border mb-8">
+            <div className="bg-gradient-to-br from-accent/10 via-card to-card border border-accent/20 rounded-2xl p-8 md:p-12 text-center">
+              <h2 className="text-3xl font-bold text-text-primary">
+                Track your predictions
+              </h2>
+              <p className="text-text-secondary mt-2 mb-8 text-lg">
+                Free account. No credit card required.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 max-w-2xl mx-auto mb-8">
+                {[
+                  '✓ Save matches to your watchlist',
+                  '✓ Track your prediction accuracy',
+                  '✓ Your personal prediction streak',
+                  '✓ Match notifications before kickoff',
+                ].map(item => (
+                  <div key={item} className="bg-background/60 border border-border rounded-xl px-4 py-3">
+                    <p className="text-text-secondary text-sm">{item}</p>
+                  </div>
+                ))}
+              </div>
+              <Link
+                href="/register"
+                className="inline-flex items-center gap-2 bg-accent hover:bg-accent-hover text-white font-semibold px-8 py-3.5 rounded-xl transition-all duration-200 shadow-lg shadow-accent/25"
+              >
+                Create Free Account
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </Link>
+              <p className="text-text-tertiary text-sm mt-4">$0 forever · No credit card needed</p>
+            </div>
+          </section>
+        </div>
+      </main>
+    )
+  }
+
+  // Regular browser mode: show full hero and all sections
   return (
     <>
       <Hero />
