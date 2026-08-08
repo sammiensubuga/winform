@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { User } from '@supabase/supabase-js'
@@ -9,12 +9,11 @@ import Image from 'next/image'
 import Hero from '@/components/Hero'
 import TopPickCard from '@/components/TopPickCard'
 import LiveMatchBanner from '@/components/LiveMatchBanner'
-import { Star, Zap, Target, CheckCircle, XCircle, ChevronRight, Trophy, Clock } from 'lucide-react'
+import { Star, Zap, Target, CheckCircle, XCircle, ChevronRight, Clock, CalendarDays, Flame } from 'lucide-react'
 import {
   mockTopPicks,
   mockLiveMatches,
   mockUpcomingMatches,
-  mockWorldCupMatches,
   mockYesterdayStats,
   mockLeagues,
 } from '@/lib/mock-data'
@@ -54,46 +53,45 @@ const SHOW_LIVE = mockLiveMatches.length > 0
 export default function HomePage() {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<User | null>(null)
-  const [isStandalone, setIsStandalone] = useState(false)
-  const [greeting, setGreeting] = useState('')
-  const [currentDate, setCurrentDate] = useState('')
   const router = useRouter()
   const supabase = createClient()
 
+  // User auth check
   useEffect(() => {
     const checkUser = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       setUser(user)
       setLoading(false)
       
-      // If user is logged in, redirect to watchlist
       if (user) {
         router.push('/watchlist')
       }
     }
     checkUser()
+  }, [router, supabase.auth])
 
-    // Detect if running in standalone mode (PWA installed)
-    const standalone = window.matchMedia('(display-mode: standalone)').matches
-    setIsStandalone(standalone)
+  // useMemo for values that don't need to trigger re-renders
+  const isStandalone = useMemo(() => {
+    if (typeof window === 'undefined') return false
+    return window.matchMedia('(display-mode: standalone)').matches
+  }, [])
 
-    // Set greeting based on time of day
+  const greeting = useMemo(() => {
     const hour = new Date().getHours()
-    let greetingText = 'Good evening'
-    if (hour >= 5 && hour < 12) greetingText = 'Good morning'
-    else if (hour >= 12 && hour < 18) greetingText = 'Good afternoon'
-    setGreeting(greetingText)
+    if (hour >= 5 && hour < 12) return 'Good morning'
+    if (hour >= 12 && hour < 18) return 'Good afternoon'
+    return 'Good evening'
+  }, [])
 
-    // Format date
+  const currentDate = useMemo(() => {
     const now = new Date()
-    const dateStr = now.toLocaleDateString('en-US', { 
+    return now.toLocaleDateString('en-US', { 
       weekday: 'long', 
       day: 'numeric', 
       month: 'long', 
       year: 'numeric' 
     })
-    setCurrentDate(dateStr)
-  }, [router, supabase.auth])
+  }, [])
 
   if (loading) {
     return (
@@ -103,7 +101,6 @@ export default function HomePage() {
     )
   }
 
-  // If logged in, show nothing (redirecting)
   if (user) {
     return null
   }
@@ -112,8 +109,7 @@ export default function HomePage() {
   const strongPicks = mockTopPicks.filter(m => m.confidenceTier === 'strong')
   const valuePicks = mockTopPicks.filter(m => m.confidenceTier === 'value')
 
-
-  // Standalone mode: show slim layout without hero
+  // STANDALONE MODE (PWA installed)
   if (isStandalone) {
     return (
       <main className="min-h-screen bg-background">
@@ -129,7 +125,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Spacer for the slim header */}
+        {/* Spacer for slim header */}
         <div className="h-14" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 space-y-8">
@@ -237,7 +233,7 @@ export default function HomePage() {
             )}
           </section>
 
-          {/* Live Matches — only shown when live matches exist */}
+          {/* Live Matches */}
           {SHOW_LIVE && (
             <section className="py-10 border-t border-border">
               <div className="flex items-center gap-3 mb-6">
@@ -295,7 +291,7 @@ export default function HomePage() {
     )
   }
 
-  // Regular browser mode: show full hero and all sections
+  // REGULAR BROWSER MODE
   return (
     <>
       <Hero />
@@ -470,7 +466,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Live Matches — only shown when live matches exist */}
+        {/* Live Matches */}
         {SHOW_LIVE && (
           <section className="py-10 border-t border-border">
             <div className="flex items-center gap-3 mb-6">
@@ -560,176 +556,14 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* World Cup 2026 */}
-        <section className="py-10 border-t border-border">
-          <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-6">
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <Trophy className="w-5 h-5 text-amber-400" />
-                <h2 className="text-2xl font-bold text-text-primary">World Cup 2026</h2>
-              </div>
-              <p className="text-text-secondary text-sm">Tournament predictions · Group stage</p>
-            </div>
-            <Link 
-              href="/world-cup" 
-              className="inline-flex items-center justify-center w-full sm:w-auto px-4 py-1.5 mt-3 sm:mt-0 rounded-lg text-sm font-medium transition"
-              style={{ 
-                border: '1px solid #D4AF37',
-                color: 'white',
-                backgroundColor: 'transparent'
-              }}
-            >
-              View all
-            </Link>
-          </div>
-
-          {['Group A', 'Group B', 'Group C', 'Group D', 'Group E', 'Group F', 'Group G', 'Group H'].map((groupName) => {
-            const groupMatches = mockWorldCupMatches.filter(match => match.group === groupName)
-            if (groupMatches.length === 0) return null
-            
-            return (
-              <div key={groupName} className="mb-4 sm:mb-6">
-                <h3 className="text-[10px] sm:text-xs text-text-tertiary uppercase tracking-wider mb-2 sm:mb-3 font-medium">
-                  {groupName}
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {groupMatches.map((match) => (
-                    <Link key={match.id} href={`/matches/${match.slug}`}>
-                      <div className="bg-card border border-border hover:border-accent/50 rounded-xl p-4 transition-all duration-200 cursor-pointer h-full flex flex-col gap-3">
-                        
-                        <div className="flex items-center justify-between gap-2">
-                          <div className="flex items-center gap-1.5 min-w-0 flex-1">
-                            <Trophy className="w-4 h-4 text-amber-400 shrink-0" />
-                            <span className="text-xs text-text-secondary font-medium truncate">World Cup</span>
-                          </div>
-                          <div className="flex-1 text-center">
-                            <span className="text-xs text-text-secondary">{match.kickoff}</span>
-                          </div>
-                          <div className="flex-1 flex items-center justify-end gap-1.5">
-                            <span className="text-xs text-text-tertiary truncate">{match.venue || 'Stadium'}</span>
-                            <svg className="w-3.5 h-3.5 text-text-secondary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
-                            </svg>
-                          </div>
-                        </div>
-
-                        <div className="border-t border-border" />
-
-                        <div className="flex items-center justify-between gap-3">
-                          <div className="flex-1 text-center">
-                            <div className="relative w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2">
-                              <Image src={match.homeTeamLogo} alt={match.homeTeam} fill className="object-contain" />
-                            </div>
-                            <p className="text-text-primary font-semibold text-xs sm:text-sm truncate px-1">{match.homeTeam}</p>
-                            <div className="flex justify-center gap-0.5 sm:gap-1 mt-2">
-                              {match.homeForm?.split('').map((letter, idx) => (
-                                <span key={idx} className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold ${letter === 'W' ? 'bg-green-500 text-white' : letter === 'L' ? 'bg-red-500 text-white' : 'bg-gray-500 text-white'}`}>
-                                  {letter}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-
-                          <div className="text-text-tertiary text-[10px] sm:text-xs font-medium shrink-0">VS</div>
-
-                          <div className="flex-1 text-center">
-                            <div className="relative w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2">
-                              <Image src={match.awayTeamLogo} alt={match.awayTeam} fill className="object-contain" />
-                            </div>
-                            <p className="text-text-primary font-semibold text-xs sm:text-sm truncate px-1">{match.awayTeam}</p>
-                            <div className="flex justify-center gap-0.5 sm:gap-1 mt-2">
-                              {match.awayForm?.split('').map((letter, idx) => (
-                                <span key={idx} className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold ${letter === 'W' ? 'bg-green-500 text-white' : letter === 'L' ? 'bg-red-500 text-white' : 'bg-gray-500 text-white'}`}>
-                                  {letter}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center justify-between gap-3 mt-2">
-                          <div className="flex-1 flex flex-col items-center gap-1">
-                            <span className="text-[10px] text-text-tertiary uppercase tracking-wider">Win</span>
-                            <CircularProgress percentage={match.homeProbability || 58} color="#22C55E" />
-                          </div>
-                          <div className="flex flex-col items-center gap-1">
-                            <span className="text-[10px] text-text-tertiary uppercase tracking-wider">Draw</span>
-                            <CircularProgress percentage={match.drawProbability || 24} color="#F97316" />
-                          </div>
-                          <div className="flex-1 flex flex-col items-center gap-1">
-                            <span className="text-[10px] text-text-tertiary uppercase tracking-wider">Win</span>
-                            <CircularProgress percentage={match.awayProbability || 20} color="#3B82F6" />
-                          </div>
-                        </div>
-
-                        <div className="border-t border-border" />
-
-                        <div className="flex items-center justify-between gap-2">
-                          <div className="flex items-center gap-1 min-w-0">
-                            <Trophy className="w-4 h-4 text-amber-400 shrink-0" />
-                            <p className="text-text-primary font-semibold text-sm truncate">{match.topPick}</p>
-                          </div>
-                          <div className="flex items-center gap-1 shrink-0">
-                            <span className="text-text-primary font-bold text-sm">{match.odds.toFixed(2)}</span>
-                          </div>
-                        </div>
-
-                        <div>
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="text-text-secondary text-xs">Confidence</span>
-                            <span className={`text-sm font-bold ${match.confidenceTier === 'elite' ? 'text-amber-400' : match.confidenceTier === 'strong' ? 'text-green-500' : 'text-blue-500'}`}>{match.confidence}%</span>
-                          </div>
-                          <div className="w-full bg-gray-700 rounded-full h-1.5">
-                            <div className={`rounded-full h-1.5 ${match.confidenceTier === 'elite' ? 'bg-amber-400' : match.confidenceTier === 'strong' ? 'bg-green-500' : 'bg-blue-500'}`} style={{ width: `${match.confidence}%` }} />
-                          </div>
-                        </div>
-
-                        <div>
-                          <p className="text-text-tertiary text-xs uppercase tracking-wider mb-1">Analysis</p>
-                          <p className="text-text-secondary text-xs leading-relaxed line-clamp-2">
-                            {match.aiPreviewShort || 'Both teams have shown strong form in recent matches.'}
-                          </p>
-                        </div>
-
-                        <div className="mt-auto pt-1 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
-                          <span className="text-text-tertiary text-[8px] sm:text-[10px] text-center sm:text-left w-full sm:w-auto">
-                            {new Date(match.matchDate || '2026-06-15').toLocaleDateString('en-GB', {
-                              weekday: 'long',
-                              day: 'numeric',
-                              month: 'long',
-                              year: 'numeric'
-                            })}
-                          </span>
-                          <Link 
-                            href={`/matches/${match.slug}`}
-                            className="inline-flex items-center justify-center text-[8px] sm:text-xs font-medium px-3 py-1.5 rounded-lg transition w-full sm:w-auto"
-                            style={{ 
-                              color: 'white',
-                              border: '1px solid #D4AF37',
-                              backgroundColor: 'transparent'
-                            }}
-                          >
-                            <span>Details</span>
-                          </Link>
-                        </div>
-
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )
-          })}
-        </section>
-
         {/* League Explorer */}
         <section className="py-10 border-t border-border">
           <h2 className="text-2xl font-bold text-text-primary mb-6">League Explorer</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
             {mockLeagues.map(league => (
               <Link
                 key={league.slug}
-                href={league.slug === 'world-cup' ? '/world-cup' : `/leagues/${league.slug}`}
+                href={`/leagues/${league.slug}`}
               >
                 <div className="bg-card border border-border hover:border-accent/40 hover:bg-card-hover rounded-2xl p-4 transition-all cursor-pointer flex flex-col items-center gap-3 text-center group">
                   <div className="relative w-10 h-10">

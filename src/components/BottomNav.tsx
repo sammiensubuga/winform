@@ -2,13 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { 
-  Home, 
-  Trophy, 
-  Calendar, 
-  Star, 
-  BarChart3 
-} from 'lucide-react'
+import { Home, Calendar, Trophy, Star, BarChart3 } from 'lucide-react'
 
 const navItems = [
   { name: 'Home', href: '/', icon: Home },
@@ -23,7 +17,6 @@ export default function BottomNav() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50">
-      {/* Blurred background */}
       <div className="bg-background/80 backdrop-blur-xl border-t border-border/50">
         <div className="flex items-center justify-around h-16 max-w-lg mx-auto px-2">
           {navItems.map((item) => {
