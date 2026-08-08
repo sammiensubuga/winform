@@ -73,3 +73,10 @@ body {
     padding-bottom: 80px;
   }
 }
+
+/* HIDE HEADER IN PWA STANDALONE MODE */
+@media all and (display-mode: standalone) {
+  header {
+    display: none !important;
+  }
+}
