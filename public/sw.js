@@ -1,99 +1,101 @@
 const CACHE_NAME = 'winform-v1'
-const STATIC_CACHE = 'winform-static-v1'
-
 const STATIC_ASSETS = [
   '/',
-  '/top-picks',
-  '/results',
-  '/world-cup',
   '/manifest.json',
   '/icon-192.png',
-  '/icon-512.png',
+  '/icon-512.png'
 ]
 
-// Install — cache static assets
-self.addEventListener('install', event => {
+// Install event
+self.addEventListener('install', (event) => {
+  console.log('[SW] Installing...')
   event.waitUntil(
-    caches.open(STATIC_CACHE).then(cache => {
-      return cache.addAll(STATIC_ASSETS)
-    })
+    caches.open(CACHE_NAME)
+      .then((cache) => {
+        console.log('[SW] Caching static assets...')
+        return cache.addAll(STATIC_ASSETS)
+      })
+      .then(() => {
+        console.log('[SW] Installation complete')
+        return self.skipWaiting()
+      })
+      .catch((error) => {
+        console.error('[SW] Installation failed:', error)
+      })
   )
-  self.skipWaiting()
 })
 
-// Activate — clean up old caches
-self.addEventListener('activate', event => {
+// Activate event
+self.addEventListener('activate', (event) => {
+  console.log('[SW] Activating...')
   event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(
-        keys
-          .filter(key => key !== CACHE_NAME && key !== STATIC_CACHE)
-          .map(key => caches.delete(key))
-      )
-    )
+    caches.keys()
+      .then((cacheNames) => {
+        return Promise.all(
+          cacheNames.map((cacheName) => {
+            if (cacheName !== CACHE_NAME) {
+              console.log('[SW] Deleting old cache:', cacheName)
+              return caches.delete(cacheName)
+            }
+          })
+        )
+      })
+      .then(() => {
+        console.log('[SW] Activation complete')
+        return self.clients.claim()
+      })
   )
-  self.clients.claim()
 })
 
-// Fetch — network first, fall back to cache
-self.addEventListener('fetch', event => {
-  // Skip non-GET requests
-  if (event.request.method !== 'GET') return
-
-  // Skip Supabase and external API calls — never cache these
+// Fetch event
+self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url)
-  if (
-    url.hostname.includes('supabase.co') ||
-    url.hostname.includes('api-sports.io') ||
-    url.hostname.includes('thesportsdb.com') ||
-    url.hostname.includes('posthog.com')
-  ) return
+  
+  // Skip non-GET requests and cross-origin requests
+  if (event.request.method !== 'GET' || url.origin !== self.location.origin) {
+    return
+  }
+
+  // Skip API calls
+  if (url.pathname.startsWith('/api/')) {
+    return
+  }
 
   event.respondWith(
-    fetch(event.request)
-      .then(response => {
-        // Cache successful responses
-        if (response.status === 200) {
-          const responseClone = response.clone()
-          caches.open(CACHE_NAME).then(cache => {
-            cache.put(event.request, responseClone)
-          })
+    caches.match(event.request)
+      .then((cachedResponse) => {
+        // Return cached response if found
+        if (cachedResponse) {
+          return cachedResponse
         }
-        return response
+
+        // Otherwise fetch from network
+        return fetch(event.request)
+          .then((response) => {
+            // Don't cache non-successful responses
+            if (!response || response.status !== 200 || response.type !== 'basic') {
+              return response
+            }
+
+            // Cache the fetched response
+            const responseClone = response.clone()
+            caches.open(CACHE_NAME)
+              .then((cache) => {
+                cache.put(event.request, responseClone)
+              })
+              .catch((error) => {
+                console.error('[SW] Cache put error:', error)
+              })
+
+            return response
+          })
+          .catch((error) => {
+            console.error('[SW] Fetch failed:', error)
+            // Return a fallback response for HTML pages
+            if (event.request.headers.get('Accept').includes('text/html')) {
+              return caches.match('/')
+            }
+          })
       })
-      .catch(() => {
-        // Network failed — try cache
-        return caches.match(event.request).then(cached => {
-          if (cached) return cached
-          // Return offline page for navigation requests
-          if (event.request.mode === 'navigate') {
-            return caches.match('/')
-          }
-        })
-      })
-  )
-})
-
-// Push notifications (ready for later)
-self.addEventListener('push', event => {
-  if (!event.data) return
-
-  const data = event.data.json()
-  event.waitUntil(
-    self.registration.showNotification(data.title || 'WinForm', {
-      body: data.body || 'New prediction available',
-      icon: '/icon-192.png',
-      badge: '/icon-192.png',
-      data: { url: data.url || '/' },
-      vibrate: [100, 50, 100],
-    })
-  )
-})
-
-// Notification click — open the app to the right page
-self.addEventListener('notificationclick', event => {
-  event.notification.close()
-  event.waitUntil(
-    clients.openWindow(event.notification.data?.url || '/')
   )
 })
