@@ -1,15 +1,12 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import dynamic from 'next/dynamic'
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
+import BottomNav from '@/components/BottomNav'
+import PWASetup from '@/components/PWASetup'
 
 const inter = Inter({ subsets: ['latin'] })
-
-// Dynamically import client components with SSR disabled
-const Header = dynamic(() => import('@/components/Header'), { ssr: false })
-const Footer = dynamic(() => import('@/components/Footer'), { ssr: false })
-const BottomNav = dynamic(() => import('@/components/BottomNav'), { ssr: false })
-const PWASetup = dynamic(() => import('@/components/PWASetup'), { ssr: false })
 
 export const viewport: Viewport = {
   themeColor: '#0A0F1E',
