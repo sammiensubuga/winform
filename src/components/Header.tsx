@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect */
 'use client'
 
 import Link from 'next/link'
@@ -25,8 +24,6 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
-  // Default to TRUE so header is hidden on initial render
-  const [isStandalone, setIsStandalone] = useState(true)
   const supabase = createClient()
 
   const isHeroPage = pathname === '/'
@@ -41,12 +38,6 @@ export default function Header() {
     return () => subscription.unsubscribe()
   }, [supabase.auth])
 
-  // Detect standalone mode on mount
-  useEffect(() => {
-    const standalone = window.matchMedia('(display-mode: standalone)').matches
-    setIsStandalone(standalone)
-  }, [])
-
   useEffect(() => {
     if (!isHeroPage) {
       setScrolled(true)
@@ -59,12 +50,6 @@ export default function Header() {
 
   // If on auth page, don't render header
   if (isAuthPage) {
-    return null
-  }
-
-  // If in standalone mode (or still checking), render nothing
-  // This means the header is hidden by default
-  if (isStandalone) {
     return null
   }
 
