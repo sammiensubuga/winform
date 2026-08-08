@@ -112,6 +112,7 @@ export default function HomePage() {
   const strongPicks = mockTopPicks.filter(m => m.confidenceTier === 'strong')
   const valuePicks = mockTopPicks.filter(m => m.confidenceTier === 'value')
 
+
   // Standalone mode: show slim layout without hero
   if (isStandalone) {
     return (
@@ -127,6 +128,9 @@ export default function HomePage() {
             </Link>
           </div>
         </div>
+
+        {/* Spacer for the slim header */}
+        <div className="h-14" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 space-y-8">
           {/* Yesterday's Results Bar */}

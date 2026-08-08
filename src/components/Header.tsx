@@ -16,7 +16,11 @@ const leagues = [
   { name: 'Champions League', slug: 'champions-league', logo: 'https://media.api-sports.io/football/leagues/2.png' },
 ]
 
-export default function Header() {
+interface HeaderProps {
+  isStandalone?: boolean
+}
+
+export default function Header({ isStandalone = false }: HeaderProps) {
   const pathname = usePathname()
   const router = useRouter()
   const [user, setUser] = useState<User | null>(null)
@@ -52,6 +56,130 @@ useEffect(() => {
   // If on auth page, don't render header (after hooks)
   if (isAuthPage) {
     return null
+  }
+
+  // If in standalone mode, render minimal header (no sign up, no search, just logo + menu)
+  if (isStandalone) {
+    return (
+      <>
+        <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-background/95 backdrop-blur-md border-b border-border`}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-14">
+              {/* Logo */}
+              <Link href="/" className="flex items-center gap-2 shrink-0">
+                <img src="/logo.png" alt="WinForm" className="w-7 h-7 object-contain" />
+                <span className="text-lg font-bold text-text-primary hidden sm:inline">
+                  Win<span className="text-accent">Form</span>
+                </span>
+              </Link>
+
+              {/* Mobile menu button only */}
+              <button className="p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
+            </div>
+          </div>
+        </header>
+
+        {/* Mobile menu with blur overlay */}
+        {mobileMenuOpen && (
+          <div className="fixed inset-0 z-[60] bg-background/80 backdrop-blur-xl border-t border-border/50 lg:hidden">
+            <div className="flex flex-col h-full overflow-y-auto py-4 px-4">
+              <button 
+                onClick={() => setMobileMenuOpen(false)} 
+                className="self-end p-2 hover:bg-accent/10 rounded-lg transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+
+              <div className="flex-1 space-y-1 mt-2">
+                <Link href="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 px-3 py-3 text-text-secondary hover:text-text-primary hover:bg-accent/5 rounded-lg transition-colors">
+                  <Home className="w-5 h-5" /> Home
+                </Link>
+                <Link href="/top-picks" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 px-3 py-3 text-text-secondary hover:text-text-primary hover:bg-accent/5 rounded-lg transition-colors">
+                  <Star className="w-5 h-5" /> Predictions
+                </Link>
+                <Link href="/matches" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 px-3 py-3 text-text-secondary hover:text-text-primary hover:bg-accent/5 rounded-lg transition-colors">
+                  <Flame className="w-5 h-5" /> Live
+                </Link>
+                <Link href="/world-cup" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 px-3 py-3 text-text-secondary hover:text-text-primary hover:bg-accent/5 rounded-lg transition-colors">
+                  <Trophy className="w-5 h-5" /> World Cup
+                </Link>
+                <Link href="/results" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 px-3 py-3 text-text-secondary hover:text-text-primary hover:bg-accent/5 rounded-lg transition-colors">
+                  <Calendar className="w-5 h-5" /> Results
+                </Link>
+                
+                <div className="pt-3 mt-3 border-t border-border/50">
+                  <p className="px-3 py-1 text-xs text-text-tertiary uppercase tracking-wider flex items-center gap-2">
+                    <Globe className="w-3 h-3" /> Leagues
+                  </p>
+                  {leagues.map(league => (
+                    <Link
+                      key={league.slug}
+                      href={`/leagues/${league.slug}`}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-3 px-3 py-2.5 text-text-secondary hover:text-text-primary hover:bg-accent/5 rounded-lg transition-colors"
+                    >
+                      <div className="relative w-5 h-5">
+                        <img src={league.logo} alt={league.name} className="w-full h-full object-contain" />
+                      </div>
+                      {league.name}
+                    </Link>
+                  ))}
+                  <Link
+                    href="/world-cup"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-3 px-3 py-2.5 text-amber-400 hover:text-amber-300 hover:bg-accent/5 rounded-lg transition-colors"
+                  >
+                    <Trophy className="w-4 h-4" />
+                    World Cup 2026
+                  </Link>
+                </div>
+
+                {!user && (
+                  <div className="pt-3 mt-3 border-t border-border/50 space-y-2">
+                    <Link
+                      href="/login"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-3 px-3 py-2.5 text-text-secondary hover:text-text-primary hover:bg-accent/5 rounded-lg transition-colors"
+                    >
+                      <UserIcon className="w-5 h-5" />
+                      Login
+                    </Link>
+                    <Link
+                      href="/register"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center justify-center gap-2 px-3 py-3 text-center bg-accent hover:bg-accent-hover text-white rounded-lg mx-3 transition-colors"
+                      style={{ border: '1px solid #22C55E' }}
+                    >
+                      Sign Up
+                    </Link>
+                  </div>
+                )}
+
+                {user && (
+                  <div className="pt-3 mt-3 border-t border-border/50">
+                    <button
+                      onClick={() => {
+                        handleSignOut()
+                        setMobileMenuOpen(false)
+                      }}
+                      className="flex items-center gap-3 w-full text-left px-3 py-2.5 text-red-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                    >
+                      <LogOut className="w-5 h-5" />
+                      Sign Out
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Spacer */}
+        <div className="h-14" />
+      </>
+    )
   }
 
   const handleSignOut = async () => {
