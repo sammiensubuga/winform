@@ -72,18 +72,6 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="msapplication-TileColor" content="#0A0F1E" />
         <meta name="msapplication-tap-highlight" content="no" />
-        
-        {/* Detect standalone mode BEFORE paint */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if (window.matchMedia('(display-mode: standalone)').matches || 
-                  window.navigator.standalone === true) {
-                document.documentElement.classList.add('is-standalone')
-              }
-            `,
-          }}
-        />
       </head>
       <body className={`${inter.className} bg-background text-text-primary min-h-screen pb-16`}>
         <AppStatusBar />

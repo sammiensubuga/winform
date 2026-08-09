@@ -74,36 +74,46 @@ body {
   }
 }
 
-/* ============================================= */
-/* PWA STANDALONE MODE STYLES                   */
-/* ============================================= */
+/* ============================================================ */
+/* PWA STANDALONE MODE — CSS ONLY, NO JAVASCRIPT NEEDED        */
+/* ============================================================ */
 
-/* Hide app-status-bar by default, show only in standalone */
+/* 1. Hide the full header */
+@media all and (display-mode: standalone) {
+  .app-header {
+    display: none !important;
+  }
+}
+
+/* 2. Hide the footer */
+@media all and (display-mode: standalone) {
+  footer {
+    display: none !important;
+  }
+}
+
+/* 3. Hide the hero section */
+@media all and (display-mode: standalone) {
+  .hero-section {
+    display: none !important;
+  }
+}
+
+/* 4. Show the status bar ONLY in standalone */
+@media all and (display-mode: standalone) {
+  .app-status-bar {
+    display: flex !important;
+  }
+}
+
+/* 5. Hide status bar in browser mode */
 .app-status-bar {
-  display: none;
-}
-
-/* Show in standalone mode */
-html.is-standalone .app-status-bar {
-  display: flex;
-}
-
-/* Hide header in standalone mode */
-html.is-standalone .app-header {
   display: none !important;
 }
 
-/* Hide footer in standalone mode */
-html.is-standalone footer {
-  display: none !important;
-}
-
-/* Hide hero section in standalone mode */
-html.is-standalone .hero-section {
-  display: none !important;
-}
-
-/* Add top padding for the status bar in standalone mode */
-html.is-standalone body {
-  padding-top: 44px;
+/* 6. Add top padding in standalone mode */
+@media all and (display-mode: standalone) {
+  body {
+    padding-top: 44px !important;
+  }
 }
