@@ -6,6 +6,7 @@ import Footer from '@/components/Footer'
 import BottomNav from '@/components/BottomNav'
 import PWASetup from '@/components/PWASetup'
 import AppStatusBar from '@/components/AppStatusBar'
+import { headers } from 'next/headers'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -57,11 +58,16 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  // Detect standalone on the server using headers
+  const headersList = await headers()
+  const userAgent = headersList.get('user-agent') || ''
+  const isStandalone = userAgent.includes('standalone') || userAgent.includes('mobile')
+
   return (
     <html lang="en">
       <head>
@@ -72,14 +78,31 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="msapplication-TileColor" content="#0A0F1E" />
         <meta name="msapplication-tap-highlight" content="no" />
+        
+        {/* Script to add standalone class immediately */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
+                                      window.navigator.standalone === true
+                  if (isStandalone) {
+                    document.documentElement.classList.add('is-standalone')
+                  }
+                } catch(e) {}
+              })()
+            `,
+          }}
+        />
       </head>
       <body className={`${inter.className} bg-background text-text-primary min-h-screen pb-16`}>
         <AppStatusBar />
-        <Header />
+        <Header isStandalone={isStandalone} />
         <main>
           {children}
         </main>
-        <Footer />
+        <Footer isStandalone={isStandalone} />
         <BottomNav />
         <PWASetup />
       </body>

@@ -7,7 +7,6 @@ export default function AppStatusBar() {
   const [time, setTime] = useState('')
 
   useEffect(() => {
-    // Set initial time
     const updateTime = () => {
       const now = new Date()
       setTime(
@@ -19,7 +18,7 @@ export default function AppStatusBar() {
     }
 
     updateTime()
-    const interval = setInterval(updateTime, 60000) // Update every minute
+    const interval = setInterval(updateTime, 60000)
 
     return () => clearInterval(interval)
   }, [])

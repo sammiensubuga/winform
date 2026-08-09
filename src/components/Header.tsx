@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useEffect, useState } from 'react'
 import type { User } from '@supabase/supabase-js'
 import { Search, Trophy, Menu, X, ChevronDown, LogOut, User as UserIcon, Home, Star, Flame, Calendar, Globe } from 'lucide-react'
-import SearchModal from './SearchModal'
+import SearchModal from '@/components/SearchModal'
 
 const leagues = [
   { name: 'Premier League', slug: 'premier-league', logo: 'https://media.api-sports.io/football/leagues/39.png' },
@@ -17,7 +17,11 @@ const leagues = [
   { name: 'Champions League', slug: 'champions-league', logo: 'https://media.api-sports.io/football/leagues/2.png' },
 ]
 
-export default function Header() {
+interface HeaderProps {
+  isStandalone?: boolean
+}
+
+export default function Header({ isStandalone = false }: HeaderProps) {
   const pathname = usePathname()
   const router = useRouter()
   const [user, setUser] = useState<User | null>(null)
@@ -30,7 +34,6 @@ export default function Header() {
   const isHeroPage = pathname === '/'
   const isAuthPage = pathname === '/login' || pathname === '/register' || pathname === '/forgot-password' || pathname === '/update-password'
 
-  // Hooks must be called unconditionally
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUser(data.user))
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -49,8 +52,13 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [isHeroPage])
 
-  // If on auth page, don't render header
+  // If on auth page or standalone mode, return null
   if (isAuthPage) {
+    return null
+  }
+
+  // CRITICAL: Hide header in standalone mode
+  if (isStandalone) {
     return null
   }
 
@@ -99,7 +107,6 @@ export default function Header() {
               <Link href="/top-picks" className={navLinkClass('/top-picks')}>Predictions</Link>
               <Link href="/matches" className={navLinkClass('/matches')}>Live</Link>
               
-              {/* Leagues Dropdown - Hover to open with glass background */}
               <div className="relative group">
                 <button className={`${navLinkClass('/leagues')} flex items-center gap-1`}>
                   Leagues
@@ -191,7 +198,6 @@ export default function Header() {
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-[60] bg-background/80 backdrop-blur-xl border-t border-border/50 lg:hidden">
           <div className="flex flex-col h-full overflow-y-auto py-4 px-4">
-            {/* Close button at top */}
             <button 
               onClick={() => setMobileMenuOpen(false)} 
               className="self-end p-2 hover:bg-accent/10 rounded-lg transition-colors"
@@ -199,7 +205,6 @@ export default function Header() {
               <X className="w-6 h-6" />
             </button>
 
-            {/* Menu content */}
             <div className="flex-1 space-y-1 mt-2">
               <Link href="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 px-3 py-3 text-text-secondary hover:text-text-primary hover:bg-accent/5 rounded-lg transition-colors">
                 <Home className="w-5 h-5" /> Home
@@ -217,7 +222,6 @@ export default function Header() {
                 <Calendar className="w-5 h-5" /> Results
               </Link>
               
-              {/* Leagues section in mobile */}
               <div className="pt-3 mt-3 border-t border-border/50">
                 <p className="px-3 py-1 text-xs text-text-tertiary uppercase tracking-wider flex items-center gap-2">
                   <Globe className="w-3 h-3" /> Leagues
@@ -245,7 +249,6 @@ export default function Header() {
                 </Link>
               </div>
 
-              {/* Login/Sign Up for mobile */}
               {!user && (
                 <div className="pt-3 mt-3 border-t border-border/50 space-y-2">
                   <Link
@@ -267,7 +270,6 @@ export default function Header() {
                 </div>
               )}
 
-              {/* Sign Out for mobile */}
               {user && (
                 <div className="pt-3 mt-3 border-t border-border/50">
                   <button
@@ -287,10 +289,8 @@ export default function Header() {
         </div>
       )}
 
-      {/* Search Modal */}
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 
-      {/* Spacer for non-hero pages */}
       {!isHeroPage && <div className="h-16" />}
     </>
   )
