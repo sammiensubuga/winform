@@ -5,6 +5,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import BottomNav from '@/components/BottomNav'
 import PWASetup from '@/components/PWASetup'
+import AppStatusBar from '@/components/AppStatusBar'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -72,11 +73,20 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#0A0F1E" />
         <meta name="msapplication-tap-highlight" content="no" />
         
-        {/* Force Chrome to load icons */}
-        <link rel="icon" href="/icon-192.png" sizes="192x192" />
-        <link rel="apple-touch-icon" href="/icon-192.png" />
+        {/* Detect standalone mode BEFORE paint */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (window.matchMedia('(display-mode: standalone)').matches || 
+                  window.navigator.standalone === true) {
+                document.documentElement.classList.add('is-standalone')
+              }
+            `,
+          }}
+        />
       </head>
       <body className={`${inter.className} bg-background text-text-primary min-h-screen pb-16`}>
+        <AppStatusBar />
         <Header />
         <main>
           {children}
