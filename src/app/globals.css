@@ -89,15 +89,14 @@ body {
   [class*="Footer"] {
     display: none !important;
   }
-
-  @media all and (display-mode: standalone) {
-  .bottom-nav {
-    display: none !important;
-  }
-}
   
   /* Also hide any fixed position elements that might be header/footer */
   .fixed {
+    display: none !important;
+  }
+}
+@media all and (display-mode: standalone) {
+  .bottom-nav {
     display: none !important;
   }
 }
